@@ -289,6 +289,12 @@ p95 `find` < 100 мс, `explain` < 50 мс — вывод в коммит.
 и `datasets/<id>.md` (полная карточка). Детерминированно.
 Приёмка: 314 файлов + `llms.txt`; повторный экспорт не меняет ни байта. Тест на 3 наборах.
 
+### T8b. Сигналы использования (добавлено 09.11, 45 мин)
+Портал публикует журнал вызовов своего MCP-сервера агентами (`analyse-usage-mcp-et-agent-ia-copie`, 39 675 строк).
+`sources/usage.py` + `manage.py signals <domain>`: число вызовов на набор → `Dataset.usage_count` (1 запрос, `group_by`);
+поиск `compiled` прибавляет `0.05 · sqrt(usage_count)` к BM25, `naked` — нет. Подбор на 11 пробных вопросах — `NOTES.md`.
+Приёмка: справочник в top-5 по «collèges publics Côte-d'Or» и «combien d'écoles en France»; тест на сброс устаревших счётчиков.
+
 ### T9. Celery (1 ч)
 `context/celery.py`, брокер RabbitMQ. Задачи: `scan_portal(domain)` → после коммита (`transaction.on_commit`) →
 `compile_portal` → `project_portal` (ES + Neo4j только для изменившихся карточек). Блокировка «один скан на портал»

@@ -16,3 +16,20 @@ Decision: keep BM25 for now (k=5 cards go to the agent, which chooses). The eval
 dense vectors are added only if that number shows recall is the bottleneck. This failing question is the demo case
 for the improve loop. Golden cases may accept several valid datasets (e.g. `fr-en-carte-scolaire-colleges-publics`
 also lists public collèges).
+
+## T8b — usage signals from the portal's own MCP log (09.11.2026)
+
+`data.education.gouv.fr` publishes `analyse-usage-mcp-et-agent-ia-copie`: one row per call that AI agents made to
+its Huwise MCP server (Huwy + "Connecter votre IA"), Feb → Nov 2026, 39 675 rows. Most used: the directory
+`fr-en-annuaire-education` (3 389 calls), then geolocation (2 186), bac by academy (1 006). Top catalog searches:
+"éducation", "indice de position sociale", "IPS", "collège", "résultats brevet", "collèges Poissy".
+
+`manage.py signals <domain>` loads calls per dataset (1 request, group_by) into `Dataset.usage_count`; compiled
+search adds `0.05 * sqrt(usage_count)` to BM25 (naked baseline does not).
+
+Probe set (11 questions, not reused in the golden set): top-1 / top-5
+- BM25 only: 7 / 9 — the directory missing for "collèges publics Côte-d'Or" and "combien d'écoles en France"
+- + usage (`sqrt`, sum, 0.05): **8 / 11**
+- `log2p` multiply: 7 / 10; `log1p` sum: 8 / 10
+
+Risk: tuned on 11 questions; the golden-set eval (T12) is the real check.

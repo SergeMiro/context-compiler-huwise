@@ -35,6 +35,7 @@ MAPPING = {
             "themes": {"type": "keyword"},
             "modified": {"type": "date"},
             "records_count": {"type": "long"},
+            "usage_count": {"type": "long"},
             "version": {"type": "integer"},
             "short": {"type": "text", "index": False},
         },
@@ -42,6 +43,9 @@ MAPPING = {
 }
 COMPILED_FIELDS = ["title^3", "keywords^2", "dataset_id.text^2", "description", "field_text"]
 NAKED_FIELDS = ["title^3", "description"]  # what a generic catalog search sees
+# usage signal added to the BM25 score: sqrt(3389 agent calls) * 0.05 = +2.9 for the most used dataset.
+# Tuned on 11 probe questions (NOTES.md, T8b): top-5 9/11 -> 11/11. Kept out of the naked baseline.
+USAGE_FACTOR = 0.05
 
 
 def client():
@@ -68,7 +72,7 @@ def doc(ds, card):
         "keywords": " ".join(ds.keywords), "description": ds.description,
         "field_text": " ".join(f"{f.name} {f.label} {f.description}" for f in ds.fields.all()),
         "themes": ds.themes, "modified": ds.modified, "records_count": ds.records_count,
-        "version": card.version, "short": card.short,
+        "usage_count": ds.usage_count, "version": card.version, "short": card.short,
     }
 
 
@@ -118,13 +122,21 @@ def rebuild_index(portals):
     return ok, new
 
 
+def _query(portal_domain, q, naked):
+    text = {"bool": {"must": [{"multi_match": {"query": q, "fields": NAKED_FIELDS if naked else COMPILED_FIELDS,
+                                                "type": "cross_fields", "operator": "or"}}],
+                     "filter": [{"term": {"portal": portal_domain}}]}}
+    if naked:
+        return text
+    return {"function_score": {"query": text, "boost_mode": "sum", "field_value_factor": {
+        "field": "usage_count", "modifier": "sqrt", "factor": USAGE_FACTOR, "missing": 0}}}
+
+
 def search(portal_domain, q, k=5, naked=False):
     try:
         r = client().search(
             index=settings.ES_INDEX, routing=portal_domain, size=k,
-            query={"bool": {"must": [{"multi_match": {"query": q, "fields": NAKED_FIELDS if naked else COMPILED_FIELDS,
-                                                       "type": "cross_fields", "operator": "or"}}],
-                            "filter": [{"term": {"portal": portal_domain}}]}},
+            query=_query(portal_domain, q, naked),
             source=["dataset_id", "title", "short", "description"])
     except NotFoundError:
         return []
