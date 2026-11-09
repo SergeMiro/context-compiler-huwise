@@ -274,7 +274,7 @@ reverted — нет; PII-примеров в карточке нет.
 `naked_search(portal, question)` → title + первые 300 символов описания (ES по `title`/`description`, без синонимов и полей);
 `naked_get(portal, dataset_id)` → сырые `raw_metas` + список полей name/type; `naked_query` — `query` **без** валидатора.
 
-`mcpserver.py`: FastMCP, транспорт streamable HTTP, `127.0.0.1:8766`. Портал — из заголовка `X-Domain`
+`mcpserver.py`: FastMCP, транспорт streamable HTTP, `127.0.0.1:8796`. Портал — из заголовка `X-Domain`
 (как у Huwise), иначе аргумент `portal`; `X-Apikey` — насквозь в `query`, не логировать, не хранить.
 Rate limit на портал: 10 вызовов/с (token bucket в памяти; `shortcut:` общий счётчик при нескольких серверах).
 Команда `manage.py mcp`.
