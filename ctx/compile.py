@@ -35,8 +35,10 @@ def _label(f):
     return "" if not f.label or same else f.label
 
 
-def _edits(ds):
+def _edits(ds, extra=None):
     kept = list(ds.edits.filter(status="kept").order_by("created_at", "id"))
+    if extra is not None and extra not in kept:
+        kept.append(extra)  # preview: the card as it would be with this edit
     desc = [e.after for e in kept if e.kind == "description"]
     return {
         "description": desc[-1] if desc else None,
@@ -68,9 +70,9 @@ def _fit(head, lines, tail, budget, more):
     return head + kept + tail
 
 
-def render(ds):
+def render(ds, extra=None):
     fields = list(ds.fields.all())
-    edits = _edits(ds)
+    edits = _edits(ds, extra)
     fields_by_prio = _ordered_fields(fields, edits)
     description = edits["description"] or ds.description
     updated = ds.modified.strftime("%d.%m.%Y") if ds.modified else "?"
