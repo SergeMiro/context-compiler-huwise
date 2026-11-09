@@ -12,3 +12,15 @@ Status: in development. Plan (in Russian): [`docs/PLAN.md`](docs/PLAN.md).
 ## Branches
 
 `feat/*` → `dev` (development) → `preprod` (verified) → `prod` (stable, default).
+
+Stack (same as Huwise): Django + DRF, MariaDB, Celery + RabbitMQ, Elasticsearch, Neo4j, MCP Python SDK.
+
+## Run locally
+
+```bash
+docker compose up -d --wait          # MariaDB, RabbitMQ, Elasticsearch, Neo4j on 127.0.0.1
+python3.12 -m venv .venv && .venv/bin/pip install -r requirements.txt   # needs libmariadb-dev, pkg-config
+cp .env.example .env
+.venv/bin/python manage.py migrate
+.venv/bin/python manage.py test
+```

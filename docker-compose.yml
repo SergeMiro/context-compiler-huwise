@@ -1,0 +1,61 @@
+# Local stand with the Huwise stack: MariaDB, RabbitMQ, Elasticsearch, Neo4j. Bound to 127.0.0.1 only.
+# Up: docker compose up -d   ·   Remove with data: docker compose down -v
+services:
+  mariadb:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: ctxc
+      MARIADB_USER: ctxc
+      MARIADB_PASSWORD: ${DB_PASSWORD:-ctxc-local}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-ctxc-local-root}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    ports: ["127.0.0.1:3307:3306"]
+    volumes: [dbdata:/var/lib/mysql, ./docker/mariadb-init.sql:/docker-entrypoint-initdb.d/init.sql:ro]
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      retries: 20
+
+  rabbitmq:
+    image: rabbitmq:4.1-alpine
+    ports: ["127.0.0.1:5673:5672"]
+    mem_limit: 384m
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      retries: 10
+
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    environment:
+      - discovery.type=single-node
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - xpack.security.enabled=false   # local stand only
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports: ["127.0.0.1:9200:9200"]
+    volumes: [esdata:/usr/share/elasticsearch/data]
+    mem_limit: 1g
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      retries: 20
+
+  neo4j:
+    image: neo4j:5.26-community
+    environment:
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD:-ctxc-local-pass}
+      - NEO4J_server_memory_heap_max__size=512m
+      - NEO4J_server_memory_pagecache_size=128m
+    ports: ["127.0.0.1:7474:7474", "127.0.0.1:7687:7687"]
+    volumes: [neo4jdata:/data]
+    mem_limit: 1g
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- localhost:7474 || exit 1"]
+      interval: 10s
+      retries: 20
+
+volumes:
+  dbdata:
+  esdata:
+  neo4jdata:

@@ -95,10 +95,12 @@ elasticsearch 8.19.3, neo4j 5.28.8. Контейнеры (только 127.0.0.1
 Добавить (закрепить точные версии в `requirements.txt`, все пакеты — с версией старше двух недель):
 - `httpx` — клиент Explore API и LLM-адаптер;
 - `mcp` — официальный Python SDK (FastMCP, транспорт streamable HTTP);
-- `celery` + `redis` — фоновые задачи; брокер Redis;
+- `celery` — фоновые задачи, брокер **RabbitMQ** (как у Huwise);
+- `mysqlclient` — драйвер **MariaDB** (как у Huwise; нужны `libmariadb-dev` и `pkg-config`);
 - больше ничего. Токены считаем приближённо (`len(text) // 4`), YAML не нужен (JSON), HTML чистим `html.parser` из stdlib.
 
-В `docker-compose.yml` добавить `redis:7-alpine` на `127.0.0.1:6381` с `mem_limit: 128m`.
+Стек — строго технологии Huwise: Django/DRF, MariaDB 11.4, Celery + RabbitMQ 4.1, Elasticsearch 8, Neo4j 5.
+Redis не используем: блокировки — `GET_LOCK` в MariaDB, кеш карточек — в процессе.
 Свободной памяти на VPS ~8 ГБ, стенд занимает ~2,2 ГБ.
 
 ## 5. Структура кода (итог)
@@ -148,17 +150,16 @@ def chat(messages: list[dict], tools: list[dict] | None = None, temperature: flo
 Оценка времени — для агента с работающим окружением.
 
 ### T0. Окружение (30 мин)
-- `requirements.txt` с точными версиями (текущие 4 пакета + httpx, mcp, celery, redis); установить в `.venv`.
-- Redis в `docker-compose.yml` (127.0.0.1:6381).
+- `requirements.txt` с точными версиями (текущие 4 пакета + httpx, mcp, celery, mysqlclient); установить в `.venv`.
+- `docker-compose.yml`: MariaDB (127.0.0.1:3307, init даёт права на `test_ctxc`), RabbitMQ (:5673), ES (:9200), Neo4j (:7687), у всех healthcheck.
 - `settings.py` читает env (`os.environ.get` с дефолтами для стенда): `ES_URL`, `NEO4J_URL`, `NEO4J_AUTH`,
-  `REDIS_URL`, `CTXC_LLM_*`, `CTXC_SCAN_BUDGET_PCT=5`. `.env.example` со всеми ключами, `.env` в `.gitignore`.
+  `DB_*`, `CELERY_BROKER_URL`, `CTXC_LLM_*`, `CTXC_SCAN_BUDGET_PCT=5`. `.env.example` со всеми ключами, `.env` в `.gitignore`.
 - Подключить `django.contrib.admin`, `sessions`, `messages`, `staticfiles`, шаблоны — понадобятся в T14.
 
 Приёмка: `manage.py check` без ошибок; `docker compose ps` — 3 контейнера healthy; старые тесты зелёные.
 
 ### T1. Модели и миграции (1 ч)
-Стенд одноразовый: удалить `db.sqlite3` и старые миграции `catalog`, сгенерировать заново. Старую команду
-`seed` удалить (выдуманные порталы больше не нужны); `Transformation` оставить для ручного lineage.
+Проект с нуля: миграции генерируются под MariaDB. `Transformation` — ручной lineage.
 
 | Модель | Поля | Ограничения |
 |---|---|---|
@@ -267,7 +268,7 @@ reverted — нет; PII-примеров в карточке нет.
 - `query(portal, dataset_id, params, api_key=None)` → валидатор → `GET …/records` → `{total_count, results}`.
   Ошибка API (`ODSQLError`) возвращается агенту текстом. Таймаут 10 с.
 - Каждый вызов пишет `ToolCall` (tool, ms, ok, error_code). Кеш карточек — `functools.lru_cache` по
-  (`dataset_id`, `version`); `shortcut:` кеш в процессе, Redis — когда серверов больше одного.
+  (`dataset_id`, `version`); `shortcut:` кеш в процессе; при нескольких серверах — общий кеш (их выбор).
 
 «Голый» набор для сравнения (как 4 общих инструмента их MCP) — в том же файле, только для eval:
 `naked_search(portal, question)` → title + первые 300 символов описания (ES по `title`/`description`, без синонимов и полей);
@@ -275,7 +276,7 @@ reverted — нет; PII-примеров в карточке нет.
 
 `mcpserver.py`: FastMCP, транспорт streamable HTTP, `127.0.0.1:8766`. Портал — из заголовка `X-Domain`
 (как у Huwise), иначе аргумент `portal`; `X-Apikey` — насквозь в `query`, не логировать, не хранить.
-Rate limit на портал: 10 вызовов/с (token bucket в памяти; `shortcut:` в Redis при нескольких серверах).
+Rate limit на портал: 10 вызовов/с (token bucket в памяти; `shortcut:` общий счётчик при нескольких серверах).
 Команда `manage.py mcp`.
 
 Приёмка: скрипт-клиент на `mcp` SDK перечисляет 3 инструмента и проходит сценарий
@@ -289,9 +290,9 @@ p95 `find` < 100 мс, `explain` < 50 мс — вывод в коммит.
 Приёмка: 314 файлов + `llms.txt`; повторный экспорт не меняет ни байта. Тест на 3 наборах.
 
 ### T9. Celery (1 ч)
-`context/celery.py`, брокер Redis. Задачи: `scan_portal(domain)` → после коммита (`transaction.on_commit`) →
+`context/celery.py`, брокер RabbitMQ. Задачи: `scan_portal(domain)` → после коммита (`transaction.on_commit`) →
 `compile_portal` → `project_portal` (ES + Neo4j только для изменившихся карточек). Блокировка «один скан на портал»
-через `cache.add` (Redis) с TTL 30 мин. `acks_late=True`, ретраи с backoff на сетевые ошибки.
+через `SELECT GET_LOCK('scan:<domain>', 0)` в MariaDB (снимается сам при обрыве соединения). `acks_late=True`, ретраи с backoff на сетевые ошибки.
 Beat: `scan_all` раз в час ставит `scan_portal` для каждого портала с разносом по минутам (hash домена % 60).
 В тестах `CELERY_TASK_ALWAYS_EAGER=True`.
 Приёмка: `celery -A context worker -B` + `scan_portal.delay('data.education.gouv.fr')` → в логе цепочка из 3 задач;
@@ -371,11 +372,11 @@ Beat: `scan_all` раз в час ставит `scan_portal` для каждог
 
 | Что | Цифра | Решение в коде |
 |---|---|---|
-| Наборов / полей | ~750 000 / ~15 млн | индексы (`portal`, `modified`), (`dataset`, `name`); MariaDB/Postgres вместо SQLite — смена `DATABASES` |
+| Наборов / полей | ~750 000 / ~15 млн | индексы (`portal`, `modified`), (`dataset`, `name`); MariaDB с первого дня; масштаб — реплики на чтение |
 | Скан | полный: 1 запрос/портал; инкремент: 1–3 запроса/портал/час → ~15 000 запросов/час на парк | Celery, разнос по минутам, блокировка на портал, бюджет ≤ 5 % дневного лимита портала |
 | ES | ~750 000 карточек, единицы ГБ | один индекс, `routing=portal` — поиск по порталу бьёт в один шард |
 | Neo4j | ~750 000 `Dataset` + сотни `Key`; рёбра линейны числу полей-ключей | модель через `Key`, без попарных рёбер |
-| Горячий путь | 1 запрос ES + кеш | MCP без состояния → горизонтально; кеш карточек в Redis при > 1 сервере |
+| Горячий путь | 1 запрос ES + кеш | MCP без состояния → горизонтально; кеш карточек в процессе; общий кеш при > 1 сервере |
 | LLM | только офлайн | бюджет вызовов на портал в сутки |
 
 От 1 портала к 5 000 код не меняется: меняются БД, число воркеров, кеш и шарды.

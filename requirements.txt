@@ -1,0 +1,8 @@
+Django==5.2.19
+djangorestframework==3.16.1
+elasticsearch==8.19.3
+neo4j==5.28.8
+httpx==0.28.1
+mcp==2.3.0
+celery==5.6.3
+redis==8.1.0
