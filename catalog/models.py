@@ -29,6 +29,7 @@ class Dataset(models.Model):
     source_domain = models.CharField(max_length=255, blank=True)
     source_dataset = models.CharField(max_length=255, blank=True)
     raw_metas = models.JSONField(default=dict)
+    samples_for = models.DateTimeField(null=True, blank=True)  # `modified` at which samples were taken
     # lineage entered by hand; DERIVED_FROM edges in Neo4j are projected from here
     sources = models.ManyToManyField("self", through="Transformation", symmetrical=False,
                                      through_fields=("target", "source"), related_name="derived")

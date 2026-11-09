@@ -1,0 +1,6433 @@
+[
+{
+"dataset_id": "fr-en-ips-ecoles-ap2022",
+"has_attachments": true,
+"attachments_count": 1,
+"has_records": true,
+"fields": [
+{
+"name": "rentree_scolaire",
+"description": "Année scolaire sur laquelle portent les indices",
+"annotations": {
+"facet": []
+},
+"label": "Rentrée scolaire",
+"type": "text"
+},
+{
+"name": "code_region",
+"description": "Code de la région académique",
+"annotations": {},
+"label": "Code région",
+"type": "text"
+},
+{
+"name": "region",
+"description": "Nom de la région académique à laquelle appartient l'établissement",
+"annotations": {},
+"label": "Région",
+"type": "text"
+},
+{
+"name": "code_de_l_academie",
+"description": "Code de l'académie",
+"annotations": {},
+"label": "Code de l'académie",
+"type": "text"
+},
+{
+"name": "academie",
+"description": "Académie à laquelle appartient l'établissement",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Académie",
+"type": "text"
+},
+{
+"name": "code_du_departement",
+"description": "Code du département auquel appartient l'établissement",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Code du département",
+"type": "text"
+},
+{
+"name": "departement",
+"description": "Département auquel appartient l'établissement",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Département",
+"type": "text"
+},
+{
+"name": "code_insee_de_la_commune",
+"description": "Code de la commune à laquelle appartient l'établissement",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Code INSEE de la commune",
+"type": "text"
+},
+{
+"name": "nom_de_la_commune",
+"description": "Commune à laquelle appartient l'établissement",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Nom de la commune",
+"type": "text"
+},
+{
+"name": "uai",
+"description": "Numéro d'identification de l'établissement",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "UAI",
+"type": "text"
+},
+{
+"name": "nom_de_l_etablissement",
+"description": "Nom de l'établissement",
+"annotations": {},
+"label": "Nom de l'établissement",
+"type": "text"
+},
+{
+"name": "secteur",
+"description": "Secteur de l'établissement scolaire : établissement public ou privé sous contrat",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Secteur",
+"type": "text"
+},
+{
+"name": "ips",
+"description": "Indice moyen de position sociale des élèves de l'établissement",
+"annotations": {},
+"label": "IPS",
+"type": "text"
+},
+{
+"name": "ips_national_prive",
+"description": "Valeur nationale de l'IPS pour les établissements privés sous contrat",
+"annotations": {},
+"label": "IPS national privé",
+"type": "text"
+},
+{
+"name": "ips_national_public",
+"description": "Valeur nationale de l'IPS pour les établissements publics",
+"annotations": {},
+"label": "IPS national public",
+"type": "text"
+},
+{
+"name": "ips_national",
+"description": "Valeur nationale de l'IPS pour l'ensemble des établissements publics et privés sous contrat",
+"annotations": {},
+"label": "IPS national",
+"type": "text"
+},
+{
+"name": "ips_academique_prive",
+"description": "Valeur académique de l'IPS pour les établissements privés sous contrat",
+"annotations": {},
+"label": "IPS académique privé",
+"type": "text"
+},
+{
+"name": "ips_academique_public",
+"description": "Valeur académique de l'IPS pour les établissements publics",
+"annotations": {},
+"label": "IPS académique public",
+"type": "text"
+},
+{
+"name": "ips_academique",
+"description": "Valeur académique de l'IPS pour l'ensemble des établissements publics et privés sous contrat",
+"annotations": {},
+"label": "IPS académique",
+"type": "text"
+},
+{
+"name": "ips_departemental_prive",
+"description": "Valeur départementale de l'IPS pour les établissements privés sous contrat",
+"annotations": {},
+"label": "IPS départemental privé",
+"type": "text"
+},
+{
+"name": "ips_departemental_public",
+"description": "Valeur départementale de l'IPS pour les établissements publics",
+"annotations": {},
+"label": "IPS départemental public",
+"type": "text"
+},
+{
+"name": "ips_departemental",
+"description": "Valeur départementale de l'IPS pour l'ensemble des établissements publics et privés sous contrat",
+"annotations": {},
+"label": "IPS départemental",
+"type": "text"
+},
+{
+"name": "num_ligne",
+"description": null,
+"annotations": {},
+"label": "num_ligne",
+"type": "double"
+}
+],
+"metas": {
+"default": {
+"title": "Indices de position sociale des écoles (à partir de 2022)",
+"description": "<p>\n</p><p><b>Avertissement : ce jeu de données n’est plus actualisé.</b></p><p>L’indice de position sociale des écoles est actuellement calculé sur la seule base des élèves de CM2, dont on connaît les catégories socio-professionnelles des représentants légaux lorsqu’ils sont en sixième. En outre, les IPS sont fournis uniquement pour les écoles ayant eu au moins 25 élèves de CM2 sur les cinq dernières années. De ce fait les écoles maternelles sont exclues du champ puisqu’elles n’ont pas d’élèves de CM2. <br>Afin de pouvoir compléter le champ de diffusion et contribuer à une amélioration de ces indicateurs, des travaux méthodologiques sont actuellement en cours à la DEPP. S’ils sont concluants, une diffusion des indicateurs pourrait être envisagée pour la prochaine année scolaire.</p>L’indice de position sociale (IPS) permet d'appréhender le\nstatut social des élèves à partir des professions et catégories sociales (PCS)\nde leurs parents. À chaque PCS ou couple de PCS est associée une valeur\nnumérique de l’IPS. Cette valeur numérique correspond à un résumé quantitatif\nd’un ensemble d’attributs socio-économiques et culturels liés à la réussite\nscolaire. Plus l'indice de position sociale (IPS) est élevé, plus les élèves\nsont en moyenne d'origine sociale favorisée. Plus il est faible, plus les\nélèves sont d'origine défavorisée socialement. \n\n\n\n<p class=\"MsoNormal\" style=\"text-align:justify\">Concrètement, les valeurs de\nréférence de l'indice pour chaque PCS, ou couple de PCS sont déterminées grâce\nà une méthode statistique qui permet de synthétiser un ensemble de\ncaractéristiques décrivant les conditions de vie des élèves (voir article de\nRocher, 2016). L'indice d'une PCS donnée est ainsi le résumé quantitatif d'un\ncertain nombre d'attributs socio-économiques et culturels liés à la réussite\nscolaire, que l'on retrouve en moyenne pour cette PCS.</p>\n<p class=\"MsoNormal\" style=\"text-align:justify\">La première version de l’indice,\nutilisée jusqu’à la rentrée 2021, a été calculée sur les données du panel de la\nDEPP d’élèves entrés en sixième en 2007. Pour ces 35 000 élèves du panel,\non dispose d’une information riche sur leurs conditions de vie permettant\nd’établir la table de passage PCS- IPS. </p>\n<p class=\"MsoNormal\" style=\"text-align:justify\"><span style=\"mso-bidi-font-family:\nCalibri;mso-bidi-theme-font:minor-latin\">À</span> la rentrée 2022, cette table\nde passage a été mise à jour en mobilisant les données du panel de la DEPP\nd’élèves entrés en 2011 en CP. </p>\n<p class=\"MsoNormal\" style=\"text-align:justify\">Dès lors que les PCS des parents\nsont renseignés, ce qui est le cas pour la très grande majorité des élèves du\nsecond degré, il suffit d'appliquer ces valeurs de référence et de considérer\ncette nouvelle variable comme un indice, c'est-à-dire de manière quantitative.</p>Le niveau social d'un\nétablissement scolaire est apprécié à travers le calcul de la moyenne des IPS\ndes élèves qui y sont scolarisés. \n\n<p class=\"MsoNormal\" style=\"text-align:justify\">Il convient de rappeler que,\ncomme tout indice synthétique, il s’agit d’un résumé simplifié de la réalité,\nqui ne peut rendre compte à lui seul de la complexité de la situation\nsocio-économique et culturelle des élèves accueillis dans un établissement. </p>\n<p class=\"MsoNormal\" style=\"text-align:justify\">L’IPS étant basé sur les PCS\ndéclarées par les familles et enregistrées par les établissements, il est\nsoumis à une certaine marge d’erreur : ainsi, il est conseillé de ne pas\nsur-interpréter des différences de 3 points ou moins concernant les IPS moyens\ndes écoles.</p>\n<p class=\"MsoNormal\" style=\"text-align:justify\">Enfin, il convient de noter que\nla méthodologie de calcul de l’indice a changé, entraînant une rupture de série\nà partir de la rentrée 2022 : les valeurs de référence de l’indice ont\nchangé et les élèves dont les PCS des deux parents sont non renseignées ne\nrentrent plus dans le calcul de l’IPS moyen de leur école (table de passage disponible en pièce jointe ci-dessous). </p>\n<p class=\"MsoNormal\"><b style=\"mso-bidi-font-weight:normal\"><u>Champ</u></b></p>\n<p class=\"MsoNormal\">Le fichier fournit les IPS moyens des écoles de France sous tutelle de l'Education Nationale, publiques et privées sous contrat, calculés à\npartir des données de la rentrée N. </p>\n<p class=\"MsoNormal\">Le calcul des IPS des écoles est effectué à partir des\nélèves de CM2, dont on connaît les PCS lorsqu’ils sont en sixième. Il\ncorrespond plus exactement à la moyenne de l’IPS des anciens élèves de l’école\nsur les cinq dernières années. En outre, les IPS sont fournis uniquement pour\nles écoles ayant eu au moins 25 élèves de CM2 sur les cinq dernières années. De\nce fait les écoles maternelles sont exclues du champ puisqu’elles n’ont\npas d’élèves de CM2.</p>\n<p class=\"MsoNormal\">Dans le fichier mis à disposition, chaque ligne correspond à\nune école pour une année scolaire donnée. </p>\n<p class=\"MsoNormal\">Modifications : un premier fichier sur l’IPS des écoles\na été déposé le 05/10/2022. Il présentait l’IPS des écoles ayant eu plus de 5\nélèves de CM2 sur les cinq dernières années.</p>\n<p class=\"MsoNormal\"><b style=\"mso-bidi-font-weight:normal\"><u>Référence</u></b></p>\n<p class=\"MsoNormal\"><span>Rocher, T. (2016). Construction d’un indice de\nposition sociale des élèves. <i style=\"mso-bidi-font-style:normal\">Éducation\n&amp; formations</i>, DEPP, 90, pp.5-27.</span><span style='font-size:12.0pt;font-family:\"Calibri\",sans-serif;\nmso-ascii-theme-font:minor-latin;mso-fareast-font-family:Calibri;mso-fareast-theme-font:\nminor-latin;mso-hansi-theme-font:minor-latin;mso-bidi-font-family:\"Times New Roman\";\nmso-bidi-theme-font:minor-bidi;mso-ansi-language:FR;mso-fareast-language:EN-US;\nmso-bidi-language:AR-SA'></span></p><p class=\"MsoNormal\">Dauphant F., Evain F., Guillerm M., Simon C., \nRocher T. (2023), L’indice de position sociale (IPS) : un outil \nstatistique pour décrire les inégalités sociales entre établissements. <i>Note d’information de la Depp n°23.16.</i></p><p class=\"MsoNormal\">En savoir plus sur l’indice de position sociale : <a href=\"https://www.education.gouv.fr/l-indice-de-position-sociale-ips-357755\">\nhttps://www.education.gouv.fr/l-indice-de-position-sociale-ips-357755</a><i></i></p>\n<span class=\"\" style=\"text-decoration: underline; \"></span><p></p>",
+"theme": [
+"Etablissements (dont IPS)"
+],
+"keyword": [
+"élèves",
+"écoles",
+"IPS"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2026-08-07T07:34:04.835000+00:00",
+"publisher": "DEPP – Ministère chargé de l’éducation nationale",
+"references": null,
+"attributions": null,
+"update_frequency": null,
+"bbox": null,
+"data_processed": "2026-01-29T19:02:09.564000+00:00",
+"federated": false,
+"geographic_reference": null,
+"geographic_reference_auto": false,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-08-07T07:34:07.444000+00:00",
+"modified_updates_on_data_change": true,
+"modified_updates_on_metadata_change": true,
+"parent_domain": null,
+"records_count": 97080,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": null,
+"timezone": null
+},
+"dcat": {
+"created": "2022-10-05",
+"issued": "2022-10-05",
+"creator": null,
+"contributor": null,
+"contact_name": null,
+"contact_email": "depp-open-data@education.gouv.fr",
+"accrualperiodicity": "Annuelle",
+"spatial": "France",
+"temporal": "L'année scolaire",
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": null,
+"temporal_coverage_end": null,
+"accessRights": "Le producteur et le diffuseur des données ne sont pas responsables des interprétations ou déductions faites à partir de l'utilisation des données.  Pour citer la publication : \"Source Depp, plateforme de données ouvertes data.education.gouv.fr\" En cas de retraitement des données, ajouter à la mention précédente :  \"traitement [auteur, nom de votre organisation]\"",
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": "01/10/2024",
+"periode-donnees": "2022-2024",
+"champ": "écoles publiques et privées sous contrat",
+"couverture-geographique": [
+"France"
+],
+"unite-statistique": "les établissements",
+"secret-statistique": "Pour des raisons de respect de la confidentialité, l'IPS des établissements de moins de 5 élèves est affiché NS.",
+"source": "Traitement statistique DEPP"
+}
+},
+"features": [
+"analyze"
+]
+},
+{
+"dataset_id": "fr-en-resultats-detailles-au-dnb",
+"has_attachments": false,
+"attachments_count": 0,
+"has_records": true,
+"fields": [
+{
+"name": "session_examen",
+"description": "année de l'examen",
+"annotations": {
+"facet": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+],
+"timeserie_precision": [
+"year"
+]
+},
+"label": "Année",
+"type": "date"
+},
+{
+"name": "code_region",
+"description": "Code région académique",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Code région",
+"type": "text"
+},
+{
+"name": "libelle_region",
+"description": "Libellé région académique",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Libellé région",
+"type": "text"
+},
+{
+"name": "academie",
+"description": "Nom de l'académie du candidat",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Académie",
+"type": "text"
+},
+{
+"name": "tranche_age",
+"description": "Tranche d'âge",
+"annotations": {},
+"label": "Age",
+"type": "text"
+},
+{
+"name": "serie",
+"description": "Série générale ou professionnelle",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Série",
+"type": "text"
+},
+{
+"name": "inscrits",
+"description": "Nombre d'inscrits à l'examen",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Inscrits",
+"type": "int"
+},
+{
+"name": "presents",
+"description": "Nombre de candidats présents aux épreuves du DNB. Est considéré comme présent à l'examen tout candidat qui a participé au moins à une épreuve. Les candidats peuvent être élèves, apprentis, en formation continue ou en enseignement à distance dans un établissement public ou privé, ou encore se présenter en candidat libre.",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Présents",
+"type": "int"
+},
+{
+"name": "admis",
+"description": "Nombre de candidats admis au DNB",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Admis",
+"type": "int"
+},
+{
+"name": "admis_sans_mention",
+"description": "Nombre de candidats admis au DNB SANS MENTION, soit une note moyenne comprise entre 10 et 12 sur 20.",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Admis sans mention",
+"type": "int"
+},
+{
+"name": "admis_ab",
+"description": "Nombre de candidats admis mention assez bien",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Admis mention assez bien",
+"type": "int"
+},
+{
+"name": "admis_b",
+"description": "Nombre de candidats admis mention bien",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Admis mention bien",
+"type": "int"
+},
+{
+"name": "admis_tb",
+"description": "\t\nNombre de candidats admis mention très bien",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Admis mention très bien",
+"type": "double"
+},
+{
+"name": "inscrits_filles",
+"description": "Nombre de filles inscrites à l'examen",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Inscrits filles",
+"type": "int"
+},
+{
+"name": "presents_filles",
+"description": "Nombre de filles présentes à l'examen",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Présents filles",
+"type": "int"
+},
+{
+"name": "admis_filles",
+"description": "Nombre de filles admises au DNB",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Admis filles",
+"type": "int"
+},
+{
+"name": "admis_sans_mention_filles",
+"description": "Nombre de filles admises au DNB SANS MENTION, soit une note moyenne comprise entre 10 et 12 sur 20.",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Admis sans mention filles",
+"type": "int"
+},
+{
+"name": "admis_ab_filles",
+"description": "Nombre de filles admises mention assez bien",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Admis mention assez bien filles",
+"type": "int"
+},
+{
+"name": "admis_b_filles",
+"description": "Nombre de filles admises mention bien",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Admis mention bien filles",
+"type": "int"
+},
+{
+"name": "admis_tb_filles",
+"description": "Nombre de filles admises mention très bien",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Admis mention très bien filles",
+"type": "int"
+},
+{
+"name": "code_academie",
+"description": "Code académie",
+"annotations": {},
+"label": "Code académie",
+"type": "text"
+},
+{
+"name": "code_departement",
+"description": "Code département",
+"annotations": {},
+"label": "Code département",
+"type": "text"
+},
+{
+"name": "libelle_departement",
+"description": "Libellé département",
+"annotations": {},
+"label": "Libellé département",
+"type": "text"
+},
+{
+"name": "code_region_insee",
+"description": "Code région Insee",
+"annotations": {},
+"label": "Code région Insee",
+"type": "text"
+},
+{
+"name": "admis_tb_feli",
+"description": "Nombre de candidats admis mention très bien avec les félicitations du jury",
+"annotations": {},
+"label": "Admis mention très bien avec les félicitations du jury",
+"type": "int"
+},
+{
+"name": "admis_tb_feli_filles",
+"description": "Nombre de filles admises mention très bien avec les félicitations du jury",
+"annotations": {},
+"label": "Admis mention très bien filles avec les félicitations du jury",
+"type": "int"
+}
+],
+"metas": {
+"default": {
+"title": "Résultats détaillés au DNB",
+"description": "<p>Ce jeu de données présente les résultats au Diplôme National du Brevet, en les détaillant par âge, série et sexe. <br><br>Le DNB sanctionne la formation secondaire au terme des classes de troisième. Il atteste de la maîtrise des compétences du socle commun des connaissances et des compétences, depuis la session de 2011. Pour les candidats scolaires, l'obtention du DNB est liée à la fois à la maîtrise du socle commun et aux résultats obtenus aux épreuves de l'examen terminal. Les candidats individuels sont évalués par un examen écrit. <br><br>Depuis 2013, le DNB comporte deux séries : la série générale et la série professionnelle. Jusqu'en 2012, il comportait trois séries : la série collège, la série technologique et la série professionnelle.<br>Ce jeu de données regroupe l'ensemble des candidats au DNB des sessions de juin et de septembre. <br><br>La date d'observation est définie au 30 juin de chaque année même si la date des épreuves varie d'une année à l'autre.<br><br>Dernière observation : Session 2025 du DNB<br><br>Pour en savoir plus :</p><p><a href=\"https://www.education.gouv.fr/depp/resultats-definitifs-de-la-session-2025-du-diplome-national-du-brevet-dnb-469397\" target=\"_blank\">N’guia G., 2026, « Résultats définitifs de la session 2025 du diplôme national du brevet (DNB)», <i>Note d'Information</i>, n° 26-04, DEPP.</a></p><p><a href=\"https://www.education.gouv.fr/resultats-definitifs-de-la-session-2024-du-diplome-national-du-brevet-dnb-416584\" target=\"_blank\">N’guia G., 2025, \"Résultats définitifs de la session 2024 du diplôme national du brevet (DNB)\", </a><em><a href=\"https://www.education.gouv.fr/resultats-definitifs-de-la-session-2024-du-diplome-national-du-brevet-dnb-416584\" target=\"_blank\">Note d'Information</a></em><a href=\"https://www.education.gouv.fr/resultats-definitifs-de-la-session-2024-du-diplome-national-du-brevet-dnb-416584\" target=\"_blank\">, n° 25-09, DEPP.</a><br><a href=\"https://shs.hal.science/halshs-04970870\" target=\"_blank\">https://doi.org/10.48464/ni-25-09</a></p><p><a href=\"https://www.education.gouv.fr/resultats-definitifs-de-la-session-2023-du-diplome-national-du-brevet-dnb-et-evolutions-depuis-2018-414006\" target=\"_blank\">N’guia G., 2024, \"Résultats définitifs de la session 2023 du diplôme national du brevet (DNB) et évolutions depuis 2018\", Note d'Information, n° 24.10, DEPP.<br></a><a href=\"https://shs.hal.science/halshs-04530395\" target=\"_blank\">https://doi.org/10.48464/ni-24-10</a></p>",
+"theme": [
+"Diplômes et examens"
+],
+"keyword": [
+"troisième",
+"second degré",
+"2nd degré",
+"DNB",
+"résultat scolaire",
+"examen",
+"taux réussite",
+"candidat",
+"sexe",
+"collège",
+"département",
+"diplôme national brevet"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2026-06-23T10:09:38.097000+00:00",
+"publisher": "DEPP – Ministère chargé de l’éducation nationale",
+"references": null,
+"attributions": null,
+"update_frequency": "ANNUAL",
+"bbox": null,
+"data_processed": "2026-02-17T09:17:18.080000+00:00",
+"federated": false,
+"geographic_reference": [
+"world_fr"
+],
+"geographic_reference_auto": true,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-06-23T10:09:39.447000+00:00",
+"modified_updates_on_data_change": true,
+"modified_updates_on_metadata_change": true,
+"parent_domain": null,
+"records_count": 5544,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": [
+"France"
+],
+"timezone": null
+},
+"dcat": {
+"created": "2017-06-09",
+"issued": "2017-06-08",
+"creator": "Bureau des études statistiques sur les élèves",
+"contributor": null,
+"contact_name": null,
+"contact_email": "depp-open-data@education.gouv.fr",
+"accrualperiodicity": "Annuelle",
+"spatial": "France (Mayotte à partir de 2011)",
+"temporal": "Session annuelle des examens du DNB de Juin à Septembre",
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": "2016-06-29T22:00:00+00:00",
+"temporal_coverage_end": "2025-06-29T22:00:00+00:00",
+"accessRights": "Le producteur et le diffuseur des données ne sont pas responsables des interprétations ou déductions faites à partir de l'utilisation des données.  Pour citer la publication : \"Source Depp, plateforme de données ouvertes data.education.gouv.fr\" En cas de retraitement des données, ajouter à la mention précédente :  \"traitement [auteur, nom de votre organisation]\"",
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": "30/06/2025",
+"periode-donnees": "2016-2025",
+"champ": "Les candidats au DNB quels que soient leur origine scolaire (candidats individuels compris) et le ministère de rattachement des établissements fréquentés (éducation nationale et agriculture).",
+"couverture-geographique": [
+"France (Mayotte à partir de 2011)"
+],
+"unite-statistique": "Les candidats au DNB",
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"timeserie",
+"analyze"
+]
+},
+{
+"dataset_id": "fr-en-inserjeunes-lycee_pro",
+"has_attachments": false,
+"attachments_count": 0,
+"has_records": true,
+"fields": [
+{
+"name": "annee",
+"description": "Années scolaires sur lesquelles les statistiques ont été calculées. Par exemple \"cumul 2021-2022\" signifie que les résultats ont été obtenus à partir de l'observation des sortants de formation au cours des années scolaires 2020-2021 et 2021-2022.",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": []
+},
+"label": "Année",
+"type": "text"
+},
+{
+"name": "uai",
+"description": "Identifiant de l'établissement (UAI)",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": []
+},
+"label": "UAI",
+"type": "text"
+},
+{
+"name": "libelle",
+"description": "Nom de l'établissement",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": []
+},
+"label": "Libellé",
+"type": "text"
+},
+{
+"name": "region",
+"description": "Nom de la région où se situe l'établissement",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": []
+},
+"label": "Région",
+"type": "text"
+},
+{
+"name": "dont_apprentis_eple",
+"description": "Ensemble des élèves en voie professionnelle ou BTS de l'établissement, qu'ils soient en voie scolaire ou en apprentissage (\"ensemble\") ou sous-ensemble de ceux en apprentissage (\"dont apprentis\") ou sous-ensemble de ceux en voie scolaire (\"dont élèves en voie pro sco\")",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": []
+},
+"label": "Dont apprentis EPLE",
+"type": "text"
+},
+{
+"name": "part_en_poursuite_d_etudes",
+"description": "Devenir des jeunes après la formation - Parmi les lycéens et étudiants inscrits en dernière année d'un cycle d'études professionnel de niveau CAP à BTS, part de ceux qui sont toujours en formation en France à la rentrée suivante (y compris en cas de redoublement). (cumul sur deux années scolaires). Identique au taux de poursuite d'études",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "DEVENIR Part poursuite études",
+"type": "double"
+},
+{
+"name": "part_en_emploi_6_mois_apres_la_sortie",
+"description": "Devenir des jeunes après la formation - Parmi les lycéens et étudiants inscrits en dernière année d'un cycle d'études professionnel de niveau CAP à BTS, part de ceux qui sont en emploi salarié 6 mois après leur sortie d'études. (cumul sur deux années scolaires)",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "DEVENIR Part en emploi 6 mois",
+"type": "double"
+},
+{
+"name": "part_des_autres_situations",
+"description": "Devenir des jeunes après la formation - Parmi les lycéens et étudiants inscrits en dernière année d'un cycle d'études professionnel de niveau CAP à BTS, part d'autres situations à 6 mois (ni en études en France, ni en emploi salarié sur le champ de la DSN en France) . (cumul sur deux années scolaires)",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "DEVENIR Part autre situation 6 mois",
+"type": "double"
+},
+{
+"name": "taux_poursuite_etudes",
+"description": "Parmi les lycéens et étudiants inscrits en dernière année d'un cycle d'études professionnel de niveau CAP à BTS, part de ceux qui sont toujours en formation en France à la rentrée suivante (y compris en cas de redoublement). (cumul sur deux années scolaires)",
+"annotations": {},
+"label": "Taux poursuite études",
+"type": "double"
+},
+{
+"name": "taux_emploi_6_mois",
+"description": "Parmi les lycéens et étudiants inscrits en dernière année d'un cycle d'études professionnel de niveau CAP à BTS et qui ne sont plus en formation en France à la rentrée suivante, part de ceux qui sont en emploi salarié 6 mois après leur sortie d'études. (cumul sur deux cohortes de lycéens et étudiants sortants de formation)",
+"annotations": {},
+"label": "Taux emploi 6 mois",
+"type": "double"
+},
+{
+"name": "taux_emploi_6_mois_attendu",
+"description": "Taux d'emploi attendu, 6 mois après la sortie :  taux d’emploi moyen, à 6 mois, des lycéens et étudiants accueillis dans des établissements comparables en termes de profil des lycéens et étudiants, de formations dispensées et de taux de chômage de la zone d'emploi du domicile des lycéens et étudiants. Ce taux est calculé par un modèle statistique. Le taux attendu, et par conséquent la valeur ajoutée de l’établissement sur le taux d’emploi, sont calculés de manière indépendante pour chacun des trois types d’établissements concernés par InserJeunes  (CFA, lycées professionnels du ministère de l’éducation nationale et lycées professionnels du ministère de l’Agriculture).",
+"annotations": {},
+"label": "Taux emploi attendu 6 mois",
+"type": "double"
+},
+{
+"name": "va_emploi_6_mois",
+"description": "Valeur ajoutée, 6 mois après la sortie  :  différence entre le taux d’emploi salarié à 6 mois observé de l’établissement et le taux d’emploi attendu. Cet indicateur  permet de comparer de façon pertinente le taux d’emploi salarié des lycéens et étudiants sortant de cet établissement au taux d’emploi d’établissements similaires.  Il s’agit donc d’une mesure relative qui peut prendre des valeurs positives ou négatives. La valeur ajoutée est positive lorsque le taux d’emploi salarié en France à 6 mois est supérieur au taux d’emploi à 6 mois attendu. Cela signifie que les lycéens et étudiants sortant de l’établissement s’insèrent, en moyenne, mieux que les lycéens et étudiants sortants ayant les mêmes caractéristiques individuelles, issus des mêmes formations et résidant dans une zone d’emploi avec un taux de chômage similaire. Dans ce cas, l’apport propre de l’établissement dans l’insertion professionnelle de ses lycéens et étudiants est positif. Il est négatif dans le cas contraire. Les valeurs extrêmes ont été bornées à -12 et +12. Ainsi, une VA égale à 12 signifie '12 ou plus' (-12 signifie ' -12 ou moins').  ",
+"annotations": {},
+"label": "VA emploi 6 mois",
+"type": "double"
+},
+{
+"name": "taux_emploi_12_mois",
+"description": "Parmi les lycéens et étudiants inscrits en dernière année d'un cycle d'études professionnel de niveau CAP à BTS et qui ne sont plus en formation en France à la rentrée suivante, part de ceux qui sont en emploi salarié 12 mois après leur sortie d'études. (cumul sur deux cohortes de lycéens et étudiants sortants de formation)",
+"annotations": {},
+"label": "Taux emploi 12 mois",
+"type": "double"
+},
+{
+"name": "taux_emploi_18_mois",
+"description": "Parmi les lycéens et étudiants inscrits en dernière année d'un cycle d'études professionnel de niveau CAP à BTS et qui ne sont plus en formation en France à la rentrée suivante, part de ceux qui sont en emploi salarié 18 mois après leur sortie d'études. (cumul sur deux cohortes de lycéens et étudiants sortants de formation)",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Taux emploi 18 mois",
+"type": "double"
+},
+{
+"name": "taux_emploi_24_mois",
+"description": "Parmi les lycéens et étudiants inscrits en dernière année d'un cycle d'études professionnel de niveau CAP à BTS et qui ne sont plus en formation en France à la rentrée suivante, part de ceux qui sont en emploi salarié 24 mois après leur sortie d'études. (cumul sur deux cohortes de lycéens et étudiants sortants de formation)",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Taux emploi 24 mois",
+"type": "double"
+}
+],
+"metas": {
+"default": {
+"title": "Inserjeunes Voie professionnelle scolaire par établissement relevant du ministère de l'éducation nationale",
+"description": "<p>Ces données sont issues du système d'information DEPP/DARES InserJeunes et rendent compte du devenir des lycéens et étudiants inscrits en dernière année d'une formation en voie professionnelle de niveau 3 à 5 (CAP, baccalauréat professionnel, BTS, Mention complémentaire de niveau 3 et 4), dispensée dans un Etablissement Public Local d'Enseignement (EPLE) ou dans un lycée privé sous contrat, sous tutelle du ministère de l'éducation nationale.<br><br>Les indicateurs issus d'InserJeunes au niveau établissement sont calculés pour deux millésimes cumulés :<br><br>- les jeunes inscrits en N et N-1 pour le taux de poursuite d'études et le devenir des jeunes après la formation.<br>- les sortants d'études en N et N-1 pour les taux d'emploi à 6, 12, 18 et 24 mois après la sortie d'études.<br><br>Depuis le cumul 2022-2023, l'insertion professionnelle n'est plus restreinte à l'emploi salarié privé et inclut l'emploi salarié public. Inserjeunes couvre ainsi l’ensemble de l’emploi salarié en France, à l’exception des emplois salariés relevant de particuliers employeurs. L’emploi non salarié ou à l’étranger n'est pas couvert.</p><p>Pour les sortants 2023-2024, seule la situation à 6 et 12 mois est disponible à ce jour. La situation à 18 et 24 mois sera complétée ultérieurement.<br><br>Pour en savoir plus :</p><p><a href=\"https://www.education.gouv.fr/depp/insertion-des-lyceens-professionnels-et-etudiants-de-niveau-cap-bts-deux-ans-apres-leur-sortie-d-505061\" target=\"_blank\">Jounin\n É., Lemaire É., Perrin T., 2026,  \"Insertion des lycéens professionnels\n et étudiants de niveau CAP à BTS deux ans après leur sortie d'études en\n 2023 - 59 % sont en emploi salarié en juillet 2025\"</a>, <i>Note d'Information</i>, n° 26-26, DEPP-DARES.<br><a href=\"https://doi.org/10.48464/ni-26-26\" target=\"_blank\">https://doi.org/10.48464/ni-26-26</a></p><p><a href=\"https://www.education.gouv.fr/depp/insertion-des-lyceens-professionnels-et-etudiants-de-niveau-cap-bts-six-mois-apres-leur-sortie-d-468230\" target=\"_blank\">Loiseau\n C., Jounin E., 2025, \"Insertion des lycéens professionnels et étudiants\n de niveau CAP à BTS six mois après leur sortie d’études en 2024 - 41 % \nsont en emploi salarié en janvier 2025\", </a><i>Note d'Information</i>, n° 25-68, DEPP-DARES.<br><a href=\"https://doi.org/10.48464/ni-25-68\" target=\"_blank\">https://doi.org/10.48464/ni-25-68</a><br></p><p><a href=\"https://www.education.gouv.fr/depp/insertion-des-lyceens-professionnels-et-etudiants-de-niveau-cap-bts-deux-ans-apres-leur-sortie-d-504308\" target=\"_blank\">Antoine\n R., Grandperrin N., 2025, \"Insertion des lycéens professionnels et \nétudiants de niveau CAP à BTS deux ans après leur sortie d’études en \n2022 - 61 % sont en emploi salarié en juillet 2024\", </a><i>Note d'Information</i>, n° 25-38, DEPP-DARES.<br><a href=\"https://doi.org/10.48464/ni-25-38\" target=\"_blank\">https://doi.org/10.48464/ni-25-38</a></p><p><a href=\"https://doi.org/10.48464/ni-26-26\" target=\"_blank\">Filles et garçons sur le chemin de l'égalité, de l'école à l'enseignement supérieur, édition 2026</a></p>",
+"theme": [
+"Elèves, étudiants, et apprentis"
+],
+"keyword": [
+"lycéen",
+"poursuite études",
+"voie professionnelle",
+"insertion professionnelle",
+"inserjeunes",
+"lycée",
+"lycée professionnel",
+"établissement"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2026-07-20T08:29:09.764000+00:00",
+"publisher": "DEPP – Ministère chargé de l’éducation nationale",
+"references": null,
+"attributions": null,
+"update_frequency": "ANNUAL_3",
+"bbox": null,
+"data_processed": "2026-06-25T13:10:44.391000+00:00",
+"federated": false,
+"geographic_reference": null,
+"geographic_reference_auto": false,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-07-20T08:29:11.116000+00:00",
+"modified_updates_on_data_change": true,
+"modified_updates_on_metadata_change": true,
+"parent_domain": null,
+"records_count": 30944,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": null,
+"timezone": null
+},
+"dcat": {
+"created": "2021-04-15",
+"issued": "2021-04-14",
+"creator": "Bureau des études statistiques sur la formation des adultes, l'apprentissage et l'insertion des jeunes",
+"contributor": "DARES – Ministère en charge du travail",
+"contact_name": null,
+"contact_email": "inserjeunes@education.gouv.fr",
+"accrualperiodicity": "threeTimesAYear",
+"spatial": "France hors Mayotte",
+"temporal": "Chaque année : emploi salarié mesuré à 6 mois, 12 mois, 18 mois et 24 mois après la sortie d'études",
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": "2018-12-31T23:00:00+00:00",
+"temporal_coverage_end": "2024-12-30T23:00:00+00:00",
+"accessRights": "Le producteur et le diffuseur des données ne sont pas responsables des interprétations ou déductions faites à partir de l'utilisation des données.  Pour citer la publication : \"Source Depp, plateforme de données ouvertes data.education.gouv.fr\"  En cas de retraitement des données, ajouter à la mention précédente :  \"traitement [auteur, nom de votre organisation]\"",
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": "Chaque année : emploi salarié mesuré à 6 mois, 12 mois, 18 mois et 24 mois après la sortie d'études",
+"periode-donnees": "2019-2024",
+"champ": "Etablissements Publics Locaux d'Enseignement (EPLE) ou lycées privés sous contrat, sous tutelle du ministère de l'éducation nationale.",
+"couverture-geographique": [
+"France hors Mayotte"
+],
+"unite-statistique": "Lycéens et étudiants inscrits en dernière année de formation en voie professionnelle de niveau CAP à BTS en lycée public et privé sous contrat (pour le taux de poursuite d'études) Sortants d'une dernière année de formation en voie professionnelle de niveau CAP à BTS en lycée public et privé sous contrat (pour le taux d'emploi salarié)",
+"secret-statistique": "Pour des raisons de respect de la confidentialité, les statistiques ne sont diffusées que si les effectifs sont supérieurs ou égaux à 20.",
+"source": "Traitement statistique DEPP-DARES, InserJeunes"
+}
+},
+"features": [
+"analyze"
+]
+},
+{
+"dataset_id": "fr-en-effectifs-etudiants-cpge-par-annee-et-par-sexe",
+"has_attachments": false,
+"attachments_count": 0,
+"has_records": true,
+"fields": [
+{
+"name": "rentree_scolaire",
+"description": "rentrée scolaire",
+"annotations": {
+"facet": [],
+"sortable": []
+},
+"label": "Rentrée Scolaire",
+"type": "text"
+},
+{
+"name": "ministere",
+"description": "ministère dont dépend la classe préparatoire",
+"annotations": {
+"facet": [],
+"sortable": []
+},
+"label": "Ministère",
+"type": "text"
+},
+{
+"name": "filiere",
+"description": "filière de la CPGE",
+"annotations": {
+"facet": [],
+"sortable": []
+},
+"label": "Filière",
+"type": "text"
+},
+{
+"name": "annee",
+"description": "année de la CPGE",
+"annotations": {
+"facet": [],
+"sortable": []
+},
+"label": "Année",
+"type": "text"
+},
+{
+"name": "nombre_de_garcons_dans_le_public",
+"description": "nombre de garçons dans le public",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de garçons dans le public",
+"type": "int"
+},
+{
+"name": "nombre_de_filles_dans_le_public",
+"description": "nombre de filles dans le public",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de filles dans le public",
+"type": "int"
+},
+{
+"name": "nombre_de_garcons_dans_le_prive",
+"description": "nombre de garçons dans le privé",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de garçons dans le privé",
+"type": "int"
+},
+{
+"name": "nombre_de_filles_dans_le_prive",
+"description": "nombre de filles dans le privé",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de filles dans le privé",
+"type": "int"
+}
+],
+"metas": {
+"default": {
+"title": "Effectifs d’étudiants en CPGE par année et par sexe",
+"description": "<p>Tableau statistique : effectifs d'étudiants en CPGE  selon l'année et le sexe</p><p>Source : RERS - Repères et références statistiques sur les enseignements, la formation et la recherche</p><p> </p><p>À compter de 2021 ces données figurent dans les jeux de données : </p><p>\"Parcoursup - vœux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements\"</p>",
+"theme": [
+"Elèves, étudiants, et apprentis",
+"Etablissements (dont IPS)"
+],
+"keyword": [
+"EPLE",
+"post-bac",
+"lycée"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2026-01-29T18:25:45.806000+00:00",
+"publisher": "DNE - Ministère de l'Education Nationale",
+"references": null,
+"attributions": null,
+"update_frequency": null,
+"bbox": null,
+"data_processed": "2026-01-29T18:25:45.806000+00:00",
+"federated": false,
+"geographic_reference": [
+"world_fr"
+],
+"geographic_reference_auto": true,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-01-29T18:25:45.940000+00:00",
+"modified_updates_on_data_change": true,
+"modified_updates_on_metadata_change": true,
+"parent_domain": null,
+"records_count": 144,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": [
+"France"
+],
+"timezone": null
+},
+"dcat": {
+"created": "2016-12-06",
+"issued": null,
+"creator": null,
+"contributor": null,
+"contact_name": null,
+"contact_email": null,
+"accrualperiodicity": "Annuelle",
+"spatial": "France",
+"temporal": "2009-2020",
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": "2008-12-31T23:00:00+00:00",
+"temporal_coverage_end": "2020-12-30T23:00:00+00:00",
+"accessRights": null,
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": null,
+"periode-donnees": null,
+"champ": null,
+"couverture-geographique": null,
+"unite-statistique": null,
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"analyze"
+]
+},
+{
+"dataset_id": "fr-en-indicateurs-de-resultat-des-lycees-denseignement-general-et-technologique",
+"has_attachments": true,
+"attachments_count": 1,
+"has_records": true,
+"fields": [
+{
+"name": "etablissement",
+"description": "nom de l'établissement",
+"annotations": {
+"facet": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Etablissement",
+"type": "text"
+},
+{
+"name": "annee",
+"description": "année",
+"annotations": {
+"facet": [],
+"sortable": [],
+"facetsort": [
+"-alphanum"
+]
+},
+"label": "Annee",
+"type": "text"
+},
+{
+"name": "ville",
+"description": "ville",
+"annotations": {
+"facet": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Ville",
+"type": "text"
+},
+{
+"name": "code_etablissement",
+"description": "code uai (unité administrative immatriculée) de l'établissement",
+"annotations": {
+"facet": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "UAI",
+"type": "text"
+},
+{
+"name": "commune",
+"description": "code commune",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Code commune",
+"type": "text"
+},
+{
+"name": "academie",
+"description": "académie",
+"annotations": {
+"facet": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Academie",
+"type": "text"
+},
+{
+"name": "departement",
+"description": "département",
+"annotations": {
+"facet": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Departement",
+"type": "text"
+},
+{
+"name": "secteur_public_pu_prive_pr",
+"description": "secteur d'enseignement (public/privé)",
+"annotations": {
+"facet": [],
+"sortable": []
+},
+"label": "Secteur",
+"type": "text"
+},
+{
+"name": "effectif_presents_serie_l",
+"description": "effectif présent série L",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - L",
+"type": "int"
+},
+{
+"name": "effectif_presents_serie_es",
+"description": "effectif présent série ES",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - ES",
+"type": "int"
+},
+{
+"name": "effectif_presents_serie_s",
+"description": "effectif présent série S",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - S",
+"type": "int"
+},
+{
+"name": "effectif_presents_serie_stg",
+"description": "effectif présent série STG",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - STG",
+"type": "int"
+},
+{
+"name": "effectif_presents_serie_sti2d",
+"description": "effectif présent série STI2D",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - STI2D",
+"type": "int"
+},
+{
+"name": "effectif_presents_serie_std2a",
+"description": "effectif présent série STD2A",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - STD2A",
+"type": "int"
+},
+{
+"name": "effectif_presents_serie_stmg",
+"description": "effectif présent série STMG",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - STMG",
+"type": "int"
+},
+{
+"name": "effectif_presents_serie_sti",
+"description": "effectif présent série STI",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - STI",
+"type": "int"
+},
+{
+"name": "effectif_presents_serie_stl",
+"description": "effectif présent série STL",
+"annotations": {
+"sortable": [],
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - STL",
+"type": "int"
+},
+{
+"name": "effectif_presents_serie_st2s",
+"description": "effectif présent série ST2S",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - ST2S",
+"type": "int"
+},
+{
+"name": "effectif_presents_serie_musiq_danse",
+"description": "effectif présent série TMD",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - TMD",
+"type": "int"
+},
+{
+"name": "effectif_presents_serie_hotellerie",
+"description": "effectif présent série STHR",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - STHR",
+"type": "int"
+},
+{
+"name": "effectif_presents_total_series",
+"description": "effectif présent toutes séries",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Presents - Toutes series",
+"type": "int"
+},
+{
+"name": "taux_brut_de_reussite_serie_l",
+"description": "taux brut de réussite série L",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - L",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_serie_es",
+"description": "taux brut de réussite série ES",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - ES",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_serie_s",
+"description": "taux brut de réussite série S",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - S",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_serie_stg",
+"description": "taux brut de réussite série STG",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - STG",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_serie_sti2d",
+"description": "taux brut de réussite série STI2D",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - STI2D",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_serie_std2a",
+"description": "taux brut de réussite série STD2A",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - STD2A",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_serie_stmg",
+"description": "taux brut de réussite série STMG",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - STMG",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_serie_sti",
+"description": "taux brut de réussite série STI",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - STI",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_serie_stl",
+"description": "taux brut de réussite série STL",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - STL",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_serie_st2s",
+"description": "taux brut de réussite série ST2S",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - ST2S",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_serie_musiq_danse",
+"description": "taux brut de réussite série TMD",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - TMD",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_serie_hotellerie",
+"description": "taux brut de réussite série STHR",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - STHR",
+"type": "text"
+},
+{
+"name": "taux_brut_de_reussite_total_series",
+"description": "taux brut de réussite toutes séries",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite - Toutes series",
+"type": "double"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_l",
+"description": "taux de réussite attendu par référence à l'académie série L",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - L",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_es",
+"description": "taux de réussite attendu par référence à l'académie série ES",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - ES",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_s",
+"description": "taux de réussite attendu par référence à l'académie série S",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - S",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_stg",
+"description": "taux de réussite attendu par référence à l'académie série STG",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - STG",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_sti2d",
+"description": "taux de réussite attendu par référence à l'académie série STI2D",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - STI2D",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_std2a",
+"description": "taux de réussite attendu par référence à l'académie série STD2A",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - STD2A",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_stmg",
+"description": "taux de réussite attendu par référence à l'académie série STMG",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - STMG",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_sti",
+"description": "taux de réussite attendu par référence à l'académie série STI",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - STI",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_stl",
+"description": "taux de réussite attendu par référence à l'académie série STL",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - STL",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_st2s",
+"description": "taux de réussite attendu par référence à l'académie série ST2S",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - ST2S",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_musiq_danse",
+"description": "taux de réussite attendu par référence à l'académie série TMD",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - TMD",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_serie_hotellerie",
+"description": "taux de réussite attendu par référence à l'académie série STHR",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - STHR",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_acad_total_series",
+"description": "taux de réussite attendu par référence à l'académie toutes séries",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu acad - Toutes series",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_l",
+"description": "taux de réussite attendu par référence à la France entière série L",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - L",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_es",
+"description": "taux de réussite attendu par référence à la France entière série ES",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - ES",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_s",
+"description": "taux de réussite attendu par référence à la France entière série S",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - S",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_stg",
+"description": "taux de réussite attendu par référence à la France entière série STG",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - STG",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_sti2d",
+"description": "taux de réussite attendu par référence à la France entière série STI2D",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - STI2D",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_std2a",
+"description": "taux de réussite attendu par référence à la France entière série STD2A",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - STD2A",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_stmg",
+"description": "taux de réussite attendu par référence à la France entière série STMG",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - STMG",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_sti",
+"description": "taux de réussite attendu par référence à la France entière série STI",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - STI",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_stl",
+"description": "taux de réussite attendu par référence à la France entière série STL",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - STL",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_st2s",
+"description": "taux de réussite attendu par référence à la France entière série ST2S",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - ST2S",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_musiq_danse",
+"description": "taux de réussite attendu par référence à la France entière série TMD",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - TMD",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_serie_hotellerie",
+"description": "taux de réussite attendu par référence à la France entière série STHR",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - STHR",
+"type": "text"
+},
+{
+"name": "taux_reussite_attendu_france_total_series",
+"description": "taux de réussite attendu par référence à la France entière toutes séries",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de reussite attendu france - Toutes series",
+"type": "text"
+},
+{
+"name": "taux_mention_brut_serie_l",
+"description": "Taux de mentions brut série L",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions - L",
+"type": "text"
+},
+{
+"name": "taux_mention_brut_serie_es",
+"description": "Taux de mentions brut série ES",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions - ES",
+"type": "text"
+},
+{
+"name": "taux_mention_brut_serie_s",
+"description": "Taux de mentions brut série S",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions - S",
+"type": "text"
+},
+{
+"name": "taux_mention_brut_serie_sti2d",
+"description": "Taux de mentions brut série STI2D",
+"annotations": {
+"sortable": []
+},
+"label": "Taux de mentions - STI2D",
+"type": "text"
+},
+{
+"name": "taux_mention_brut_serie_std2a",
+"description": "Taux de mentions brut série STD2A",
+"annotations": {
+"sortable": []
+},
+"label": "Taux de mentions - STD2A",
+"type": "text"
+},
+{
+"name": "taux_mention_brut_serie_stmg",
+"description": "Taux de mentions brut série STMG",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions - STMG",
+"type": "text"
+},
+{
+"name": "taux_mention_brut_serie_stl",
+"description": "Taux de mentions brut série STL",
+"annotations": {
+"sortable": []
+},
+"label": "Taux de mentions - STL",
+"type": "text"
+},
+{
+"name": "taux_mention_brut_serie_st2s",
+"description": "Taux de mentions brut série ST2S",
+"annotations": {
+"sortable": []
+},
+"label": "Taux de mentions - ST2S",
+"type": "text"
+},
+{
+"name": "taux_mention_brut_serie_musiq_danse",
+"description": "Taux de mentions brut séries TMD",
+"annotations": {
+"sortable": []
+},
+"label": "Taux de mentions - TMD",
+"type": "text"
+},
+{
+"name": "taux_mention_brut_serie_hotellerie",
+"description": "Taux de mentions brut série Hôtellerie",
+"annotations": {
+"sortable": []
+},
+"label": "Taux de mentions - STHR",
+"type": "text"
+},
+{
+"name": "taux_mention_brut_toutes_series",
+"description": "Taux de mentions brut toutes séries",
+"annotations": {},
+"label": "Taux de mentions - Toutes series",
+"type": "double"
+},
+{
+"name": "taux_mention_attendu_serie_l",
+"description": "Taux de mentions attendu série L",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions attendu - L",
+"type": "text"
+},
+{
+"name": "taux_mention_attendu_serie_es",
+"description": "Taux de mentions attendu série ES",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions attendu - ES",
+"type": "text"
+},
+{
+"name": "taux_mention_attendu_serie_s",
+"description": "Taux de mentions attendu série S",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions attendu - S",
+"type": "text"
+},
+{
+"name": "taux_mention_attendu_serie_sti2d",
+"description": "Taux de mentions attendu série STI2D",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions attendu - STI2D",
+"type": "text"
+},
+{
+"name": "taux_mention_attendu_serie_std2a",
+"description": "Taux de mentions attendu série STD2A",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions attendu - STD2A",
+"type": "text"
+},
+{
+"name": "taux_mention_attendu_serie_stmg",
+"description": "Taux de mentions attendu série STMG",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions attendu - STMG",
+"type": "text"
+},
+{
+"name": "taux_mention_attendu_serie_stl",
+"description": "Taux de mentions attendu série STL",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions attendu - STL",
+"type": "text"
+},
+{
+"name": "taux_mention_attendu_serie_st2s",
+"description": "Taux de mentions attendu série ST2S",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions attendu - ST2S",
+"type": "text"
+},
+{
+"name": "taux_mention_attendu_serie_musiq_danse",
+"description": "Taux de mentions attendu séries TMD",
+"annotations": {
+"sortable": []
+},
+"label": "Taux de mentions attendu - TMD",
+"type": "text"
+},
+{
+"name": "taux_mention_attendu_serie_hotellerie",
+"description": "Taux de mentions attendu série STHR",
+"annotations": {
+"sortable": []
+},
+"label": "Taux de mentions attendu - STHR",
+"type": "text"
+},
+{
+"name": "taux_mention_attendu_toutes_series",
+"description": "Taux de mentions attendu toutes séries ",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux de mentions attendu - Toutes series",
+"type": "text"
+},
+{
+"name": "sructure_pedagogique_en_5_groupes",
+"description": "1 : lycée général\n2 : lycée polyvalent à dominante tertiaire\n3 : lycée polyvalent à dominante industrielle\n4/5 : lycée technologique à dominante tertiaire (plus de 75 % des élèves sont en filière technologique avec une majorité en séries tertiaires)\n6 : lycée technologique à dominante industrielle (plus de 75 % des élèves sont en filière technologique avec une majorité en séries industrielles)",
+"annotations": {
+"sortable": []
+},
+"label": "Structure pedagogique 5 groupes",
+"type": "text"
+},
+{
+"name": "sructure_pedagogique_en_7_groupes",
+"description": "A : Lycée avec uniquement L, ES et S\nB : Lycée avec uniquement L, ES, S et STMG\nC : Lycée avec L, ES, S, STMG et autre(s) série(s)\nD : Lycée avec L, ES, S et autre(s) série(s) hors STMG\nE : Lycée hôtelier\nF : Autre lycée avec au plus trois séries\nG : Autre lycée avec au moins quatre séries",
+"annotations": {
+"sortable": []
+},
+"label": "Structure pedagogique 7 groupes",
+"type": "text"
+},
+{
+"name": "pourcentage_bacheliers_sortants_2de_1re_term_etab",
+"description": "pourcentage d'élèves de seconde, première ou terminale qui quittent l'établissement avec le baccalauréat",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Pourcentage bacheliers sortants 2de 1re Terminale Etablissement",
+"type": "text"
+},
+{
+"name": "pourcentage_bacheliers_sortants_terminales_etab",
+"description": "pourcentage d'élèves de terminale qui quittent l'établissement avec le baccalauréat",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Pourcentage bacheliers sortants Terminales Etablissement",
+"type": "text"
+},
+{
+"name": "pourcentage_bacheliers_sortants_2de_1re_term_acad",
+"description": "pourcentage d'élèves de seconde, première ou terminale qui quittent les établissements de l'académie avec le baccalauréat",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Pourcentage bacheliers sortants 2de 1re Terminale Acad",
+"type": "text"
+},
+{
+"name": "pourcentage_bacheliers_sortants_terminales_acad",
+"description": "pourcentage d'élèves de terminale qui quittent les établissements de l'académie avec le baccalauréat",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Pourcentage bacheliers sortants Terminale Acad",
+"type": "text"
+},
+{
+"name": "pourcentage_bacheliers_sortants_2de_1re_term_france",
+"description": "pourcentage d'élèves de seconde, première ou terminale qui quittent les établissements de France avec le baccalauréat",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Pourcentage bacheliers sortants 2de 1re Terminale France",
+"type": "text"
+},
+{
+"name": "pourcentage_bacheliers_sortants_terminales_france",
+"description": "pourcentage d'élèves de  terminale qui quittent les établissements de France avec le baccalauréat",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Pourcentage bacheliers sortants Terminale France",
+"type": "text"
+},
+{
+"name": "effectif_de_seconde",
+"description": "effectif de seconde",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Effectif de seconde",
+"type": "int"
+},
+{
+"name": "effectif_de_premiere",
+"description": "effectif de première",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Effectif de premiere",
+"type": "int"
+},
+{
+"name": "effectif_de_terminale",
+"description": "effectif de terminale",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Effectif de terminale",
+"type": "int"
+},
+{
+"name": "taux_acces_brut_seconde_bac",
+"description": "Cet indicateur évalue, pour un élève de seconde, la probabilité qu'il obtienne le baccalauréat à l'issue d'une scolarité entièrement effectuée dans le lycée, quel que soit le nombre d'années nécessaire",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux d'acces 2nde-bac",
+"type": "double"
+},
+{
+"name": "taux_acces_attendu_acad_seconde_bac",
+"description": "Taux d'accès de la seconde au baccalauréat, si les élèves du lycée accédaient au baccalauréat comme tous les élèves de mêmes âge, origine sociale, sexe et niveau scolaire et scolarisés dans des établissements comparables en terme de population accueillie (référence académique)",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux d'acces attendu acad 2nde-bac",
+"type": "text"
+},
+{
+"name": "taux_acces_attendu_france_seconde_bac",
+"description": "Taux d'accès de la seconde au baccalauréat, si les élèves du lycée accédaient au baccalauréat comme tous les élèves de mêmes âge, origine sociale, sexe et niveau scolaire et scolarisés dans des établissements comparables en terme de population accueillie (référence nationale)",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux d'acces attendu france 2nde-bac",
+"type": "text"
+},
+{
+"name": "taux_acces_brut_premiere_bac",
+"description": "Cet indicateur évalue, pour un élève de première, la probabilité qu'il obtienne le baccalauréat  dans le lycée, quel que soit le nombre d'années nécessaire",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux d'acces 1ere-bac",
+"type": "text"
+},
+{
+"name": "taux_acces_attendu_acad_premiere_bac",
+"description": "Taux d'accès de la première au baccalauréat, si les élèves du lycée accédaient au baccalauréat comme tous les élèves de mêmes âge, origine sociale, sexe et niveau scolaire et scolarisés dans des établissements comparables en terme de population accueillie (référence académique)",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux d'acces attendu acad 1ere-bac",
+"type": "text"
+},
+{
+"name": "taux_acces_attendu_france_premiere_bac",
+"description": "Taux d'accès de la première au baccalauréat, si les élèves du lycée accédaient au baccalauréat comme tous les élèves de mêmes âge, origine sociale, sexe et niveau scolaire et scolarisés dans des établissements comparables en terme de population accueillie (référence nationale)",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux d'acces attendu france 1ere-bac",
+"type": "text"
+},
+{
+"name": "taux_acces_brut_terminale_bac",
+"description": "Cet indicateur évalue, pour un élève de terminale, la probabilité qu'il obtienne le baccalauréat  dans le lycée, quel que soit le nombre d'années nécessaire",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux d'acces terminale-bac",
+"type": "text"
+},
+{
+"name": "taux_acces_attendu_france_terminale_bac",
+"description": "Taux d'accès de la terminale au baccalauréat, si les élèves du lycée accédaient au baccalauréat comme tous les élèves de mêmes âge, origine sociale, sexe et niveau scolaire et scolarisés dans des établissements comparables en terme de population accueillie (référence nationale)",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Taux d'acces attendu france terminale-bac",
+"type": "text"
+},
+{
+"name": "libelle_region_2016",
+"description": "nom de la région",
+"annotations": {
+"facet": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Region",
+"type": "text"
+},
+{
+"name": "code_region_2016",
+"description": "code de la région",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Code region",
+"type": "text"
+},
+{
+"name": "code_departement",
+"description": "code du département",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Code departement",
+"type": "text"
+},
+{
+"name": "va_reu_total",
+"description": "valeur ajoutée du taux de réussite toutes séries. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu.",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - Toutes series",
+"type": "text"
+},
+{
+"name": "va_acc_seconde",
+"description": "valeur ajoutée du taux d'accès de la seconde au bac. Il s'agit de la différence entre le taux d'accès brut et la taux d'accès attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux d'acces 2nde-bac",
+"type": "text"
+},
+{
+"name": "va_men_total",
+"description": "valeur ajoutée du taux de mentions toutes séries. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de mentions - Toutes series",
+"type": "text"
+},
+{
+"name": "va_reu_l",
+"description": "valeur ajoutée du taux de réussite pour la série L. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - L",
+"type": "text"
+},
+{
+"name": "va_reu_es",
+"description": "valeur ajoutée du taux de réussite pour la série ES. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - ES",
+"type": "text"
+},
+{
+"name": "va_reu_s",
+"description": "valeur ajoutée du taux de réussite pour la série S. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - S",
+"type": "text"
+},
+{
+"name": "va_reu_stg",
+"description": "valeur ajoutée du taux de réussite pour la série STG. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - STG",
+"type": "text"
+},
+{
+"name": "va_reu_sti2d",
+"description": "valeur ajoutée du taux de réussite pour la série STI2D. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - STI2D",
+"type": "text"
+},
+{
+"name": "va_reu_std2a",
+"description": "valeur ajoutée du taux de réussite pour la série STD2A. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - STD2A",
+"type": "text"
+},
+{
+"name": "va_reu_stmg",
+"description": "valeur ajoutée du taux de réussite pour la série STMG. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - STMG",
+"type": "text"
+},
+{
+"name": "va_reu_sti",
+"description": "valeur ajoutée du taux de réussite pour la série STI. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - STI",
+"type": "text"
+},
+{
+"name": "va_reu_stl",
+"description": "valeur ajoutée du taux de réussite pour la série STL. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - STL",
+"type": "text"
+},
+{
+"name": "va_reu_st2s",
+"description": "valeur ajoutée du taux de réussite pour la série ST2S. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - ST2S",
+"type": "text"
+},
+{
+"name": "va_reu_musiq_danse",
+"description": "valeur ajoutée du taux de réussite pour la série TMD. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - TMD",
+"type": "text"
+},
+{
+"name": "va_reu_hotellerie",
+"description": "valeur ajoutée du taux de réussite pour la série STHR. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu",
+"annotations": {
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de reussite - STHR",
+"type": "text"
+},
+{
+"name": "va_acc_premiere",
+"description": "valeur ajoutée du taux d'accès de la première au bac. Il s'agit de la différence entre le taux d'accès brut et la taux d'accès attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux d'acces 1ere-bac",
+"type": "text"
+},
+{
+"name": "va_acc_terminale",
+"description": "valeur ajoutée du taux d'accès de la terminale au bac. Il s'agit de la différence entre le taux d'accès brut et la taux d'accès attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux d'acces terminale-bac",
+"type": "text"
+},
+{
+"name": "va_men_l",
+"description": "valeur ajoutée du taux de mentions pour la série L. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de mentions - L",
+"type": "text"
+},
+{
+"name": "va_men_es",
+"description": "valeur ajoutée du taux de mentions pour la série ES. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de mentions - ES",
+"type": "text"
+},
+{
+"name": "va_men_s",
+"description": "valeur ajoutée du taux de mentions pour la série S. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de mentions - S",
+"type": "text"
+},
+{
+"name": "va_men_sti2d",
+"description": "valeur ajoutée du taux de mentions pour la série STI2D. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de mentions - STI2D",
+"type": "text"
+},
+{
+"name": "va_men_std2a",
+"description": "valeur ajoutée du taux de mentions pour la série STD2A. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de mentions - STD2A",
+"type": "text"
+},
+{
+"name": "va_men_stmg",
+"description": "valeur ajoutée du taux de mentions pour la série STMG. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de mentions - STMG",
+"type": "text"
+},
+{
+"name": "va_men_stl",
+"description": "valeur ajoutée du taux de mentions pour la série STL. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de mentions - STL",
+"type": "text"
+},
+{
+"name": "va_men_st2s",
+"description": "valeur ajoutée du taux de mentions pour la série ST2S. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de mentions - ST2S",
+"type": "text"
+},
+{
+"name": "va_men_musiq_danse",
+"description": "valeur ajoutée du taux de mentions pour la série TMD. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de mentions - TMD",
+"type": "text"
+},
+{
+"name": "va_men_hotellerie",
+"description": "valeur ajoutée du taux de mentions pour la série STHR. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"sortable": []
+},
+"label": "Valeur ajoutee du taux de mentions - STHR",
+"type": "text"
+},
+{
+"name": "presents_gnle",
+"description": "effectif présent série générale",
+"annotations": {},
+"label": "Presents - Gnle",
+"type": "double"
+},
+{
+"name": "taux_reu_brut_gnle",
+"description": "taux brut de réussite série générale",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Taux de reussite - Gnle",
+"type": "text"
+},
+{
+"name": "va_reu_gnle",
+"description": "valeur ajoutée du taux de réussite pour la série générale. Il s'agit de la différence entre le taux de réussite brut et la taux de réussite attendu.",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Valeur ajoutee du taux de réussite - Gnle",
+"type": "text"
+},
+{
+"name": "taux_men_brut_gnle",
+"description": "Taux de mentions brut série générale",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Taux de mentions - Gnle",
+"type": "text"
+},
+{
+"name": "va_men_gnle",
+"description": "valeur ajoutée du taux de mentions pour la série générale. Il s'agit de la différence entre le taux de mentions brut et la taux de mentions attendu",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Valeur ajoutée du taux de mentions - Gnle",
+"type": "text"
+},
+{
+"name": "nombre_de_mentions_tb_avec_felicitations_g",
+"description": "Nombre de mentions Très Bien avec les félicitations du jury dans la voie générale",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de mentions TB avec félicitations - G",
+"type": "int"
+},
+{
+"name": "nombre_de_mentions_tb_sans_felicitations_g",
+"description": "Nombre de mentions Très Bien sans félicitations du jury dans la voie générale",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de mentions TB sans félicitations - G",
+"type": "int"
+},
+{
+"name": "nombre_de_mentions_b_g",
+"description": "Nombre de mentions Bien dans la voie générale",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de mentions B - G",
+"type": "int"
+},
+{
+"name": "nombre_de_mentions_ab_g",
+"description": "Nombre de mentions Assez Bien dans la voie générale",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de mentions AB - G",
+"type": "int"
+},
+{
+"name": "nombre_de_mentions_tb_avec_felicitations_t",
+"description": "Nombre de mentions Très Bien avec félicitations du jury dans la voie technologique",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de mentions TB avec félicitations - T",
+"type": "int"
+},
+{
+"name": "nombre_de_mentions_tb_sans_felicitations_t",
+"description": "Nombre de mentions Très Bien sans félicitations du jury dans la voie technologique",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de mentions TB sans félicitations - T",
+"type": "int"
+},
+{
+"name": "nombre_de_mentions_b_t",
+"description": "Nombre de mentions Bien dans la voie technologique",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de mentions B - T",
+"type": "int"
+},
+{
+"name": "nombre_de_mentions_ab_t",
+"description": "Nombre de mentions Assez Bien dans la voie technologique",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Nombre de mentions AB - T",
+"type": "int"
+},
+{
+"name": "libelle_departement",
+"description": "libellé du département",
+"annotations": {
+"sortable": []
+},
+"label": "Libelle departement",
+"type": "text"
+}
+],
+"metas": {
+"default": {
+"title": "Indicateurs de valeur ajoutée des lycées d'enseignement général et technologique (ancienne version)",
+"description": "<p><b>Ce jeu de données a été remplacé par une nouvelle version et ne sera plus actualisé.</b><br><a href=\"https://data.education.gouv.fr/explore/dataset/fr-en-indicateurs-de-resultat-des-lycees-gt_v2/information\">Nouvelle version des indicateurs de valeur ajoutée en lycée d’enseignement général et technologique</a> <span></span></p><p><span>Les\n indicateurs de valeur ajoutée des lycées sont une batterie \nd’indicateurs qui visent à évaluer l'action propre de chaque lycée pour \nfaire réussir les élèves qu’il accueille,\n en terme de réussite au baccalauréat et d’accompagnement tout au long \nde sa scolarité au lycée. </span>\n</p><span>Les\n IVAL permettent un diagnostic qui va au-delà de celui qui peut être \nfait à partir des seuls taux de réussite « bruts » à l’examen. Pour \ndonner une image de l’apport de chaque\n lycée, le calcul statistique s'efforce d'éliminer l'incidence des \nfacteurs de réussite scolaire extérieurs au lycée, pour essayer de \nconserver ce qui est dû à son action propre. Pour juger de l’efficacité \nd’un lycée, la réussite de chacun de ses élèves doit\n ainsi être comparée à celle des élèves comparables scolarisés dans des \nlycées comparables. Des indicateurs en « valeur ajoutée » accompagnent \nainsi les indicateurs « bruts ». Pour chaque lycée, la valeur ajoutée \ncorrespond à la différence entre les résultats\n obtenus et les résultats qui étaient attendus, compte tenu des \ncaractéristiques scolaires et sociodémographiques des élèves accueillis.\n L’analyse combine des facteurs individuels des élèves (âge et sexe, \nniveau scolaire à l’entrée au lycée, profil social)\n et des facteurs liés à la structure de l’établissement (pourcentage de \nfilles, part d'élèves en retard scolaire, profil social des élèves et \nnote moyenne obtenue au diplôme national du brevet).\n</span>\n<p></p><p><span>La\n valeur ajoutée est une approche relative et non pas absolue. Si la \nvaleur ajoutée est positive, on a tout lieu de penser que \nl’établissement a plus fait réussir ses élèves que\n ce qui était prévu vu le profil des élèves qu’il accueillait. Si elle \nest négative, cela signifie que les résultats de l’établissement sont \ninférieurs à la moyenne des résultats des établissements qui lui \nressemblent.</span></p><p><span>Les IVAL sont diffusés uniquement pour les lycées publics et privés sous contrat.\n</span>\n</p><p><span>Les\n taux d’accès et leur valeur ajoutée sont calculés uniquement pour les \nlycées qui offrent un cycle complet, c’est-à-dire qui accueillent des \nélèves de 2nde, 1ère et Tale. Enfin, les résultats en valeur ajoutée et les effectifs de lauréats par mention ne sont pas diffusés lorsqu’il y a moins de 20 candidats en série GT ou moins de 10 candidats en série PRO.</span></p><span>Les fiches de résultats des lycées sont consultables à partir de la page de diffusion des IVAL sur le site du ministère : </span><span><a href=\"https://www.education.gouv.fr/les-indicateurs-de-resultats-des-colleges-et-des-lycees-377729\"><span>https://www.education.gouv.fr/les-indicateurs-de-resultats-des-colleges-et-des-lycees-377729</span></a></span><p><span><a href=\"https://www.education.gouv.fr/les-indicateurs-de-resultats-des-lycees-1118\"><span><br></span></a></span><span> </span><span><a href=\"https://www.education.gouv.fr/les-indicateurs-de-resultats-des-lycees-1118\"><span></span></a></span><span>Bibliographie :</span>\n<span>Evain\n F., 2020, Indicateurs de valeur ajoutée des lycées Du pilotage interne à\n la diffusion grand public. Insee, Courrier des statistiques n°5.</span></p><p></p>",
+"theme": [
+"Etablissements (dont IPS)"
+],
+"keyword": [
+"évaluation",
+"acquis",
+"élèves",
+"enseignement général",
+"enseignement technologique",
+"indicateur de valeur ajoutée",
+"lycée",
+"IVAL"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2026-07-01T12:20:20.659000+00:00",
+"publisher": "DEPP – Ministère chargé de l’éducation nationale",
+"references": null,
+"attributions": null,
+"update_frequency": null,
+"bbox": null,
+"data_processed": "2026-01-29T16:40:33.321000+00:00",
+"federated": false,
+"geographic_reference": [
+"world_fr"
+],
+"geographic_reference_auto": true,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-07-01T12:20:22.997000+00:00",
+"modified_updates_on_data_change": true,
+"modified_updates_on_metadata_change": true,
+"parent_domain": null,
+"records_count": 27808,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": [
+"France"
+],
+"timezone": null
+},
+"dcat": {
+"created": "2016-11-14",
+"issued": "2016-11-13",
+"creator": null,
+"contributor": null,
+"contact_name": null,
+"contact_email": "depp-open-data@education.gouv.fr",
+"accrualperiodicity": "Annuelle",
+"spatial": "France",
+"temporal": "2012-2023",
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": "2011-12-31T23:00:00+00:00",
+"temporal_coverage_end": "2023-12-30T23:00:00+00:00",
+"accessRights": "Le producteur et le diffuseur des données ne sont pas responsables des interprétations ou déductions faites à partir de l'utilisation des données.  Pour citer la publication : \"Source Depp, plateforme de données ouvertes data.education.gouv.fr\" En cas de retraitement des données, ajouter à la mention précédente :  \"traitement [auteur, nom de votre organisation]\"",
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": null,
+"periode-donnees": null,
+"champ": null,
+"couverture-geographique": null,
+"unite-statistique": null,
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"analyze"
+]
+},
+{
+"dataset_id": "fr-en-ips-lycees-ap2022",
+"has_attachments": true,
+"attachments_count": 1,
+"has_records": true,
+"fields": [
+{
+"name": "rentree_scolaire",
+"description": "Année scolaire sur laquelle porte les indices",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"-alphanum"
+]
+},
+"label": "Rentrée scolaire",
+"type": "text"
+},
+{
+"name": "academie",
+"description": "Académie à laquelle appartient l'établissement",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Académie",
+"type": "text"
+},
+{
+"name": "code_du_departement",
+"description": "Code du département auquel appartient l'établissement",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Code du département",
+"type": "text"
+},
+{
+"name": "departement",
+"description": "Département auquel appartient l'établissement",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Département",
+"type": "text"
+},
+{
+"name": "uai",
+"description": "Numéro d'identification de l'établissement",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "UAI",
+"type": "text"
+},
+{
+"name": "nom_de_l_etablissment",
+"description": "Nom de l'établissement",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Nom de l'établissment",
+"type": "text"
+},
+{
+"name": "code_insee_de_la_commune",
+"description": "Code de la commune à laquelle appartient l'établissement",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+],
+"sortable": []
+},
+"label": "Code INSEE de la commune",
+"type": "text"
+},
+{
+"name": "nom_de_la_commune",
+"description": "Commune à laquelle appartient l'établissement",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Nom de la commune",
+"type": "text"
+},
+{
+"name": "secteur",
+"description": "Secteur de l'établissement scolaire : établissement public ou privé sous contrat",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"-alphanum"
+]
+},
+"label": "Secteur",
+"type": "text"
+},
+{
+"name": "type_de_lycee",
+"description": "Type de lycée : LEGT (lycée d'enseignement général et technologique), LP (lycée professionnel), LPO (lycée polyvalent)",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Type de lycée",
+"type": "text"
+},
+{
+"name": "effectifs_voie_gt",
+"description": "Nombre d'élèves scolarisés en voie générale ou technologique du second degré dans l'établissement inclus dans le calcul de l’IPS",
+"annotations": {},
+"label": "Effectifs voie GT",
+"type": "double"
+},
+{
+"name": "effectifs_voie_pro",
+"description": "Nombre d'élèves scolarisés en voie professionnelle du second degré dans l'établissement inclus dans le calcul de l’IPS",
+"annotations": {},
+"label": "Effectifs voie PRO",
+"type": "double"
+},
+{
+"name": "effectifs_ensemble_gt_pro",
+"description": "Nombre d'élèves du second degré de l'établissement inclus dans le calcul de l’IPS",
+"annotations": {},
+"label": "Effectifs Ensemble GT-PRO",
+"type": "double"
+},
+{
+"name": "ips_voie_gt",
+"description": "Indice moyen de position sociale des élèves scolarisés en voie générale ou technologique dans l'établissement",
+"annotations": {},
+"label": "IPS voie GT",
+"type": "double"
+},
+{
+"name": "ips_voie_pro",
+"description": "Indice moyen de position sociale des élèves scolarisés en voie professionnelle dans l'établissement",
+"annotations": {},
+"label": "IPS voie PRO",
+"type": "double"
+},
+{
+"name": "ips_ensemble_gt_pro",
+"description": "Indice moyen de position sociale de l’ensemble des élèves du second cycle dans l'établissement",
+"annotations": {},
+"label": "IPS Ensemble GT-PRO",
+"type": "double"
+},
+{
+"name": "ecart_type_de_l_ips_voie_gt",
+"description": "Écart-type de l'indice de position sociale des élèves scolarisés en voie générale ou technologique dans l'établissement",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Ecart-type de l'IPS voie GT",
+"type": "double"
+},
+{
+"name": "ecart_type_de_l_ips_voie_pro",
+"description": "Écart-type de l'indice de position sociale des élèves scolarisés en voie professionnelle dans l'établissement",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Ecart-type de l'IPS voie PRO",
+"type": "double"
+}
+],
+"metas": {
+"default": {
+"title": "Indices de position sociale dans les lycées (2022)",
+"description": "L’indice de position sociale (IPS) permet d'appréhender le statut social\n des élèves à partir des professions et catégories sociales (PCS) de \nleurs parents. À chaque PCS ou couple de PCS est associée une valeur \nnumérique de l’IPS. Cette valeur numérique correspond à un résumé \nquantitatif d’un ensemble d’attributs socio-économiques et culturels \nliés à la réussite scolaire. Plus l'indice de position sociale (IPS) est\n élevé, plus les élèves sont en moyenne d'origine sociale favorisée. \nPlus il est faible, plus les élèves sont d'origine défavorisée \nsocialement.<br><br>Concrètement, les valeurs de référence de l'indice \npour chaque PCS, ou couple de PCS sont déterminées grâce à une méthode \nstatistique qui permet de synthétiser un ensemble de caractéristiques \ndécrivant les conditions de vie des élèves (voir article de Rocher, \n2016). L'indice d'une PCS donnée est ainsi le résumé quantitatif d'un \ncertain nombre d'attributs socio-économiques et culturels liés à la \nréussite scolaire, que l'on retrouve en moyenne pour cette PCS.<br><br>La\n première version de l’indice, utilisée jusqu’à la rentrée 2021, a été \ncalculée sur les données du panel de la DEPP d’élèves entrés en sixième \nen 2007. Pour ces 35 000 élèves du panel, on dispose d’une information \nriche sur leurs conditions de vie permettant d’établir la table de \npassage PCS- IPS.<br><br>À la rentrée 2022, cette table de passage a été\n mise à jour en mobilisant les données du panel de la DEPP d’élèves \nentrés en 2011 en CP.<br><br>Dès lors que les PCS des parents sont \nrenseignés, ce qui est le cas pour la très grande majorité des élèves du\n second degré, il suffit d'appliquer ces valeurs de référence et de \nconsidérer cette nouvelle variable comme un indice, c'est-à-dire de \nmanière quantitative.<br><br>Le niveau social d'un établissement \nscolaire est apprécié à travers le calcul de la moyenne des IPS des \nélèves qui y sont scolarisés.<br><br>Il convient de rappeler que, comme \ntout indice synthétique, il s’agit d’un résumé simplifié de la réalité, \nqui ne peut rendre compte à lui seul de la complexité de la situation \nsocio-économique et culturelle des élèves accueillis dans un \nétablissement.<br><br>L’IPS étant basé sur les PCS déclarées par les \nfamilles et enregistrées par les établissements, il est soumis à une \ncertaine marge d’erreur : ainsi, il est conseillé de ne pas \nsur-interpréter des différences de 3 points ou moins concernant les IPS \nmoyens des établissements.<br><br>Enfin, il convient de noter que la \nméthodologie de calcul de l’indice a changé, entraînant une rupture de \nsérie à partir de la rentrée 2022 : les valeurs de référence de l’indice\n ont changé et les élèves dont les PCS des deux parents sont non \nrenseignées ne rentrent plus dans le calcul de l’IPS moyen de leur \nétablissement (table de passage disponible en pièce jointe ci-dessous).<br><br>L’indice\n d’hétérogénéité sociale d’un établissement correspond à l’écart-type de\n l’indice de position sociale (IPS) de ses élèves. Plus il est élevé, \nplus le profil social des élèves est diversifié. Cet indice est calculé \ndepuis la rentrée 2019, uniquement pour les établissements du second \ndegré. De même que pour le calcul de l’IPS moyen, à partir de la rentrée\n 2022, les élèves dont les PCS des deux parents ne sont pas renseignées \nsont exclus du champ du calcul de l’écart-type.<br><br><p class=\"MsoNormal\"><b style=\"mso-bidi-font-weight:normal\"><u>Champ</u></b></p>\n<p class=\"MsoNormal\">Le fichier fournit l’IPS moyen par établissement \nainsi que\nl’écart-type des IPS de ses élèves pour les lycées de France sous \ntutelle de l'Education Nationale, publics et privés sous contrat, \ncalculés à partir des données de la\nrentrée N et pour les élèves du second cycle uniquement. Le fichier \nfournit\négalement les effectifs d’élèves du second cycle du lycée à partir \ndesquels l’IPS est calculé. </p>\n<p class=\"MsoNormal\">Dans le fichier mis à disposition, chaque ligne correspond à\nun lycée pour une année scolaire donnée. </p>\n<p class=\"MsoNormal\">L’IPS moyen de chaque établissement et les effectifs\nd’élèves du second cycle sont déclinés pour les élèves de la voie générale et\ntechnologique uniquement, pour les élèves de la voie professionnelle\nuniquement, et pour l’ensemble des élèves du second cycle. L’écart-type des IPS\ndes élèves est décliné pour les élèves de la voie générale et technologique uniquement\net pour les élèves de la voie professionnelle uniquement.</p>\n<p class=\"MsoNormal\"><b style=\"mso-bidi-font-weight:normal\"><u>Référence</u></b></p>\n<p class=\"MsoNormal\"><span>Rocher, T. (2016). Construction d’un indice de\nposition sociale des élèves. <i style=\"mso-bidi-font-style:normal\">Éducation\n&amp; formations</i>, DEPP, 90, pp.5-27.</span><span style='font-size:12.0pt;font-family:\"Calibri\",sans-serif;\nmso-ascii-theme-font:minor-latin;mso-fareast-font-family:Calibri;mso-fareast-theme-font:\nminor-latin;mso-hansi-theme-font:minor-latin;mso-bidi-font-family:\"Times New Roman\";\nmso-bidi-theme-font:minor-bidi;mso-ansi-language:FR;mso-fareast-language:EN-US;\nmso-bidi-language:AR-SA'></span></p><p class=\"MsoNormal\">Dauphant F., Evain F., Guillerm M., Simon C., \nRocher T. (2023), L’indice de position sociale (IPS) : un outil \nstatistique pour décrire les inégalités sociales entre établissements.\n<i>Note d’information de la Depp n°23.16.</i></p><p class=\"MsoNormal\">En savoir plus sur l’indice de position sociale : <a href=\"https://www.education.gouv.fr/l-indice-de-position-sociale-ips-357755\">\nhttps://www.education.gouv.fr/l-indice-de-position-sociale-ips-357755</a><i></i></p>",
+"theme": [
+"Elèves, étudiants, et apprentis"
+],
+"keyword": [
+"élèves",
+"lycées"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2024-05-24T12:13:01+00:00",
+"publisher": "DEPP – Ministère chargé de l’éducation nationale",
+"references": null,
+"attributions": null,
+"update_frequency": null,
+"bbox": null,
+"data_processed": "2026-01-29T18:58:47.176000+00:00",
+"federated": false,
+"geographic_reference": null,
+"geographic_reference_auto": false,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-06-23T10:44:05.748000+00:00",
+"modified_updates_on_data_change": false,
+"modified_updates_on_metadata_change": false,
+"parent_domain": null,
+"records_count": 3598,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": null,
+"timezone": null
+},
+"dcat": {
+"created": "2023-03-14",
+"issued": "2023-03-14",
+"creator": null,
+"contributor": null,
+"contact_name": null,
+"contact_email": "depp-open-data@education.gouv.fr",
+"accrualperiodicity": "Annuelle",
+"spatial": "France",
+"temporal": "2022-2024",
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": "2021-12-31T23:00:00+00:00",
+"temporal_coverage_end": "2023-12-30T23:00:00+00:00",
+"accessRights": "Le producteur et le diffuseur des données ne sont pas responsables des interprétations ou déductions faites à partir de l'utilisation des données.  Pour citer la publication : \"Source Depp, plateforme de données ouvertes data.education.gouv.fr\" En cas de retraitement des données, ajouter à la mention précédente :  \"traitement [auteur, nom de votre organisation]\"",
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": "01/10/2022",
+"periode-donnees": "2022",
+"champ": "lycées des secteurs public et privé sous contrat",
+"couverture-geographique": [
+"France"
+],
+"unite-statistique": "Les établissements",
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"analyze"
+]
+},
+{
+"dataset_id": "fr-en-ecoles-effectifs-nb_classes",
+"has_attachments": false,
+"attachments_count": 0,
+"has_records": true,
+"fields": [
+{
+"name": "rentree_scolaire",
+"description": "Année de rentrée scolaire sous la forme YYYY (par exemple : 2019 pour l'année scolaire 2019-2020)",
+"annotations": {
+"sortable": [],
+"facet": [],
+"disjunctive": [],
+"facetsort": [
+"-alphanum"
+],
+"timeserie_precision": [
+"year"
+]
+},
+"label": "Rentrée scolaire",
+"type": "date"
+},
+{
+"name": "code_region_aca",
+"description": "Code de la région académique",
+"annotations": {},
+"label": "Code région académique",
+"type": "text"
+},
+{
+"name": "code_region_insee",
+"description": "Code région Insee",
+"annotations": {},
+"label": "Code région Insee",
+"type": "text"
+},
+{
+"name": "region_academique",
+"description": "Région académique",
+"annotations": {
+"facet": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": []
+},
+"label": "Région académique",
+"type": "text"
+},
+{
+"name": "code_academie",
+"description": "Code de l'académie",
+"annotations": {},
+"label": "Code académie",
+"type": "text"
+},
+{
+"name": "academie",
+"description": "Académie",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Académie",
+"type": "text"
+},
+{
+"name": "code_departement",
+"description": "Code du département",
+"annotations": {},
+"label": "Code département",
+"type": "text"
+},
+{
+"name": "departement",
+"description": "Département",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Département",
+"type": "text"
+},
+{
+"name": "code_commune_insee",
+"description": "Code postal",
+"annotations": {},
+"label": "Code postal",
+"type": "text"
+},
+{
+"name": "commune",
+"description": "Libellé commune",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Libellé commune",
+"type": "text"
+},
+{
+"name": "numero_ecole",
+"description": "Numéro de l'école",
+"annotations": {
+"facet": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": []
+},
+"label": "Numéro de l'école",
+"type": "text"
+},
+{
+"name": "denomination_principale",
+"description": "Dénomination principale",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Dénomination principale",
+"type": "text"
+},
+{
+"name": "patronyme",
+"description": "Patronyme",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Patronyme",
+"type": "text"
+},
+{
+"name": "secteur",
+"description": "Secteur d'enseignement PUBLIC / PRIVE",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"-alphanum"
+]
+},
+"label": "Secteur",
+"type": "text"
+},
+{
+"name": "rep",
+"description": "Appartenance à un REP : 0 signifie que l'école n'appartient pas à un réseau, 1 signifie qu'elle appartient à un réseau",
+"annotations": {
+"facet": []
+},
+"label": "REP",
+"type": "text"
+},
+{
+"name": "rep_plus",
+"description": "Appartenance à un REP+ : 0 signifie que l'école n'appartient pas à un réseau, 1 signifie qu'elle appartient à un réseau",
+"annotations": {
+"facet": []
+},
+"label": "REP +",
+"type": "text"
+},
+{
+"name": "nombre_total_classes",
+"description": "Nombre de classes total dans l'école",
+"annotations": {},
+"label": "Nombre total de classes",
+"type": "double"
+},
+{
+"name": "nombre_total_eleves",
+"description": "Nombre total d'élèves",
+"annotations": {},
+"label": "Nombre total d'élèves",
+"type": "double"
+},
+{
+"name": "nombre_eleves_preelementaire_hors_ulis",
+"description": "Nombre d'élèves en pré-élémentaire hors ULIS",
+"annotations": {},
+"label": "Nombre d'élèves en pré-élémentaire hors ULIS",
+"type": "double"
+},
+{
+"name": "nombre_eleves_elementaire_hors_ulis",
+"description": "Nombre d'élèves en élémentaire hors ULIS",
+"annotations": {},
+"label": "Nombre d'élèves en élémentaire hors ULIS",
+"type": "double"
+},
+{
+"name": "nombre_eleves_ulis",
+"description": "Nombre d'élèves en ULIS",
+"annotations": {},
+"label": "Nombre d'élèves en ULIS",
+"type": "double"
+},
+{
+"name": "nombre_eleves_ueea",
+"description": "Nombre d'élèves en UEEA (Unité d'Enseignement en Elémentaire Autisme)",
+"annotations": {},
+"label": "Nombre d'élèves en UEEA",
+"type": "int"
+},
+{
+"name": "nombre_eleves_cp_hors_ulis",
+"description": "Nombre d'élèves en CP hors ULIS",
+"annotations": {},
+"label": "Nombre d'élèves en CP hors ULIS",
+"type": "double"
+},
+{
+"name": "nombre_eleves_ce1_hors_ulis",
+"description": "Nombre d'élèves en CE1 hors ULIS",
+"annotations": {},
+"label": "Nombre d'élèves en CE1 hors ULIS",
+"type": "double"
+},
+{
+"name": "nombre_eleves_ce2_hors_ulis",
+"description": "Nombre d'élèves en CE2 hors ULIS",
+"annotations": {},
+"label": "Nombre d'élèves en CE2 hors ULIS",
+"type": "double"
+},
+{
+"name": "nombre_eleves_cm1_hors_ulis",
+"description": "Nombre d'élèves en CM1 hors ULIS",
+"annotations": {},
+"label": "Nombre d'élèves en CM1 hors ULIS",
+"type": "double"
+},
+{
+"name": "nombre_eleves_cm2_hors_ulis",
+"description": "Nombre d'élèves en CM2 hors ULIS",
+"annotations": {},
+"label": "Nombre d'élèves en CM2 hors ULIS",
+"type": "double"
+}
+],
+"metas": {
+"default": {
+"title": "Effectifs d’élèves par école",
+"description": "<p>Ce jeu de données présente les effectifs d’élèves par niveau et le nombre de classes\n<u>par école.</u></p><p>Les données présentées illustrent les effectifs à la date d'observation.\n Les informations contenues dans ce jeu de données ne sont pas \ncomparables avec notamment le jeu de données \"taille moyenne des classes\n dans le premier degré\", qui est issu d'une observation ultérieure.</p><p>Jusqu'à la rentrée 2023, les élèves des classes UEEA étaient \ncomptabilisés avec les élèves scolarisés en élémentaire sans possibilité\n de les isoler. Depuis la rentrée 2024, il est désormais possible de \ndénombrer ces élèves séparément des effectifs d'élémentaire. Ainsi, à \ncompter de cette rentrée, les effectifs d’élève UEEA par école sont \ndisponibles dans la variable ‘’Nombre d'élèves en UEEA’’ et ne sont plus\n inclus dans les variables d’effectifs des différents niveaux \nd’élémentaire.</p><p>Depuis 2020, les académies de Caen et de Rouen constituent l’académie de Normandie. Les données sont présentées selon ce découpage afin d’en faciliter la lecture.</p><p>Lorsque les effectifs étaient inférieurs à 5, ils ont été supprimés pour des questions de secret statistique. De ce fait, la somme des effectifs n’est pas égale aux effectifs nationaux.</p><p>Observation à la rentrée : à la mi-septembre de chaque année.</p>Date de la dernière observation 15/09/2025.<p></p><p>Abréviations utilisées : </p><ul><li>REP : Réseau d’Éducation Prioritaire</li><li>REP+ : Réseau d’Éducation Prioritaire Plus</li><li>ULIS : Unités Localisées pour l'Inclusion Scolaire</li><li>UEEA : Unités d'Enseignement Élémentaire Autisme</li></ul><p>Pour en savoir plus :</p><p><a href=\"https://www.education.gouv.fr/depp/projections-d-effectifs-d-eleves-dans-les-premier-et-second-degres-horizon-2035-504275\" target=\"_blank\">Barhoumi M., Miconnet N., Serre P., 2026, \"Projections d'effectifs d'élèves dans les premier et second degrés à horizon 2035\", </a><i>Document de travail - série études</i>, n° 2026-E08, DEPP.<br><br><a href=\"https://www.education.gouv.fr/depp/projections-d-effectifs-scolaires-horizon-2035-504281\" target=\"_blank\">André P., Barhoumi M., Miconnet N., Serre P., 2026, \"Projections d’effectifs scolaires à horizon 2035\", </a><i>Note d'Information</i>, n° 26-09, DEPP.<br><a href=\"https://doi.org/10.48464/ni-26-09\" target=\"_blank\">https://doi.org/10.48464/ni-26-09</a></p><p><a href=\"https://www.education.gouv.fr/taille-des-classes-du-premier-degre-une-neuvieme-annee-de-baisse-consecutive-dans-les-ecoles-452099\" target=\"_blank\">Evain F., 2026, \"Taille des classes du premier degré : une neuvième année de baisse consécutive dans les écoles publiques\", </a><i>Note d'Information</i>, n° 26-01, DEPP.</p><p><a href=\"https://www.education.gouv.fr/depp/les-effectifs-dans-le-premier-degre-6155-millions-d-eleves-scolarises-la-rentree-2025-467612\" target=\"_blank\">Barhoumi\n M., Brun L., Serre P., 2025, \"Les effectifs dans le premier degré : \n6,155 millions d’élèves scolarisés à la rentrée 2025\"</a>, <i>Note d'Information</i>, n° 25-58, DEPP. <a href=\"https://doi.org/10.48464/ni-25-58\" target=\"_blank\">https://doi.org/10.48464/ni-25-58</a></p><p>Le premier degré : évolution des effectifs<br><a href=\"https://rers.depp.education.fr/2026/tableau/03_EL1D/01_EVO\" target=\"_blank\"><i>RERS 2026 Fiche 3.01</i></a><br><a href=\"https://rers.depp.education.fr/2025/tableau/03_EL1D/01_EVO\" target=\"_blank\"><i>RERS 2025 Fiche 3.01</i></a></p>",
+"theme": [
+"Elèves, étudiants, et apprentis"
+],
+"keyword": [
+"école",
+"premier degré",
+"1er degré",
+"effectif scolaire",
+"élève",
+"établissement public",
+"établissement privé sous contrat"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2026-08-27T09:25:30.169000+00:00",
+"publisher": "DEPP – Ministère chargé de l’éducation nationale",
+"references": null,
+"attributions": null,
+"update_frequency": "ANNUAL",
+"bbox": null,
+"data_processed": "2026-06-24T17:29:32.444000+00:00",
+"federated": false,
+"geographic_reference": [
+"world_fr"
+],
+"geographic_reference_auto": true,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-08-27T09:25:34.397000+00:00",
+"modified_updates_on_data_change": true,
+"modified_updates_on_metadata_change": true,
+"parent_domain": null,
+"records_count": 859372,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": [
+"France"
+],
+"timezone": null
+},
+"dcat": {
+"created": "2021-03-11",
+"issued": "2021-03-11",
+"creator": "Bureau des études statistiques sur les élèves",
+"contributor": null,
+"contact_name": null,
+"contact_email": "depp-open-data@education.gouv.fr",
+"accrualperiodicity": "Annuelle",
+"spatial": "France + COM + Nouvelle Calédonie",
+"temporal": "la rentrée scolaire",
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": "2009-09-14T22:00:00+00:00",
+"temporal_coverage_end": "2025-09-14T22:00:00+00:00",
+"accessRights": "Le producteur et le diffuseur des données ne sont pas responsables des interprétations ou déductions faites à partir de l'utilisation des données.  Pour citer la publication : \"Source Depp, plateforme de données ouvertes data.education.gouv.fr\"  En cas de retraitement des données, ajouter à la mention précédente :  \"traitement [auteur, nom de votre organisation]\"",
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": "15/09/2025",
+"periode-donnees": "2009-2025",
+"champ": "Établissements publics et privés sous contrat sous tutelle du ministère de l'éducation nationale",
+"couverture-geographique": [
+"France"
+],
+"unite-statistique": "les élèves",
+"secret-statistique": "Pour respecter le secret statistique, l'effectif et sa décomposition ne sont pas affichés si l'effectif est inférieur à 5 élèves.",
+"source": "DEPP, constats de rentrée premier degré"
+}
+},
+"features": [
+"timeserie",
+"analyze"
+]
+},
+{
+"dataset_id": "fr-en-annuaire-education",
+"has_attachments": true,
+"attachments_count": 1,
+"has_records": true,
+"fields": [
+{
+"name": "identifiant_de_l_etablissement",
+"description": "numéro de l'unité administrative immatriculée (uai)",
+"annotations": {
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Identifiant_de_l_etablissement",
+"type": "text"
+},
+{
+"name": "nom_etablissement",
+"description": "nom de l'établissement",
+"annotations": {
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Nom_etablissement",
+"type": "text"
+},
+{
+"name": "type_etablissement",
+"description": "type regroupé d'établissement : école, collège, lycée, EREA, ...",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Type_etablissement",
+"type": "text"
+},
+{
+"name": "statut_public_prive",
+"description": "Statut public ou privé, si applicable",
+"annotations": {
+"facetsort": [
+"-count"
+],
+"facet": [],
+"sortable": []
+},
+"label": "Statut_public_prive",
+"type": "text"
+},
+{
+"name": "adresse_1",
+"description": "premier élément de l'adresse",
+"annotations": {},
+"label": "Adresse_1",
+"type": "text"
+},
+{
+"name": "adresse_2",
+"description": "deuxième élément de l'adresse",
+"annotations": {},
+"label": "Adresse_2",
+"type": "text"
+},
+{
+"name": "adresse_3",
+"description": "troisième élément de l'adresse",
+"annotations": {},
+"label": "Adresse_3",
+"type": "text"
+},
+{
+"name": "code_postal",
+"description": "code postal",
+"annotations": {
+"sortable": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"facet": []
+},
+"label": "Code_postal",
+"type": "text"
+},
+{
+"name": "code_commune",
+"description": "code insee de la commune",
+"annotations": {
+"sortable": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": []
+},
+"label": "Code_commune",
+"type": "text"
+},
+{
+"name": "nom_commune",
+"description": "nom de la commune",
+"annotations": {
+"sortable": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"facet": []
+},
+"label": "Nom_commune",
+"type": "text"
+},
+{
+"name": "code_departement",
+"description": "code du département",
+"annotations": {
+"sortable": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"facet": []
+},
+"label": "Code_departement",
+"type": "text"
+},
+{
+"name": "code_academie",
+"description": "code de l'académie",
+"annotations": {
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Code_academie",
+"type": "text"
+},
+{
+"name": "code_region",
+"description": "Code_region",
+"annotations": {
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Code_region",
+"type": "text"
+},
+{
+"name": "ecole_maternelle",
+"description": "indique si l'établissement est une école maternelle",
+"annotations": {
+"facet": []
+},
+"label": "Ecole_maternelle",
+"type": "int"
+},
+{
+"name": "ecole_elementaire",
+"description": "indique si l'établissement est une école élémentaire",
+"annotations": {
+"facet": []
+},
+"label": "Ecole_elementaire",
+"type": "int"
+},
+{
+"name": "voie_generale",
+"description": "indique si l'établissement dispense les enseignements de la voie générale",
+"annotations": {
+"facet": []
+},
+"label": "Voie_generale",
+"type": "text"
+},
+{
+"name": "voie_technologique",
+"description": "indique si l'établissement dispense les enseignements de la voie technologique",
+"annotations": {
+"facet": []
+},
+"label": "Voie_technologique",
+"type": "text"
+},
+{
+"name": "voie_professionnelle",
+"description": "indique si l'établissement dispense les enseignements de la voie professionnelle",
+"annotations": {
+"facet": []
+},
+"label": "Voie_professionnelle",
+"type": "text"
+},
+{
+"name": "telephone",
+"description": "numéro de téléphone",
+"annotations": {},
+"label": "Telephone",
+"type": "text"
+},
+{
+"name": "fax",
+"description": "numéro de fax",
+"annotations": {},
+"label": "Fax",
+"type": "text"
+},
+{
+"name": "web",
+"description": "site web",
+"annotations": {},
+"label": "Web",
+"type": "text"
+},
+{
+"name": "mail",
+"description": "adresse mail",
+"annotations": {},
+"label": "Mail",
+"type": "text"
+},
+{
+"name": "restauration",
+"description": "indique si l'établissement dispose d'un service de restauration",
+"annotations": {
+"facet": []
+},
+"label": "Restauration",
+"type": "int"
+},
+{
+"name": "hebergement",
+"description": "indique si l'établissement dispose d'un service d'hébergement",
+"annotations": {
+"facet": []
+},
+"label": "Hebergement",
+"type": "int"
+},
+{
+"name": "ulis",
+"description": "indique si l'établissement dispose d'une unité localisée pour l'inclusion scolaire",
+"annotations": {
+"facet": []
+},
+"label": "ULIS",
+"type": "int"
+},
+{
+"name": "apprentissage",
+"description": "indique si l'établissement propose des formations par apprentissage",
+"annotations": {
+"facet": []
+},
+"label": "Apprentissage",
+"type": "text"
+},
+{
+"name": "segpa",
+"description": "indique si l'établissement dispose d'une \"section d'enseignement général et professionnel adapté\"",
+"annotations": {
+"facet": []
+},
+"label": "Segpa",
+"type": "text"
+},
+{
+"name": "section_arts",
+"description": "indique si l'établissement possède une section arts",
+"annotations": {
+"facet": []
+},
+"label": "Section_arts",
+"type": "text"
+},
+{
+"name": "section_cinema",
+"description": "indique si l'établissement possède une section cinéma",
+"annotations": {
+"facet": []
+},
+"label": "Section_cinema",
+"type": "text"
+},
+{
+"name": "section_theatre",
+"description": "indique si l'établissement possède une section théâtre",
+"annotations": {
+"facet": []
+},
+"label": "Section_theatre",
+"type": "text"
+},
+{
+"name": "section_sport",
+"description": "indique si l'établissement possède une section sport",
+"annotations": {
+"facet": []
+},
+"label": "Section_sport",
+"type": "text"
+},
+{
+"name": "section_internationale",
+"description": "indique si l'établissement possède une section internationale",
+"annotations": {
+"facet": []
+},
+"label": "Section_internationale",
+"type": "text"
+},
+{
+"name": "section_europeenne",
+"description": "indique si l'établissement possède une section européenne",
+"annotations": {
+"facet": []
+},
+"label": "Section_europeenne",
+"type": "text"
+},
+{
+"name": "lycee_agricole",
+"description": "indique si l'établissement est un lycée agricole",
+"annotations": {
+"facet": []
+},
+"label": "Lycee_Agricole",
+"type": "text"
+},
+{
+"name": "lycee_militaire",
+"description": "indique si l'établissement est un lycée militaire",
+"annotations": {
+"facet": []
+},
+"label": "Lycee_militaire",
+"type": "text"
+},
+{
+"name": "lycee_des_metiers",
+"description": "Indique si l'établissement est labellisé \"lycée des métiers\"",
+"annotations": {
+"facet": []
+},
+"label": "Lycee_des_metiers",
+"type": "text"
+},
+{
+"name": "post_bac",
+"description": "Indique si l'établissement propose des formations après le baccalauréat",
+"annotations": {
+"facet": []
+},
+"label": "Post_BAC",
+"type": "text"
+},
+{
+"name": "appartenance_education_prioritaire",
+"description": "Indique si l'établissement est situé en réseau d'éducation prioritaire (REP), ou réseau d'éducation prioritaire renforcé (REP+)",
+"annotations": {
+"facet": [],
+"disjunctive": []
+},
+"label": "Appartenance_Education_Prioritaire",
+"type": "text"
+},
+{
+"name": "greta",
+"description": "indique si l'établissement fait partie d'un GRETA (groupement d'établissements)",
+"annotations": {
+"facet": []
+},
+"label": "GRETA",
+"type": "text"
+},
+{
+"name": "siren_siret",
+"description": "numéro SIRET de l'établissement (constitué du numéro SIREN sur 9 chiffres et du numéro NIC sur 5 chiffres)",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "SIREN_SIRET",
+"type": "text"
+},
+{
+"name": "fiche_onisep",
+"description": "url de la fiche onisep",
+"annotations": {},
+"label": "Fiche_onisep",
+"type": "text"
+},
+{
+"name": "position",
+"description": "position (latitude/longitude WGS 84) de l'établissement",
+"annotations": {},
+"label": "position",
+"type": "geo_point_2d"
+},
+{
+"name": "type_contrat_prive",
+"description": "dans le cas d'un établissement privé, libellé du type de contrat",
+"annotations": {
+"disjunctive": [],
+"sortable": []
+},
+"label": "Type_contrat_prive",
+"type": "text"
+},
+{
+"name": "libelle_departement",
+"description": "nom du département",
+"annotations": {
+"disjunctive": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Libelle_departement",
+"type": "text"
+},
+{
+"name": "libelle_academie",
+"description": "nom de l'académie",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Libelle_academie",
+"type": "text"
+},
+{
+"name": "libelle_region",
+"description": "nom de la région",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"sortable": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Libelle_region",
+"type": "text"
+},
+{
+"name": "coordx_origine",
+"description": "première coordonnée géographique de l'établissement dans le système de coordonnées légal",
+"annotations": {},
+"label": "coordX_origine",
+"type": "double"
+},
+{
+"name": "coordy_origine",
+"description": "deuxième coordonnée géographique de l'établissement dans le système de coordonnées légal",
+"annotations": {},
+"label": "coordY_origine",
+"type": "double"
+},
+{
+"name": "epsg_origine",
+"description": "code EPSG du système de coordonnées légal",
+"annotations": {},
+"label": "epsg_origine",
+"type": "text"
+},
+{
+"name": "nom_circonscription",
+"description": "nom de la circonscription",
+"annotations": {
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "nom_circonscription",
+"type": "text"
+},
+{
+"name": "latitude",
+"description": "latitude WGS84  de l'établissement",
+"annotations": {},
+"label": "latitude",
+"type": "double"
+},
+{
+"name": "longitude",
+"description": "longitude WGS84  de l'établissement",
+"annotations": {},
+"label": "longitude",
+"type": "double"
+},
+{
+"name": "precision_localisation",
+"description": "précision de la localisation géographique\nValeurs possibles\n1/ l'adresse ponctuelle a été vérifiée par un collecteur:\n1. BÂTIMENT\n2/ l'adresse ponctuelle correspondant exactement à celle de l'établissement a été trouvée :\n2. PLAQUE_ADRESSE_PROJETEE : projection de la plaque adresse\n3. CENTRE_PARCELLE_PROJETE : projection du centroïde de parcelle\n3/ l'adresse précise n'a pas été trouvée mais une adresse ponctuelle voisine a été trouvée:\n- DEFAUT_D_INDICE [numéro et indice utilisé] : adresse projetée de même numéro, mais d'indice différent)\n- DEFAUT_DE_NUMERO [numéro cherché -> numéro utilisé] : adresse projetée la plus proche. Si l'adresse recherchée n'a pas de numéro, il est placé sur le plus petit numéro trouvé (ex. DEFAUT_DE_NUMERO [->2])\n4/ aucune adresse ponctuelle portant le même nom de voie n'a été trouvée, mais un tronçon portant ce nom a été trouvé :\n1. INTERPOLATION : adresse interpolée entre les bornes initiales et finales d'un tronçon (interpolation linéaire)\n2. DEFAUT_DE_TRONCON : aucun tronçon de la route appariée n'a de bornes permettant d'encadrer le numéro recherché. L'adresse est positionnée sur le tronçon dont les bornes sont le plus proche du numéro recherché.\n5/ ni adresse ni tronçon n’ont été trouvés, mais un lieu-dit (ponctuel) ou une zone nommée (ponctuelle) de même nom a été trouvée :\n- ZONE_D_ADRESSAGE\n6/ la géolocalisation se fait à la commune:\n- COMMUNE\n7/ pas de géolocalisation :\n- ERR",
+"annotations": {},
+"label": "precision_localisation",
+"type": "text"
+},
+{
+"name": "date_ouverture",
+"description": "date d'ouverture de l'établissement",
+"annotations": {},
+"label": "date_ouverture",
+"type": "date"
+},
+{
+"name": "date_maj_ligne",
+"description": "date de mise à jour des informations",
+"annotations": {},
+"label": "date_maj_ligne",
+"type": "date"
+},
+{
+"name": "etat",
+"description": "état de l'établissement (ouvert/à ouvrir/à fermer)",
+"annotations": {
+"facet": []
+},
+"label": "etat",
+"type": "text"
+},
+{
+"name": "ministere_tutelle",
+"description": "ministère de tutelle",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "ministere_tutelle",
+"type": "text"
+},
+{
+"name": "multi_uai",
+"description": "indique si plusieurs lignes possèdent le même identifiant (c'est le cas de certains établissements à plusieurs sites)",
+"annotations": {},
+"label": "multi_uai",
+"type": "int"
+},
+{
+"name": "rpi_concentre",
+"description": "indique si l'établissement fait partie d'un réseau pédagogique intercommunal concentré",
+"annotations": {},
+"label": "rpi_concentre",
+"type": "int"
+},
+{
+"name": "rpi_disperse",
+"description": "si l'établissement fait partie d'un réseau pédagogique intercommunal (RPI) dispersé, identifiant de ce réseau",
+"annotations": {},
+"label": "rpi_disperse",
+"type": "text"
+},
+{
+"name": "code_nature",
+"description": "code nature (type d'établissement détaillé)",
+"annotations": {},
+"label": "code_nature",
+"type": "int"
+},
+{
+"name": "libelle_nature",
+"description": "libellé de la nature(type d'établissement détaillé)",
+"annotations": {},
+"label": "libelle_nature",
+"type": "text"
+},
+{
+"name": "code_type_contrat_prive",
+"description": "dans le cas d'un établissement privé, code du type de contrat",
+"annotations": {
+"disjunctive": [],
+"facetsort": [
+"-count"
+]
+},
+"label": "Code_type_contrat_prive",
+"type": "text"
+},
+{
+"name": "pial",
+"description": "Lorsque l'établissement fait partie d'un PIAL (Pôles inclusifs d’accompagnement localisés), numéro UAI de l'établissement tête de réseau",
+"annotations": {
+"disjunctive": [],
+"sortable": []
+},
+"label": "PIAL",
+"type": "text"
+},
+{
+"name": "etablissement_mere",
+"description": "Identifiant de l'établissement mère, s'il y en a un",
+"annotations": {},
+"label": "etablissement_mere",
+"type": "text"
+},
+{
+"name": "type_rattachement_etablissement_mere",
+"description": "type de rattachement à l'établissement mère",
+"annotations": {},
+"label": "type_rattachement_etablissement_mere",
+"type": "text"
+},
+{
+"name": "code_circonscription",
+"description": "code de la circonscription",
+"annotations": {},
+"label": "code_circonscription",
+"type": "text"
+},
+{
+"name": "code_zone_animation_pedagogique",
+"description": "code de la zone d'animation pédagogique",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "code_zone_animation_pedagogique",
+"type": "text"
+},
+{
+"name": "libelle_zone_animation_pedagogique",
+"description": "libellé de la zone d'animation pédagogique",
+"annotations": {},
+"label": "libelle_zone_animation_pedagogique",
+"type": "text"
+},
+{
+"name": "code_bassin_formation",
+"description": "code du bassin de formation (niveau infradépartemental d'animation de la politique pédagogique, institué par la circulaire n°2001-114 du 20-6-2001 - NOR : MEND0101328C)",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "code_bassin_formation",
+"type": "text"
+},
+{
+"name": "libelle_bassin_formation",
+"description": "libellé du bassin de formation",
+"annotations": {},
+"label": "libelle_bassin_formation",
+"type": "text"
+}
+],
+"metas": {
+"default": {
+"title": "Annuaire de l'éducation",
+"description": "<p>Annuaire de l'éducation : données sur les établissements publics et privés ouverts situés en France. Le jeu de données couvre le premier degré, le second degré, les établissements médico-sociaux, les Centre d'Information et d'Orientation ainsi que les établissements administratifs. <br></p><p>Sources : données ONISEP et RAMSESE</p>",
+"theme": [
+"Données de référence"
+],
+"keyword": [
+"structures",
+"unités d'enseignement",
+"établissements",
+"écoles",
+"EPLE",
+"public",
+"privé",
+"internat",
+"demi-pension",
+"restauration",
+"cité scolaire",
+"CFA",
+"lycées",
+"collèges",
+"lycées professionnels"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2026-11-09T06:01:23.892000+00:00",
+"publisher": "DNE - Ministère de l'Education Nationale",
+"references": null,
+"attributions": null,
+"update_frequency": null,
+"bbox": {
+"type": "Feature",
+"geometry": {
+"coordinates": [
+[
+[
+168.10648960992694,
+51.07118995394558
+],
+[
+-63.10663995333016,
+51.07118995394558
+],
+[
+-63.10663995333016,
+-22.66973538324237
+],
+[
+168.10648960992694,
+-22.66973538324237
+],
+[
+168.10648960992694,
+51.07118995394558
+]
+]
+],
+"type": "Polygon"
+},
+"properties": {}
+},
+"data_processed": "2026-11-09T06:01:23.892000+00:00",
+"federated": false,
+"geographic_reference": [
+"world"
+],
+"geographic_reference_auto": true,
+"geometry_types": [
+"Point"
+],
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-11-09T06:01:23.979000+00:00",
+"modified_updates_on_data_change": true,
+"modified_updates_on_metadata_change": true,
+"parent_domain": null,
+"records_count": 68563,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": [
+"World"
+],
+"timezone": null
+},
+"dcat": {
+"created": "2016-12-07",
+"issued": "2016-12-06",
+"creator": null,
+"contributor": null,
+"contact_name": null,
+"contact_email": null,
+"accrualperiodicity": "Quotidienne",
+"spatial": "France",
+"temporal": "2016-2040",
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": "2015-12-31T23:00:00+00:00",
+"temporal_coverage_end": "2040-12-30T23:00:00+00:00",
+"accessRights": null,
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": null,
+"periode-donnees": null,
+"champ": null,
+"couverture-geographique": null,
+"unite-statistique": null,
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"analyze",
+"timeserie",
+"geo"
+]
+},
+{
+"dataset_id": "fr-en-indicateurs-de-resultat-des-lycees-gt_v2",
+"has_attachments": true,
+"attachments_count": 1,
+"has_records": true,
+"fields": [
+{
+"name": "annee",
+"description": "année au format YYYY",
+"annotations": {
+"facet": [],
+"timeserie_precision": [
+"year"
+],
+"facetsort": [
+"-alphanum"
+]
+},
+"label": "Année",
+"type": "date"
+},
+{
+"name": "uai",
+"description": "Identifiant de l'établissement scolaire (UAI)",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "UAI",
+"type": "text"
+},
+{
+"name": "libelle_uai",
+"description": "Nom de l'établissement",
+"annotations": {},
+"label": "Etablissement",
+"type": "text"
+},
+{
+"name": "secteur",
+"description": "Secteur d'enseignement (public/privé)",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Secteur",
+"type": "text"
+},
+{
+"name": "code_commune",
+"description": "Code de la commune",
+"annotations": {
+"sortable": []
+},
+"label": "Code commune",
+"type": "text"
+},
+{
+"name": "libelle_commune",
+"description": "Libellé de la commune",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Commune",
+"type": "text"
+},
+{
+"name": "code_departement",
+"description": "Code du département",
+"annotations": {
+"sortable": []
+},
+"label": "Code departement",
+"type": "text"
+},
+{
+"name": "libelle_departement",
+"description": "Libellé du département",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Département",
+"type": "text"
+},
+{
+"name": "libelle_academie",
+"description": " Libellé de l'académie",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Académie",
+"type": "text"
+},
+{
+"name": "code_region",
+"description": "Code région Insee",
+"annotations": {
+"sortable": []
+},
+"label": "Code région",
+"type": "text"
+},
+{
+"name": "libelle_region",
+"description": "Libellé de la région",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Region",
+"type": "text"
+},
+{
+"name": "presents_total",
+"description": "Nombre total d'élèves présents",
+"annotations": {},
+"label": "Présents - Toutes séries",
+"type": "int"
+},
+{
+"name": "taux_reu_total",
+"description": "Taux de réussite observé - Toutes séries",
+"annotations": {},
+"label": "Taux de réussite - Toutes séries",
+"type": "double"
+},
+{
+"name": "va_reu_total",
+"description": "Valeur ajoutée du taux de réussite - Toutes séries",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - Toutes séries",
+"type": "double"
+},
+{
+"name": "taux_acces_2nde",
+"description": "Taux d'accès de la seconde au baccalauréat",
+"annotations": {},
+"label": "Taux d'accès 2nde-bac",
+"type": "double"
+},
+{
+"name": "va_acces_2nde",
+"description": "Valeur ajoutée du taux d'accès de la seconde au baccalauréat",
+"annotations": {},
+"label": "Valeur ajoutée du taux d'acces 2nde-bac",
+"type": "double"
+},
+{
+"name": "taux_men_total",
+"description": "Taux de mentions observé - Toutes séries",
+"annotations": {},
+"label": "Taux de mentions - Toutes séries",
+"type": "double"
+},
+{
+"name": "va_men_total",
+"description": "Valeur ajoutée du taux de mentions - Toutes séries",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - Toutes séries",
+"type": "double"
+},
+{
+"name": "presents_l",
+"description": "Nombre d'élèves présents - série L",
+"annotations": {},
+"label": "Présents - L",
+"type": "int"
+},
+{
+"name": "presents_es",
+"description": "Nombre d'élèves présents - série ES",
+"annotations": {},
+"label": "Présents - ES",
+"type": "int"
+},
+{
+"name": "presents_s",
+"description": "Nombre d'élèves présents - série S",
+"annotations": {},
+"label": "Présents - S",
+"type": "int"
+},
+{
+"name": "presents_gnle",
+"description": "Nombre d'élèves présents - série Gnle",
+"annotations": {},
+"label": "Présents - Gnle",
+"type": "int"
+},
+{
+"name": "presents_sti2d",
+"description": "Nombre d'élèves présents - série STI2D",
+"annotations": {},
+"label": "Présents - STI2D",
+"type": "int"
+},
+{
+"name": "presents_std2a",
+"description": "Nombre d'élèves présents - série STD2A",
+"annotations": {},
+"label": "Présents - STD2A",
+"type": "int"
+},
+{
+"name": "presents_stmg",
+"description": "Nombre d'élèves présents - série STMG",
+"annotations": {},
+"label": "Présents - STMG",
+"type": "int"
+},
+{
+"name": "presents_stl",
+"description": "Nombre d'élèves présents - série STL",
+"annotations": {},
+"label": "Présents - STL",
+"type": "int"
+},
+{
+"name": "presents_st2s",
+"description": "Nombre d'élèves présents - série ST2S",
+"annotations": {},
+"label": "Présents - ST2S",
+"type": "int"
+},
+{
+"name": "presents_s2tmd",
+"description": "Nombre d'élèves présents - série S2TMD",
+"annotations": {},
+"label": "Présents - S2TMD",
+"type": "int"
+},
+{
+"name": "presents_sthr",
+"description": "Nombre d'élèves présents - série STHR",
+"annotations": {},
+"label": "Présents - STHR",
+"type": "int"
+},
+{
+"name": "taux_reu_l",
+"description": "Taux de réussite observé - série L",
+"annotations": {},
+"label": "Taux de réussite - L",
+"type": "text"
+},
+{
+"name": "taux_reu_es",
+"description": "Taux de réussite observé - série ES",
+"annotations": {},
+"label": "Taux de réussite - ES",
+"type": "text"
+},
+{
+"name": "taux_reu_s",
+"description": "Taux de réussite observé - série S",
+"annotations": {},
+"label": "Taux de réussite - S",
+"type": "text"
+},
+{
+"name": "taux_reu_gnle",
+"description": "Taux de réussite observé - série Gnle",
+"annotations": {},
+"label": "Taux de réussite - Gnle",
+"type": "text"
+},
+{
+"name": "taux_reu_sti2d",
+"description": "Taux de réussite observé - série STI2D",
+"annotations": {},
+"label": "Taux de réussite - STI2D",
+"type": "text"
+},
+{
+"name": "taux_reu_std2a",
+"description": "Taux de réussite observé - série STD2A",
+"annotations": {},
+"label": "Taux de réussite - STD2A",
+"type": "text"
+},
+{
+"name": "taux_reu_stmg",
+"description": "Taux de réussite observé - série STMG",
+"annotations": {},
+"label": "Taux de réussite - STMG",
+"type": "text"
+},
+{
+"name": "taux_reu_stl",
+"description": "Taux de réussite observé - série STL",
+"annotations": {},
+"label": "Taux de réussite - STL",
+"type": "text"
+},
+{
+"name": "taux_reu_st2s",
+"description": "Taux de réussite observé - série ST2S",
+"annotations": {},
+"label": "Taux de réussite - ST2S",
+"type": "text"
+},
+{
+"name": "taux_reu_s2tmd",
+"description": "Taux de réussite observé - série S2TMD",
+"annotations": {},
+"label": "Taux de réussite - S2TMD",
+"type": "text"
+},
+{
+"name": "taux_reu_sthr",
+"description": "Taux de réussite observé - série STHR",
+"annotations": {},
+"label": "Taux de réussite - STHR",
+"type": "text"
+},
+{
+"name": "va_reu_l",
+"description": "Valeur ajoutée du taux de réussite - série L",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - L",
+"type": "text"
+},
+{
+"name": "va_reu_es",
+"description": "Valeur ajoutée du taux de réussite - série ES",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - ES",
+"type": "text"
+},
+{
+"name": "va_reu_s",
+"description": "Valeur ajoutée du taux de réussite - série S",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - S",
+"type": "text"
+},
+{
+"name": "va_reu_gnle",
+"description": "Valeur ajoutée du taux de réussite - série Gnle",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - Gnle",
+"type": "text"
+},
+{
+"name": "va_reu_sti2d",
+"description": "Valeur ajoutée du taux de réussite - série STI2D",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - STI2D",
+"type": "text"
+},
+{
+"name": "va_reu_std2a",
+"description": "Valeur ajoutée du taux de réussite - série STD2A",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - STD2A",
+"type": "text"
+},
+{
+"name": "va_reu_stmg",
+"description": "Valeur ajoutée du taux de réussite - série STMG",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - STMG",
+"type": "text"
+},
+{
+"name": "va_reu_stl",
+"description": "Valeur ajoutée du taux de réussite - série STL",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - STL",
+"type": "text"
+},
+{
+"name": "va_reu_st2s",
+"description": "Valeur ajoutée du taux de réussite - série ST2S",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - ST2S",
+"type": "text"
+},
+{
+"name": "va_reu_s2tmd",
+"description": "Valeur ajoutée du taux de réussite - série S2TMD",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - S2TMD",
+"type": "text"
+},
+{
+"name": "va_reu_sthr",
+"description": "Valeur ajoutée du taux de réussite - série STHR",
+"annotations": {},
+"label": "Valeur ajoutée du taux de réussite - STHR",
+"type": "text"
+},
+{
+"name": "eff_2nde",
+"description": "Effectif de seconde",
+"annotations": {},
+"label": "Effectif de seconde",
+"type": "int"
+},
+{
+"name": "eff_1ere",
+"description": "Effectif de première",
+"annotations": {},
+"label": "Effectif de premiere",
+"type": "int"
+},
+{
+"name": "eff_term",
+"description": "Effectif de terminale",
+"annotations": {},
+"label": "Effectif de terminale",
+"type": "int"
+},
+{
+"name": "taux_acces_1ere",
+"description": "Taux d'accès de la première au baccalauréat",
+"annotations": {},
+"label": "Taux d'accès 1ere-bac",
+"type": "text"
+},
+{
+"name": "taux_acces_term",
+"description": "Taux d'accès de la terminale au baccalauréat",
+"annotations": {},
+"label": "Taux d'accès terminale-bac",
+"type": "text"
+},
+{
+"name": "va_acces_1ere",
+"description": "Valeur ajoutée du taux d'accès de la première au baccalauréat",
+"annotations": {},
+"label": "Valeur ajoutée du taux d'accès 1ere-bac",
+"type": "text"
+},
+{
+"name": "va_acces_term",
+"description": "Valeur ajoutée du taux d'accès de la terminale au baccalauréat",
+"annotations": {},
+"label": "Valeur ajoutée du taux d'accès terminale-bac",
+"type": "text"
+},
+{
+"name": "taux_men_l",
+"description": "Taux de mentions observé - série L",
+"annotations": {},
+"label": "Taux de mentions - L",
+"type": "text"
+},
+{
+"name": "taux_men_es",
+"description": "Taux de mentions observé - série ES",
+"annotations": {},
+"label": "Taux de mentions - ES",
+"type": "text"
+},
+{
+"name": "taux_men_s",
+"description": "Taux de mentions observé - série S",
+"annotations": {},
+"label": "Taux de mentions - S",
+"type": "text"
+},
+{
+"name": "taux_men_gnle",
+"description": "Taux de mentions observé - série Gnle",
+"annotations": {},
+"label": "Taux de mentions - Gnle",
+"type": "text"
+},
+{
+"name": "taux_men_sti2d",
+"description": "Taux de mentions observé - série STI2D",
+"annotations": {},
+"label": "Taux de mentions - STI2D",
+"type": "text"
+},
+{
+"name": "taux_men_std2a",
+"description": "Taux de mentions observé - série STD2A",
+"annotations": {},
+"label": "Taux de mentions - STD2A",
+"type": "text"
+},
+{
+"name": "taux_men_stmg",
+"description": "Taux de mentions observé - série STMG",
+"annotations": {},
+"label": "Taux de mentions - STMG",
+"type": "text"
+},
+{
+"name": "taux_men_stl",
+"description": "Taux de mentions observé - série STL",
+"annotations": {},
+"label": "Taux de mentions - STL",
+"type": "text"
+},
+{
+"name": "taux_men_st2s",
+"description": "Taux de mentions observé - série ST2S",
+"annotations": {},
+"label": "Taux de mentions - ST2S",
+"type": "text"
+},
+{
+"name": "taux_men_s2tmd",
+"description": "Taux de mentions observé - série S2TMD",
+"annotations": {},
+"label": "Taux de mentions - S2TMD",
+"type": "text"
+},
+{
+"name": "taux_men_sthr",
+"description": "Taux de mentions observé - série STHR",
+"annotations": {},
+"label": "Taux de mentions - STHR",
+"type": "text"
+},
+{
+"name": "va_men_l",
+"description": "Valeur ajoutée du taux de mentions - série L",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - L",
+"type": "text"
+},
+{
+"name": "va_men_es",
+"description": "Valeur ajoutée du taux de mentions - série ES",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - ES",
+"type": "text"
+},
+{
+"name": "va_men_s",
+"description": "Valeur ajoutée du taux de mentions - série S",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - S",
+"type": "text"
+},
+{
+"name": "va_men_gnle",
+"description": "Valeur ajoutée du taux de mentions - série Gnle",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - Gnle",
+"type": "text"
+},
+{
+"name": "va_men_sti2d",
+"description": "Valeur ajoutée du taux de mentions - série STI2D",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - STI2D",
+"type": "text"
+},
+{
+"name": "va_men_std2a",
+"description": "Valeur ajoutée du taux de mentions - série STD2A",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - STD2A",
+"type": "text"
+},
+{
+"name": "va_men_stmg",
+"description": "Valeur ajoutée du taux de mentions - série STMG",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - STMG",
+"type": "text"
+},
+{
+"name": "va_men_stl",
+"description": "Valeur ajoutée du taux de mentions - série STL",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - STL",
+"type": "text"
+},
+{
+"name": "va_men_st2s",
+"description": "Valeur ajoutée du taux de mentions - série ST2S",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - ST2S",
+"type": "text"
+},
+{
+"name": "va_men_s2tmd",
+"description": "Valeur ajoutée du taux de mentions - série S2TMD",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - S2TMD",
+"type": "text"
+},
+{
+"name": "va_men_sthr",
+"description": "Valeur ajoutée du taux de mentions - série STHR",
+"annotations": {},
+"label": "Valeur ajoutée du taux de mentions - STHR",
+"type": "text"
+},
+{
+"name": "nb_mentions_tb_avecf_g",
+"description": "Nombre de mentions Très Bien avec félicitations du jury - voie générale",
+"annotations": {},
+"label": "Nombre de mentions TB avec félicitations - G",
+"type": "int"
+},
+{
+"name": "nb_mentions_tb_sansf_g",
+"description": "Nombre de mentions Très Bien sans félicitations du jury - voie générale",
+"annotations": {},
+"label": "Nombre de mentions TB sans félicitations - G",
+"type": "int"
+},
+{
+"name": "nb_mentions_b_g",
+"description": "Nombre de mentions Bien - voie générale",
+"annotations": {},
+"label": "Nombre de mentions B - G",
+"type": "int"
+},
+{
+"name": "nb_mentions_ab_g",
+"description": "Nombre de mentions Assez Bien - voie générale",
+"annotations": {},
+"label": "Nombre de mentions AB - G",
+"type": "int"
+},
+{
+"name": "nb_mentions_tb_avecf_t",
+"description": "Nombre de mentions Très Bien avec félicitations du jury - voie technologique",
+"annotations": {},
+"label": "Nombre de mentions TB avec félicitations - T",
+"type": "int"
+},
+{
+"name": "nb_mentions_tb_sansf_t",
+"description": "Nombre de mentions Très Bien sans félicitations du jury - voie technologique",
+"annotations": {},
+"label": "Nombre de mentions TB sans félicitations - T",
+"type": "int"
+},
+{
+"name": "nb_mentions_b_t",
+"description": "Nombre de mentions Bien - voie technologique",
+"annotations": {},
+"label": "Nombre de mentions B - T",
+"type": "int"
+},
+{
+"name": "nb_mentions_ab_t",
+"description": "Nombre de mentions Assez Bien - voie technologique",
+"annotations": {},
+"label": "Nombre de mentions AB - T",
+"type": "int"
+}
+],
+"metas": {
+"default": {
+"title": "Indicateurs de valeur ajoutée des lycées d'enseignement général et technologique",
+"description": "<p>Les indicateurs de valeur ajoutée des lycées sont une batterie d’indicateurs qui visent à évaluer l'action propre de chaque lycée pour faire réussir les élèves qu’il accueille, en terme de réussite au baccalauréat et d’accompagnement tout au long de sa scolarité au lycée. <br><br>Les IVAL permettent un diagnostic qui va au-delà de celui qui peut être fait à partir des seuls taux de réussite « bruts » à l’examen. Pour donner une image de l’apport de chaque lycée, le calcul statistique s'efforce d'éliminer l'incidence des facteurs de réussite scolaire extérieurs au lycée, pour essayer de conserver ce qui est dû à son action propre. Pour juger de l’efficacité d’un lycée, la réussite de chacun de ses élèves doit ainsi être comparée à celle des élèves comparables scolarisés dans des lycées comparables. Des indicateurs en « valeur ajoutée » accompagnent ainsi les indicateurs « bruts ». Pour chaque lycée, la valeur ajoutée correspond à la différence entre les résultats obtenus et les résultats qui étaient attendus, compte tenu des caractéristiques scolaires et sociodémographiques des élèves accueillis. L’analyse combine des facteurs individuels des élèves (âge et sexe, niveau scolaire à l’entrée au lycée, profil social) et des facteurs liés à la structure de l’établissement (pourcentage de filles, part d'élèves en retard scolaire, profil social des élèves et note moyenne obtenue au diplôme national du brevet).<br><br>La valeur ajoutée est une approche relative et non pas absolue. Si la valeur ajoutée est positive, on a tout lieu de penser que l’établissement a plus fait réussir ses élèves que ce qui était prévu vu le profil des élèves qu’il accueillait. Si elle est négative, cela signifie que les résultats de l’établissement sont inférieurs à la moyenne des résultats des établissements qui lui ressemblent.<br></p><p>Les taux d’accès sont calculés uniquement pour les lycées qui offrent un cycle complet, c’est-à-dire qui accueillent des élèves de 2nde, 1ère et Tale. Pour les lycées généraux et technologiques, il faut au moins 20 candidats au baccalauréat pour que les taux bruts soient calculés. Le seuil est fixé à 10 pour les lycées professionnels. Enfin, les taux attendus (et par conséquent les valeurs ajoutées associées) et les effectifs de lauréats par mention ne sont pas déterminés lorsqu’il y a moins de 40 candidats en série GT ou moins de 20 candidats en série PRO.</p><p>Les fiches de résultats des lycées sont consultables à partir de la page de diffusion des IVAL sur le site du ministère : <a href=\"https://www.education.gouv.fr/les-indicateurs-de-resultats-des-colleges-et-des-lycees-377729\" target=\"_blank\">https://www.education.gouv.fr/les-indicateurs-de-resultats-des-colleges-et-des-lycees-377729</a><br><br>Bibliographie : Evain F., 2020, Indicateurs de valeur ajoutée des lycées Du pilotage interne à la diffusion grand public. Insee, Courrier des statistiques n°5.<br></p>",
+"theme": [
+"Etablissements (dont IPS)"
+],
+"keyword": [
+"établissement scolaire",
+"lycée",
+"baccalauréat",
+"BAC",
+"évaluation acquis",
+"élève",
+"indicateur de valeur ajoutée lycée",
+"IVAL",
+"taux réussite",
+"établissement public",
+"établissement privé sous contrat"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2026-06-10T10:17:27.564000+00:00",
+"publisher": "DEPP – Ministère chargé de l’éducation nationale",
+"references": null,
+"attributions": null,
+"update_frequency": "ANNUAL",
+"bbox": null,
+"data_processed": "2026-04-03T07:00:48.602000+00:00",
+"federated": false,
+"geographic_reference": null,
+"geographic_reference_auto": false,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-06-10T10:17:29.097000+00:00",
+"modified_updates_on_data_change": true,
+"modified_updates_on_metadata_change": true,
+"parent_domain": null,
+"records_count": 32485,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": null,
+"timezone": null
+},
+"dcat": {
+"created": "2024-09-11",
+"issued": "2024-09-11",
+"creator": "Bureau des études sur les établissements et l'éducation prioritaire",
+"contributor": null,
+"contact_name": null,
+"contact_email": "depp-open-data@education.gouv.fr",
+"accrualperiodicity": "annual",
+"spatial": "France",
+"temporal": "La session des examens de Juin à Septembre",
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": "2012-06-29T22:00:00+00:00",
+"temporal_coverage_end": "2025-06-29T22:00:00+00:00",
+"accessRights": "Le producteur et le diffuseur des données ne sont pas responsables des interprétations ou déductions faites à partir de l'utilisation des données.  Pour citer la publication : \"Source Depp, plateforme de données ouvertes data.education.gouv.fr\" En cas de retraitement des données, ajouter à la mention précédente :  \"traitement [auteur, nom de votre organisation]\"",
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": "30/06/2025",
+"periode-donnees": "2012-2025",
+"champ": "Les lycées publics et privés sous contrat",
+"couverture-geographique": [
+"France"
+],
+"unite-statistique": "Les établissements",
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"timeserie",
+"analyze"
+]
+},
+{
+"dataset_id": "fr-en-lycees-metiers",
+"has_attachments": false,
+"attachments_count": 0,
+"has_records": true,
+"fields": [
+{
+"name": "ndeg_uai",
+"description": null,
+"annotations": {},
+"label": "N° UAI",
+"type": "text"
+},
+{
+"name": "nom_etablissement",
+"description": "nom de l'établissement",
+"annotations": {},
+"label": "Nom_etablissement",
+"type": "text"
+},
+{
+"name": "sigle",
+"description": null,
+"annotations": {},
+"label": "Sigle",
+"type": "text"
+},
+{
+"name": "libelle_nature",
+"description": "libellé de la nature(type d'établissement détaillé)",
+"annotations": {},
+"label": "libelle_nature",
+"type": "text"
+},
+{
+"name": "statut_public_prive",
+"description": "Statut public ou privé",
+"annotations": {},
+"label": "Statut",
+"type": "text"
+},
+{
+"name": "libelle_academie",
+"description": "nom de l'académie",
+"annotations": {},
+"label": "Académie",
+"type": "text"
+},
+{
+"name": "libelle_region",
+"description": "nom de la région",
+"annotations": {},
+"label": "Région",
+"type": "text"
+},
+{
+"name": "libelle_departement",
+"description": "nom du département",
+"annotations": {},
+"label": "Département",
+"type": "text"
+},
+{
+"name": "code_departement",
+"description": "code du département",
+"annotations": {},
+"label": "N° departement",
+"type": "text"
+},
+{
+"name": "nom_commune",
+"description": "nom de la commune",
+"annotations": {},
+"label": "Commune",
+"type": "text"
+},
+{
+"name": "code_postal",
+"description": "code postal",
+"annotations": {},
+"label": "Code postal",
+"type": "text"
+},
+{
+"name": "intitule_du_label",
+"description": null,
+"annotations": {},
+"label": "Intitulé du label",
+"type": "text"
+},
+{
+"name": "appellation_ldm_en_reseau",
+"description": null,
+"annotations": {},
+"label": "Appellation LDM en réseau",
+"type": "text"
+},
+{
+"name": "filiere_de_rattachement",
+"description": null,
+"annotations": {
+"multivalued": [
+";"
+]
+},
+"label": "Filière de rattachement",
+"type": "text"
+},
+{
+"name": "web",
+"description": "site web",
+"annotations": {},
+"label": "Site web",
+"type": "text"
+},
+{
+"name": "ministere_tutelle",
+"description": "ministère de tutelle",
+"annotations": {},
+"label": "Ministère de tutelle",
+"type": "text"
+},
+{
+"name": "position",
+"description": "position (latitude/longitude WGS 84) de l'établissement",
+"annotations": {},
+"label": "position",
+"type": "geo_point_2d"
+}
+],
+"metas": {
+"default": {
+"title": "Lycées des métiers",
+"description": "<p>Ce jeu de données précise les filières de rattachement de chaque lycée des métiers, ainsi que son label.</p><p>\n</p><p class=\"MsoNormal\">Le label « Lycée des métiers » permet d'identifier des pôles\nde compétences en matière de formation professionnelle, de certification et de\ncoopération avec les entreprises au sein d’une filière professionnelle ou d’un\nterritoire. Il est attribué par les recteurs et rectrices de région académique\nou, par délégation, d’académie.</p>\n<p class=\"MsoNormal\">Les établissements labellisés peuvent proposer des\nformations relatives à différentes filières d’activités. En plus de la\ngéolocalisation et de la précision de l’intitulé propre à chaque établissement,\nle jeu de données permet d’activer des filtres par filière (nomenclature\nutilisée : 12 filières de classification des campus des métiers et des\nqualifications + 1 filière « Agriculture, paysage et horticulture »).</p><p class=\"MsoNormal\">Pour plus d’informations sur le label, consulter la page\ndédiée du site Eduscol : <a href=\"https://eduscol.education.fr/670/le-label-lycee-des-metiers\">https://eduscol.education.fr/670/le-label-lycee-des-metiers</a></p>",
+"theme": [
+"Etablissements (dont IPS)",
+"Enseignements (dont formation, spécialité, langue, sport)"
+],
+"keyword": [
+"établissement scolaire",
+"lycée",
+"enseignement professionnel",
+"voie professionnelle",
+"France"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2026-09-07T14:30:49.656000+00:00",
+"publisher": "Direction générale de l'Enseignement scolaire",
+"references": null,
+"attributions": null,
+"update_frequency": "ANNUAL",
+"bbox": {
+"type": "Feature",
+"geometry": {
+"coordinates": [
+[
+[
+55.73946280404925,
+51.02923865430057
+],
+[
+-61.73993032425642,
+51.02923865430057
+],
+[
+-61.73993032425642,
+-21.079406174831092
+],
+[
+55.73946280404925,
+-21.079406174831092
+],
+[
+55.73946280404925,
+51.02923865430057
+]
+]
+],
+"type": "Polygon"
+},
+"properties": {}
+},
+"data_processed": "2026-09-07T14:30:49.656000+00:00",
+"federated": false,
+"geographic_reference": null,
+"geographic_reference_auto": false,
+"geometry_types": [
+"Point"
+],
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-09-07T14:30:49.750000+00:00",
+"modified_updates_on_data_change": true,
+"modified_updates_on_metadata_change": false,
+"parent_domain": null,
+"records_count": 763,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": null,
+"timezone": null
+},
+"dcat": {
+"created": null,
+"issued": null,
+"creator": null,
+"contributor": null,
+"contact_name": null,
+"contact_email": null,
+"accrualperiodicity": null,
+"spatial": null,
+"temporal": null,
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": null,
+"temporal_coverage_end": null,
+"accessRights": null,
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": "19/02/2026",
+"periode-donnees": "2025-2026",
+"champ": "Public et privé sous contrat sous tutelle du ministère de l'éducation nationale",
+"couverture-geographique": [
+"France"
+],
+"unite-statistique": "Etablissement",
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"analyze",
+"geo"
+]
+},
+{
+"dataset_id": "fr-en-ips_lycees",
+"has_attachments": true,
+"attachments_count": 1,
+"has_records": true,
+"fields": [
+{
+"name": "rentree_scolaire",
+"description": "Année scolaire sur laquelle porte les indices",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"-alphanum"
+]
+},
+"label": "Rentrée scolaire",
+"type": "text"
+},
+{
+"name": "academie",
+"description": "Académie à laquelle appartient l'établissement",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+]
+},
+"label": "Académie",
+"type": "text"
+},
+{
+"name": "code_du_departement",
+"description": "Code du département auquel appartient l'établissement",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Code du département",
+"type": "text"
+},
+{
+"name": "departement",
+"description": "Département auquel appartient l'établissement",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Département",
+"type": "text"
+},
+{
+"name": "uai",
+"description": "Numéro d'identification de l'établissement",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "UAI",
+"type": "text"
+},
+{
+"name": "nom_de_l_etablissment",
+"description": "Nom de l'établissement",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Nom de l'établissment",
+"type": "text"
+},
+{
+"name": "code_insee_de_la_commune",
+"description": "Code de la commune à laquelle appartient l'établissement",
+"annotations": {
+"facet": [],
+"disjunctive": [],
+"facetsort": [
+"alphanum"
+],
+"sortable": []
+},
+"label": "Code INSEE de la commune",
+"type": "text"
+},
+{
+"name": "nom_de_la_commune",
+"description": "Commune à laquelle appartient l'établissement",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Nom de la commune",
+"type": "text"
+},
+{
+"name": "secteur",
+"description": "Secteur de l'établissement scolaire : établissement public ou privé sous contrat",
+"annotations": {
+"facet": [],
+"sortable": [],
+"disjunctive": [],
+"facetsort": [
+"-alphanum"
+]
+},
+"label": "Secteur",
+"type": "text"
+},
+{
+"name": "type_de_lycee",
+"description": "Type de lycée : LEGT (lycée d'enseignement général et technologique), LP (lycée professionnel), LPO (lycée polyvalent)",
+"annotations": {
+"facet": [],
+"facetsort": [
+"alphanum"
+],
+"disjunctive": [],
+"sortable": []
+},
+"label": "Type de lycée",
+"type": "text"
+},
+{
+"name": "ips_voie_gt",
+"description": "Indice moyen de position sociale des élèves scolarisés en voie générale ou technologique dans l'établissement",
+"annotations": {},
+"label": "IPS voie GT",
+"type": "double"
+},
+{
+"name": "ips_voie_pro",
+"description": "Indice moyen de position sociale des élèves scolarisés en voie professionnelle dans l'établissement",
+"annotations": {},
+"label": "IPS voie PRO",
+"type": "double"
+},
+{
+"name": "ips_ensemble_gt_pro",
+"description": "Indice moyen de position sociale de l’ensemble des élèves du second cycle dans l'établissement",
+"annotations": {},
+"label": "IPS Ensemble GT-PRO",
+"type": "double"
+},
+{
+"name": "ecart_type_de_l_ips_voie_gt",
+"description": "Écart-type de l'indice de position sociale des élèves scolarisés en voie générale ou technologique dans l'établissement",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Ecart-type de l'IPS voie GT",
+"type": "double"
+},
+{
+"name": "ecart_type_de_l_ips_voie_pro",
+"description": "Écart-type de l'indice de position sociale des élèves scolarisés en voie professionnelle dans l'établissement",
+"annotations": {
+"facetsort": [
+"-count"
+]
+},
+"label": "Ecart-type de l'IPS voie PRO",
+"type": "double"
+}
+],
+"metas": {
+"default": {
+"title": "Indices de position sociale des lycées (2016-2021)",
+"description": "<p></p><p>\n</p>\n<p class=\"MsoNormal\">L’indice de position sociale (IPS) permet d'appréhender le\nstatut social des élèves à partir des professions et catégories sociales (PCS)\nde leurs parents. Pour chaque PCS, la valeur numérique de l’IPS correspond à un\nrésumé quantitatif d’un ensemble d’attributs socio-économiques et culturels\nliés à la réussite scolaire.</p>\n<p class=\"MsoNormal\">Concrètement, pour déterminer les valeurs associées à chaque\nPCS, nous avons considéré la moyenne pondérée de caractéristiques telles que\nles diplômes, les pratiques culturelles, les conditions matérielles, le capital\nculturel et l’implication des parents dans la scolarité. Cette méthodologie\nstatistique est décrite dans l’article de Rocher (2016) et s’appuie sur une méthode\nd’analyse de données (analyse des correspondances multiples) réalisée à partir\ndu panel de la DEPP d’élèves entrés en sixième en 2007. Les valeurs de référence de l’IPS sont disponibles pour chaque PCS et pour chaque croisement de PCS (mère-père), cf. Rocher (2016) (table de passage disponible en pièce jointe ci-dessous).<br></p>\n<p class=\"MsoNormal\">Ainsi, dès lors que les PCS des parents ont été recueillies,\nil suffit d'appliquer les valeurs de référence de l’IPS. Le niveau social d'un\nétablissement scolaire est apprécié à travers le calcul de la moyenne des IPS\ndes élèves qui y sont scolarisés.</p>\n<p class=\"MsoNormal\">Il convient de rappeler que, comme tout indice synthétique,\nil s’agit d’un résumé simplifié de la réalité, qui ne peut rendre compte à lui\nseul de la complexité de la situation socio-économique et culturelle des élèves\naccueillis dans un établissement. </p>\n<p class=\"MsoNormal\">Enfin, l’IPS étant basé sur les PCS déclarées par les\nfamilles et enregistrées par les établissements, il est soumis à une certaine\nmarge d’erreur : ainsi, il est conseillé de ne pas sur-interpréter des\ndifférences de 3 points ou moins concernant les IPS moyens des établissements.</p>\n<p class=\"MsoNormal\">L’indice d’hétérogénéité sociale d’un établissement\ncorrespond à l’écart-type de l’indice de position sociale (IPS) de ses élèves. Plus\nil est élevé, plus le profil social des élèves est diversifié. Cet indice est calculé\ndepuis la rentrée 2019, uniquement pour les établissements du second degré.</p>\n<p></p><p class=\"MsoNormal\"><b style=\"mso-bidi-font-weight:normal\"><u>Champ</u></b></p>\n<p class=\"MsoNormal\">Le fichier fournit l’IPS moyen par établissement ainsi que\nl’écart-type des IPS de ses élèves pour lycées de France sous tutelle de l’Éducation Nationale, publics et privés sous contrat, calculés à partir des données de la\nrentrée N et pour les élèves du second cycle uniquement. </p>\n<p class=\"MsoNormal\">Dans le fichier mis à disposition, chaque ligne correspond à\nun lycée pour une année scolaire donnée. </p>\n<p class=\"MsoNormal\">L’IPS moyen de chaque établissement est décliné pour les\nélèves de la voie générale et technologique uniquement, pour les élèves de la\nvoie professionnelle uniquement, et pour l’ensemble des élèves du second cycle.\nL’écart-type des IPS des élèves est décliné pour les élèves de la voie générale\net technologique uniquement et pour les élèves de la voie professionnelle\nuniquement.</p>\n<p class=\"MsoNormal\"><b style=\"mso-bidi-font-weight:normal\"><u>Référence</u></b></p>\n<p class=\"MsoNormal\">\n</p><p class=\"MsoNormal\">\n</p><p class=\"MsoNormal\"><span>Rocher, T. (2016). Construction d’un indice de\nposition sociale des élèves. <i style=\"mso-bidi-font-style:normal\">Éducation\n&amp; formations</i>, DEPP, 90, pp.5-27.</span><span style='font-size:12.0pt;font-family:\"Calibri\",sans-serif;\nmso-ascii-theme-font:minor-latin;mso-fareast-font-family:Calibri;mso-fareast-theme-font:\nminor-latin;mso-hansi-theme-font:minor-latin;mso-bidi-font-family:\"Times New Roman\";\nmso-bidi-theme-font:minor-bidi;mso-ansi-language:FR;mso-fareast-language:EN-US;\nmso-bidi-language:AR-SA'></span></p><p class=\"MsoNormal\">Dauphant F., Evain F., Guillerm M., Simon C., \nRocher T. (2023), L’indice de position sociale (IPS) : un outil \nstatistique pour décrire les inégalités sociales entre établissements. <i>Note d’information de la Depp n°23.16.</i></p><p class=\"MsoNormal\">En savoir plus sur l’indice de position sociale : <a href=\"https://www.education.gouv.fr/l-indice-de-position-sociale-ips-357755\">\nhttps://www.education.gouv.fr/l-indice-de-position-sociale-ips-357755</a></p>\n<p></p>\n<p></p>\n<p></p>",
+"theme": [
+"Etablissements (dont IPS)"
+],
+"keyword": [
+"élèves",
+"lycées"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2024-05-24T11:30:32+00:00",
+"publisher": "DEPP – Ministère chargé de l’éducation nationale",
+"references": null,
+"attributions": null,
+"update_frequency": null,
+"bbox": null,
+"data_processed": "2026-01-29T18:58:25.892000+00:00",
+"federated": false,
+"geographic_reference": null,
+"geographic_reference_auto": false,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-06-23T10:22:11.068000+00:00",
+"modified_updates_on_data_change": false,
+"modified_updates_on_metadata_change": false,
+"parent_domain": null,
+"records_count": 21777,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": null,
+"timezone": null
+},
+"dcat": {
+"created": "2023-03-14",
+"issued": "2023-03-14",
+"creator": null,
+"contributor": null,
+"contact_name": null,
+"contact_email": "depp-open-data@education.gouv.fr",
+"accrualperiodicity": "Annuelle",
+"spatial": "France",
+"temporal": "2016-2021",
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": "2015-12-31T23:00:00+00:00",
+"temporal_coverage_end": "2021-12-30T23:00:00+00:00",
+"accessRights": "Le producteur et le diffuseur des données ne sont pas responsables des interprétations ou déductions faites à partir de l'utilisation des données.  Pour citer la publication : \"Source Depp, plateforme de données ouvertes data.education.gouv.fr\" En cas de retraitement des données, ajouter à la mention précédente :  \"traitement [auteur, nom de votre organisation]\"",
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": null,
+"periode-donnees": null,
+"champ": null,
+"couverture-geographique": null,
+"unite-statistique": null,
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"analyze"
+]
+},
+{
+"dataset_id": "fr-en-adresse-et-geolocalisation-etablissements-premier-et-second-degre",
+"has_attachments": false,
+"attachments_count": 0,
+"has_records": true,
+"fields": [
+{
+"name": "numero_uai",
+"description": "Identifiant principal et unique de l'établissement. L'Unité Administrative Immatriculée (UAI) peut correspondre à un établissement au sens juridique ou à une partie d'un établissement (exemple SEGPA).",
+"annotations": {},
+"label": "Numéro d'UAI",
+"type": "text"
+},
+{
+"name": "appellation_officielle",
+"description": "Nom de l’établissement tel que publié dans les décrets ou arrêtés de création ou dans sa raison sociale, il s’agit de la dénomination la plus complète de l’UAI.",
+"annotations": {},
+"label": "Appellation officielle",
+"type": "text"
+},
+{
+"name": "denomination_principale",
+"description": "Dénomination normalisée en fonction de la nature.",
+"annotations": {},
+"label": "Dénomination principale",
+"type": "text"
+},
+{
+"name": "patronyme_uai",
+"description": "Complète s'il y a lieu la dénomination principale.",
+"annotations": {},
+"label": "Dénomination complémentaire",
+"type": "text"
+},
+{
+"name": "secteur_public_prive_libe",
+"description": "Le secteur différencie les établissements dont la gestion est assurée par des organismes publics de ceux gérés par des organismes privés.",
+"annotations": {},
+"label": "Secteur",
+"type": "text"
+},
+{
+"name": "adresse_uai",
+"description": "Numéro dans la voie, indice de répétition (bis, ter…), type de la voie, libellé de la voie.",
+"annotations": {},
+"label": "Adresse : désignation de la voie",
+"type": "text"
+},
+{
+"name": "lieu_dit_uai",
+"description": "5e ligne pour l’adresse postale normalisée : lieu-dit, quartier, ancienne commune en cas de fusion",
+"annotations": {},
+"label": "Adresse : 5e ligne",
+"type": "text"
+},
+{
+"name": "boite_postale_uai",
+"description": "Boite postale ou course spéciale",
+"annotations": {},
+"label": "Adresse : boite postale ou course spéciale",
+"type": "text"
+},
+{
+"name": "code_postal_uai",
+"description": "Code postal",
+"annotations": {},
+"label": "Adresse : code postal",
+"type": "text"
+},
+{
+"name": "localite_acheminement_uai",
+"description": "Localité d'acheminement",
+"annotations": {},
+"label": "Localité d'acheminement",
+"type": "text"
+},
+{
+"name": "libelle_commune",
+"description": "Commune d’implantation de l’établissement\n",
+"annotations": {},
+"label": "Libellé de la commune",
+"type": "text"
+},
+{
+"name": "coordonnee_x",
+"description": "Système de coordonnées différent selon le territoire (France métropolitaine : RGF93 - Lambert 93, Guadeloupe : WGS84 - UTM Nord fuseau 20, Martinique : WGS84 - UTM Nord fuseau 20, Guyane : RGFG95 - UTM Nord fuseau 22, Saint-Pierre-et-Miquelon : WGS84 - UTM Nord fuseau 21, Réunion : RGR92 - UTM Sud fuseau 40, Mayotte : WGS84 - UTM Sud fuseau 38)",
+"annotations": {},
+"label": "Géolocalisation : coordonnée X",
+"type": "double"
+},
+{
+"name": "coordonnee_y",
+"description": "Système de coordonnées différent selon le territoire (France métropolitaine : RGF93 - Lambert 93, Guadeloupe : WGS84 - UTM Nord fuseau 20, Martinique : WGS84 - UTM Nord fuseau 20, Guyane : RGFG95 - UTM Nord fuseau 22, Saint-Pierre-et-Miquelon : WGS84 - UTM Nord fuseau 21, Réunion : RGR92 - UTM Sud fuseau 40, Mayotte : WGS84 - UTM Sud fuseau 38)",
+"annotations": {},
+"label": "Géolocalisation : coordonnée Y",
+"type": "double"
+},
+{
+"name": "epsg",
+"description": "Code associé au système de coordonées par l'EPSG (European Petroleum Survey Group),\n",
+"annotations": {},
+"label": "EPSG",
+"type": "text"
+},
+{
+"name": "latitude",
+"description": "Latitude WGS84",
+"annotations": {},
+"label": "Latitude WGS84",
+"type": "double"
+},
+{
+"name": "longitude",
+"description": "Longitude WGS84",
+"annotations": {},
+"label": "Longitude WGS84",
+"type": "double"
+},
+{
+"name": "appariement",
+"description": "Indique comment l'adresse a été appariée à la position géographique",
+"annotations": {},
+"label": "Appariement par IGN",
+"type": "text"
+},
+{
+"name": "localisation",
+"description": "Qualifie le mode de positionnement de l'adresse",
+"annotations": {},
+"label": "localisation par IGN",
+"type": "text"
+},
+{
+"name": "nature_uai",
+"description": "Nomenclature N_NATURE_UAI",
+"annotations": {},
+"label": "Code nature de l'UAI",
+"type": "int"
+},
+{
+"name": "nature_uai_libe",
+"description": "La nature de l’UAI est l’élément fondamental du répertoire Ramsese ; elle classe les UAI selon leur activité ou mission. Le premier caractère du code repère l'ensemble auquel appartient l’établissement : 1. les écoles du premier degré ; 3. les établissements et sections d'enseignement du second degré.",
+"annotations": {},
+"label": "Libellé de la nature de l'UAI",
+"type": "text"
+},
+{
+"name": "etat_etablissement",
+"description": "Indicateur calculé en fonction des dates de rentrée et de fermeture de l'UAI : 1 = ouvert ; 2 = à fermer ; 3 = à ouvrir",
+"annotations": {},
+"label": "Etat de l'établissement",
+"type": "int"
+},
+{
+"name": "etat_etablissement_libe",
+"description": "OUVERT, A FERMER, A OUVRIR",
+"annotations": {},
+"label": "Libellé de l'état de l'établissement",
+"type": "text"
+},
+{
+"name": "code_departement",
+"description": "Selon code officiel géographique de l'INSEE",
+"annotations": {},
+"label": "Code INSEE du département ou de la collectivité",
+"type": "text"
+},
+{
+"name": "code_region",
+"description": "Selon code officiel géographique de l'INSEE",
+"annotations": {},
+"label": "Code INSEE de la région",
+"type": "text"
+},
+{
+"name": "code_academie",
+"description": "Nomenclature N_ACADEMIE_ET_ASSIMILE",
+"annotations": {},
+"label": "Code de l'académie",
+"type": "text"
+},
+{
+"name": "code_commune",
+"description": "Selon code officiel géographique de l'INSEE",
+"annotations": {},
+"label": "Code INSEE de la commune",
+"type": "text"
+},
+{
+"name": "libelle_departement",
+"description": "Libellé du département ou de la collectivité",
+"annotations": {},
+"label": "Libellé du département ou de la collectivité",
+"type": "text"
+},
+{
+"name": "libelle_region",
+"description": "Libellé de la région",
+"annotations": {},
+"label": "Libellé de la région",
+"type": "text"
+},
+{
+"name": "libelle_academie",
+"description": "Libellé de l'académie",
+"annotations": {},
+"label": "Libellé de l'académie",
+"type": "text"
+},
+{
+"name": "position",
+"description": "Latitude et longitude WGS84",
+"annotations": {},
+"label": "Latitude et longitude WGS84",
+"type": "geo_point_2d"
+},
+{
+"name": "secteur_prive_code_type_contrat",
+"description": "Nomenclature N_CONTRAT_ETABLISSEMENT",
+"annotations": {},
+"label": "Code du type de contrat",
+"type": "int"
+},
+{
+"name": "secteur_prive_libelle_type_contrat",
+"description": "Le contrat est l'acte juridique qui lie un établissement scolaire privé à l'éducation nationale. Le contrat peut revêtir deux formes : - contrat d'association (rémunération des maîtres et dépenses de fonctionnement) ; - contrat simple (rémunération des maîtres). Le contrat peut porter sur une partie ou sur la totalité des classes de l’établissement.",
+"annotations": {},
+"label": "Libellé du type de contrat",
+"type": "text"
+},
+{
+"name": "code_ministere",
+"description": "Nomenclature N_MINISTERE_TUTELLE",
+"annotations": {},
+"label": "Code de la tutelle ministérielle",
+"type": "text"
+},
+{
+"name": "libelle_ministere",
+"description": "Le « ministère de tutelle » permet de désigner les services ministériels exerçant une tutelle d’ordre administratif au sens juridique, financier et/ou pédagogique. La définition de la tutelle dans Ramsese doit s’entendre au sens large et obéit à des règles particulières lorsqu’il s’agit du secteur privé ou d’autres ministères.",
+"annotations": {},
+"label": "Libellé de la tutelle",
+"type": "text"
+},
+{
+"name": "date_ouverture",
+"description": "Date d'accueil des premiers élèves. Par convention, la date de rentrée est positionnée au 01/09 de l’année scolaire de la rentrée pour les établissements publics et privés sous contrat.",
+"annotations": {},
+"label": "Date de rentrée pédagogique",
+"type": "date"
+},
+{
+"name": "sigle",
+"description": "Le sigle correspond à une abréviation normalisée de la dénomination principale.",
+"annotations": {},
+"label": "Sigle de l'UAI",
+"type": "text"
+},
+{
+"name": "rnb",
+"description": "Identifiants des bâtiments issus du référentiel national des bâtiments (plusieurs valeurs possibles par UAI séparées par un ;)",
+"annotations": {},
+"label": "Identifiants RNB",
+"type": "text"
+}
+],
+"metas": {
+"default": {
+"title": "Adresse et géolocalisation des établissements d'enseignement des premier et second degrés",
+"description": "<p><span style='font-family: -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; font-size: 18.2857px; color: rgb(31, 73, 125);'>Liste géolocalisée des établissements d'enseignement des premier et second degrés (tous ministères de tutelle, secteurs public et privé) situés en France et dans les collectivités d'outre-mer. Les établissements concernés sont déterminés selon leur code nature dans la nomenclature de l'éducation nationale. Les codes entre 100 et 199 (premier degré) et entre 300 et 399 (second degré) sont retenus.</span><span style='color: rgb(51, 51, 51); font-family: -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; font-size: 18.2857px;'></span></p><p class=\"MsoNormal\" style='font-family: -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; font-size: 1rem; line-height: 1.5rem; color: rgb(51, 51, 51);'><span style=\"color: rgb(31, 73, 125);\"> </span></p><p class=\"MsoNormal\" style='font-family: -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; font-size: 1rem; line-height: 1.5rem; color: rgb(51, 51, 51);'><span style=\"color: rgb(31, 73, 125);\">Les données sont issues de RAMSESE (répertoire académique et ministériel sur les établissements du système éducatif).</span></p><p class=\"MsoNormal\" style='font-family: -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; margin: 0px; font-size: 1rem; line-height: 1.5rem; color: rgb(51, 51, 51);'><font color=\"#1f497d\">Le référentiel national des bâtiments a été ajouté à ce jeu de données améliorant l'information sur l'établissement.</font></p>",
+"theme": [
+"Données de référence"
+],
+"keyword": [
+"structures",
+"unités d'enseignement",
+"établissements",
+"écoles",
+"EPLE",
+"public",
+"privé",
+"lycées",
+"collèges",
+"lycées professionnels",
+"RNB",
+"référentiel national des bâtiments",
+"référentiel national bâtiments"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2026-11-09T06:00:53.998000+00:00",
+"publisher": "DEPP – Ministère chargé de l’éducation nationale",
+"references": null,
+"attributions": null,
+"update_frequency": "DAILY",
+"bbox": {
+"type": "Feature",
+"geometry": {
+"coordinates": [
+[
+[
+168.10648960992694,
+51.07118995394558
+],
+[
+-63.10663995333016,
+51.07118995394558
+],
+[
+-63.10663995333016,
+-22.66973538324237
+],
+[
+168.10648960992694,
+-22.66973538324237
+],
+[
+168.10648960992694,
+51.07118995394558
+]
+]
+],
+"type": "Polygon"
+},
+"properties": {}
+},
+"data_processed": "2026-11-09T06:00:53.998000+00:00",
+"federated": false,
+"geographic_reference": [
+"world"
+],
+"geographic_reference_auto": false,
+"geometry_types": [
+"Point"
+],
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-11-09T06:00:54.085000+00:00",
+"modified_updates_on_data_change": true,
+"modified_updates_on_metadata_change": true,
+"parent_domain": null,
+"records_count": 63562,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": [
+"World"
+],
+"timezone": null
+},
+"dcat": {
+"created": "2016-11-14",
+"issued": "2016-11-13",
+"creator": null,
+"contributor": null,
+"contact_name": null,
+"contact_email": "depp-ramsese@education.gouv.fr",
+"accrualperiodicity": "daily",
+"spatial": "France + COM",
+"temporal": null,
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": null,
+"temporal_coverage_end": null,
+"accessRights": "Le producteur et le diffuseur des données ne sont pas responsables des interprétations ou déductions faites à partir de l'utilisation des données. Pour citer la publication : \"Source Depp, plateforme de données ouvertes data.education.gouv.fr\" En cas de retraitement des données, ajouter à la mention précédente : \"traitement [auteur, nom de votre organisation]\"",
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": "date de la veille",
+"periode-donnees": null,
+"champ": "écoles et établissements des premier et second degrés ouverts ou à ouvrir et immatriculés dans le répertoire RAMSESE (public, privé sous et hors contrat)",
+"couverture-geographique": null,
+"unite-statistique": "Unité administrative immatriculée UAI",
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"analyze",
+"timeserie",
+"geo"
+]
+},
+{
+"dataset_id": "observatoire-des-usages-pedagogiques-de-l-ia-ressources-pedagogiques",
+"has_attachments": false,
+"attachments_count": 0,
+"has_records": true,
+"fields": [
+{
+"name": "titre",
+"description": null,
+"annotations": {},
+"label": "Titre",
+"type": "text"
+},
+{
+"name": "image",
+"description": null,
+"annotations": {},
+"label": "Image",
+"type": "int"
+},
+{
+"name": "format",
+"description": null,
+"annotations": {
+"multivalued": [
+", "
+]
+},
+"label": "Format",
+"type": "text"
+},
+{
+"name": "picto",
+"description": null,
+"annotations": {},
+"label": "Picto",
+"type": "text"
+},
+{
+"name": "eval_utilisateurs",
+"description": null,
+"annotations": {},
+"label": "Evaluation utilisateurs",
+"type": "int"
+},
+{
+"name": "eval_nb",
+"description": null,
+"annotations": {},
+"label": "Eval_nb",
+"type": "int"
+},
+{
+"name": "immanquable",
+"description": null,
+"annotations": {},
+"label": "Immanquable",
+"type": "text"
+},
+{
+"name": "duree",
+"description": null,
+"annotations": {},
+"label": "Durée",
+"type": "text"
+},
+{
+"name": "description_et_points_d_interet",
+"description": null,
+"annotations": {},
+"label": "Description et points d'intérêt",
+"type": "text"
+},
+{
+"name": "thematique",
+"description": null,
+"annotations": {
+"multivalued": [
+", "
+]
+},
+"label": "Thématique",
+"type": "text"
+},
+{
+"name": "public_cible",
+"description": null,
+"annotations": {
+"multivalued": [
+", "
+]
+},
+"label": "Public cible",
+"type": "text"
+},
+{
+"name": "auteur",
+"description": null,
+"annotations": {
+"multivalued": [
+", "
+]
+},
+"label": "Auteur",
+"type": "text"
+},
+{
+"name": "discipline_s",
+"description": null,
+"annotations": {
+"multivalued": [
+", "
+]
+},
+"label": "Discipline(s)",
+"type": "text"
+},
+{
+"name": "url_consultation",
+"description": null,
+"annotations": {},
+"label": "URL_consultation",
+"type": "text"
+},
+{
+"name": "url_telechargement",
+"description": null,
+"annotations": {},
+"label": "URL_telechargement",
+"type": "text"
+},
+{
+"name": "annee",
+"description": null,
+"annotations": {
+"timeserie_precision": [
+"year"
+]
+},
+"label": "Annee",
+"type": "date"
+},
+{
+"name": "date_de_creation",
+"description": null,
+"annotations": {},
+"label": "Date de création",
+"type": "date"
+},
+{
+"name": "formation_mooc",
+"description": null,
+"annotations": {
+"multivalued": [
+", "
+]
+},
+"label": "Formation_Mooc",
+"type": "text"
+},
+{
+"name": "date_de_depot",
+"description": null,
+"annotations": {},
+"label": "Date de dépôt",
+"type": "date"
+},
+{
+"name": "derniere_mise_a_jour",
+"description": null,
+"annotations": {},
+"label": "Dernière mise à jour",
+"type": "date"
+},
+{
+"name": "auteur_suite",
+"description": null,
+"annotations": {},
+"label": "Auteur Suite",
+"type": "text"
+},
+{
+"name": "id_grist",
+"description": null,
+"annotations": {},
+"label": "ID_Grist",
+"type": "int"
+}
+],
+"metas": {
+"default": {
+"title": "[Observatoire des usages pédagogiques de l'IA] Ressources Pédagogiques",
+"description": "<p><span style='color: rgb(51, 51, 51); font-family: -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; font-size: 16px;'>Liste validée des ressources pédagogiques en intelligence artificielle.</span><br style='color: rgb(51, 51, 51); font-family: -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; font-size: 16px;'/><span style='color: rgb(51, 51, 51); font-family: -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; font-size: 16px;'>Jeu de données utilisé pour l'Observatoire des usages pédagogiques de l'IA. </span></p>",
+"theme": [
+"Enseignements (dont formation, spécialité, langue, sport)"
+],
+"keyword": [
+"IA",
+"pédagogie",
+"ressources"
+],
+"license": "Licence Ouverte v2.0 (Etalab)",
+"license_url": "http://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+"language": "fr",
+"modified": "2026-11-03T00:00:08.906000+00:00",
+"publisher": "DGESCO",
+"references": "https://grist.numerique.gouv.fr/o/observatoire-pratiques-ia-pedagogie/1XQZxz386iNf/Observatoire-des-pratiques-pedagogiques-avec-lIA-Ressources-Referents/p/8",
+"attributions": null,
+"update_frequency": "WEEKLY",
+"bbox": null,
+"data_processed": "2026-11-03T00:00:08.906000+00:00",
+"federated": false,
+"geographic_reference": null,
+"geographic_reference_auto": false,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-11-03T00:00:09.039000+00:00",
+"modified_updates_on_data_change": true,
+"modified_updates_on_metadata_change": true,
+"parent_domain": null,
+"records_count": 42,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": null,
+"timezone": null
+},
+"dcat": {
+"created": null,
+"issued": null,
+"creator": null,
+"contributor": null,
+"contact_name": null,
+"contact_email": null,
+"accrualperiodicity": null,
+"spatial": null,
+"temporal": null,
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": null,
+"temporal_coverage_end": null,
+"accessRights": null,
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": null,
+"periode-donnees": null,
+"champ": null,
+"couverture-geographique": null,
+"unite-statistique": null,
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"timeserie",
+"analyze"
+]
+},
+{
+"dataset_id": "20261103-base-centrale-test",
+"has_attachments": false,
+"attachments_count": 0,
+"has_records": true,
+"fields": [
+{
+"name": "uai",
+"description": null,
+"annotations": {},
+"label": "UAI",
+"type": "text"
+},
+{
+"name": "latitude",
+"description": null,
+"annotations": {},
+"label": "Latitude",
+"type": "double"
+},
+{
+"name": "longitude",
+"description": null,
+"annotations": {},
+"label": "Longitude",
+"type": "double"
+},
+{
+"name": "id_academie",
+"description": null,
+"annotations": {},
+"label": "ID_Academie",
+"type": "text"
+},
+{
+"name": "titre_projet",
+"description": null,
+"annotations": {},
+"label": "Titre_projet",
+"type": "text"
+},
+{
+"name": "nom_etablissement",
+"description": null,
+"annotations": {},
+"label": "Nom établissement",
+"type": "text"
+},
+{
+"name": "commune",
+"description": null,
+"annotations": {},
+"label": "Commune",
+"type": "text"
+},
+{
+"name": "objectif_principal_du_projet",
+"description": null,
+"annotations": {},
+"label": "Objectif principal du projet",
+"type": "text"
+},
+{
+"name": "perimetre",
+"description": null,
+"annotations": {},
+"label": "Périmètre",
+"type": "text"
+},
+{
+"name": "le_projet_en_trois_phrases",
+"description": null,
+"annotations": {},
+"label": "Le projet en trois phrases",
+"type": "text"
+}
+],
+"metas": {
+"default": {
+"title": "20261103 Base Centrale-test",
+"description": null,
+"theme": null,
+"keyword": null,
+"license": null,
+"license_url": null,
+"language": "fr",
+"modified": "2026-11-05T11:14:44+00:00",
+"publisher": null,
+"references": null,
+"attributions": null,
+"update_frequency": null,
+"bbox": null,
+"data_processed": "2026-11-05T11:15:03.635000+00:00",
+"federated": false,
+"geographic_reference": null,
+"geographic_reference_auto": null,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-11-05T20:35:02.614000+00:00",
+"modified_updates_on_data_change": false,
+"modified_updates_on_metadata_change": false,
+"parent_domain": null,
+"records_count": 22,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": null,
+"timezone": null
+},
+"dcat": {
+"created": null,
+"issued": null,
+"creator": null,
+"contributor": null,
+"contact_name": null,
+"contact_email": null,
+"accrualperiodicity": null,
+"spatial": null,
+"temporal": null,
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": null,
+"temporal_coverage_end": null,
+"accessRights": null,
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": null,
+"periode-donnees": null,
+"champ": null,
+"couverture-geographique": null,
+"unite-statistique": null,
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"analyze"
+]
+},
+{
+"dataset_id": "fr-en-capytale_goals",
+"has_attachments": false,
+"attachments_count": 0,
+"has_records": true,
+"fields": [
+{
+"name": "date",
+"description": null,
+"annotations": {
+"timeserie_precision": [
+"month"
+]
+},
+"label": "Date",
+"type": "date"
+},
+{
+"name": "academie",
+"description": null,
+"annotations": {},
+"label": "Académie",
+"type": "text"
+},
+{
+"name": "idgoal",
+"description": null,
+"annotations": {},
+"label": "Identifiant d'objectif",
+"type": "text"
+},
+{
+"name": "nb_conversions",
+"description": null,
+"annotations": {},
+"label": "Nombre de conversions",
+"type": "int"
+},
+{
+"name": "nb_visits_converted",
+"description": null,
+"annotations": {},
+"label": "Nombre de visites converties",
+"type": "int"
+}
+],
+"metas": {
+"default": {
+"title": "Capytale : objectifs Matomo",
+"description": null,
+"theme": null,
+"keyword": null,
+"license": null,
+"license_url": null,
+"language": "fr",
+"modified": "2026-10-07T13:29:48+00:00",
+"publisher": null,
+"references": null,
+"attributions": null,
+"update_frequency": null,
+"bbox": null,
+"data_processed": "2026-11-08T23:15:57.139000+00:00",
+"federated": false,
+"geographic_reference": null,
+"geographic_reference_auto": false,
+"geometry_types": null,
+"metadata_languages": [
+"fr"
+],
+"metadata_processed": "2026-11-08T23:15:57.229000+00:00",
+"modified_updates_on_data_change": false,
+"modified_updates_on_metadata_change": false,
+"parent_domain": null,
+"records_count": 22615,
+"shared_catalog": null,
+"source_dataset": null,
+"source_domain": null,
+"source_domain_address": null,
+"source_domain_title": null,
+"territory": null,
+"timezone": null
+},
+"dcat": {
+"created": null,
+"issued": null,
+"creator": null,
+"contributor": null,
+"contact_name": null,
+"contact_email": null,
+"accrualperiodicity": null,
+"spatial": null,
+"temporal": null,
+"granularity": null,
+"dataquality": null,
+"publisher_type": null,
+"conforms_to": null,
+"temporal_coverage_start": null,
+"temporal_coverage_end": null,
+"accessRights": null,
+"relation": null
+},
+"metadonnees-complementaires": {
+"date-observation": null,
+"periode-donnees": null,
+"champ": null,
+"couverture-geographique": null,
+"unite-statistique": null,
+"secret-statistique": null,
+"source": null
+}
+},
+"features": [
+"analyze",
+"timeserie"
+]
+}
+]
