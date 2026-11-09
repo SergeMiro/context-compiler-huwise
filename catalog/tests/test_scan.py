@@ -1,7 +1,5 @@
 import copy
-import json
 from datetime import timedelta
-from pathlib import Path
 
 import httpx
 from django.test import TestCase
@@ -9,29 +7,7 @@ from django.test import TestCase
 from catalog.models import Dataset, Field, Portal
 from sources.explore import html_to_text, scan
 from sources.keys import is_pii, key_of
-
-FIX = Path(__file__).resolve().parents[2] / "tests" / "fixtures"
-CATALOG = json.loads((FIX / "catalog-education.json").read_text())
-FACETS = json.loads((FIX / "facets-annuaire.json").read_text())
-HEADERS = {"x-ratelimit-limit": "50000", "x-ratelimit-remaining": "49000"}
-
-
-def api(catalog, seen=None, fail_on=None):
-    def handler(request):
-        path = request.url.path
-        if seen is not None:
-            seen.append(path)
-        if fail_on and fail_on in path:
-            return httpx.Response(500)
-        if path.endswith("/catalog/exports/json"):
-            return httpx.Response(200, json=catalog, headers=HEADERS)
-        if path.endswith("/catalog/datasets"):
-            return httpx.Response(200, json={"total_count": len(catalog), "results": catalog}, headers=HEADERS)
-        if path.endswith("/facets"):
-            return httpx.Response(200, json=FACETS if "annuaire" in path else {"facets": []}, headers=HEADERS)
-        return httpx.Response(404)
-    return httpx.MockTransport(handler)
-
+from tests.explore_mock import CATALOG, FACETS, HEADERS, api
 
 class ScanTest(TestCase):
     def setUp(self):
