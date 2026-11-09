@@ -78,3 +78,4 @@ LOGGING = {"version": 1, "disable_existing_loggers": False,
            "root": {"handlers": ["console"], "level": "INFO"},
            "loggers": {"httpx": {"level": "WARNING"}, "elastic_transport": {"level": "WARNING"},
                        "neo4j": {"level": "WARNING"}}}
+ES_INDEX = env("ES_INDEX", "cards")  # alias; physical indices are <alias>_v<N>
