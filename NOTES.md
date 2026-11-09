@@ -44,3 +44,11 @@ Writing reference queries by hand failed 11 times out of 30 on the first run —
 - **Numbers stored as text:** `ips` in IPS écoles / `ips_etab` in IPS lycées are `text`: `avg()` fails, `order_by desc`
   sorts lexicographically. Those questions were replaced (collèges: numeric `ips`).
 - `academie='DIJON'` in IPS/bac datasets vs `libelle_academie='Dijon'` in the directory.
+
+## T15 — from zero (09.11.2026)
+
+`docker compose down -v && scripts/bootstrap.sh` → 314 datasets, 6 976 fields, 314 cards, 310 with usage,
+30 golden answers, 314 pages in `out/`, in **85 s**. bench right after: find p95 24 ms, explain p95 47 ms (cold);
+warm: 15 / 26 ms.
+
+Open: the real `naked` vs `compiled` table needs a model in `.env` (`CTXC_LLM_*`).
