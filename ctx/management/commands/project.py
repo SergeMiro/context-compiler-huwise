@@ -13,8 +13,10 @@ class Command(BaseCommand):
     def handle(self, domain, rebuild_index, **_):
         import time
 
-        from projections import es
+        from projections import es, graph
         portal = Portal.objects.get(domain=domain)
         t = time.monotonic()
         n = es.rebuild_index(Portal.objects.all())[0] if rebuild_index else es.project_es(portal)
         self.stdout.write(f"es: {n} cards in {time.monotonic() - t:.1f}s")
+        t = time.monotonic()
+        self.stdout.write(f"neo4j: {graph.project_graph(portal)} in {time.monotonic() - t:.1f}s")
