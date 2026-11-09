@@ -17,7 +17,9 @@ SCHEMA = [
 def driver():
     global _driver
     if _driver is None:
-        _driver = GraphDatabase.driver(settings.NEO4J_URL, auth=settings.NEO4J_AUTH)
+        # lineage queries name DERIVED_FROM before any such edge exists: not a typo, silence that warning
+        _driver = GraphDatabase.driver(settings.NEO4J_URL, auth=settings.NEO4J_AUTH,
+                                       notifications_disabled_classifications=["UNRECOGNIZED"])
     return _driver
 
 
