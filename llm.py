@@ -1,0 +1,69 @@
+"""The only place that talks to a model. Any OpenAI-compatible /chat/completions endpoint; the model is configuration
+(CTXC_LLM_BASE_URL, CTXC_LLM_API_KEY, CTXC_LLM_MODEL), never code. FakeLLM replays a script for tests."""
+import json
+import logging
+import time
+
+import httpx
+from django.conf import settings
+
+log = logging.getLogger(__name__)
+RETRY_STATUS = {429, 500, 502, 503, 504}
+_sleep = time.sleep
+
+
+class LLMNotConfigured(RuntimeError):
+    pass
+
+
+def model_name():
+    return settings.CTXC_LLM_MODEL or "not-configured"
+
+
+def chat(messages, tools=None, temperature=0, transport=None):
+    """-> {"message": {"role", "content", "tool_calls"}, "tokens": int, "ms": int}"""
+    base, key, model = settings.CTXC_LLM_BASE_URL, settings.CTXC_LLM_API_KEY, settings.CTXC_LLM_MODEL
+    if not (base and key and model):
+        raise LLMNotConfigured("set CTXC_LLM_BASE_URL, CTXC_LLM_API_KEY and CTXC_LLM_MODEL in .env")
+    body = {"model": model, "messages": messages, "temperature": temperature}
+    if tools:
+        body["tools"] = tools
+    t0 = time.monotonic()
+    with httpx.Client(timeout=settings.CTXC_LLM_TIMEOUT, transport=transport) as c:
+        for attempt in range(4):
+            try:
+                r = c.post(f"{base.rstrip('/')}/chat/completions", json=body, headers={"Authorization": f"Bearer {key}"})
+            except httpx.TransportError:
+                if attempt == 3:
+                    raise
+            else:
+                if r.status_code not in RETRY_STATUS or attempt == 3:
+                    break
+            _sleep(2 ** (attempt + 1))
+    r.raise_for_status()
+    data = r.json()
+    msg = data["choices"][0]["message"]
+    tokens = (data.get("usage") or {}).get("total_tokens", 0)
+    ms = int((time.monotonic() - t0) * 1000)
+    log.info("llm model=%s tokens=%s ms=%s", model, tokens, ms)  # never the messages
+    return {"message": {"role": "assistant", "content": msg.get("content"), "tool_calls": msg.get("tool_calls") or []},
+            "tokens": tokens, "ms": ms}
+
+
+class FakeLLM:
+    """Replays answers in order. An item is a str (final text) or a list of (tool_name, arguments) tool calls."""
+
+    def __init__(self, script):
+        self.script, self.calls = list(script), []
+
+    def __call__(self, messages, tools=None, temperature=0):
+        self.calls.append(messages)
+        item = self.script.pop(0) if self.script else "pas de données"
+        if isinstance(item, str):
+            msg = {"role": "assistant", "content": item, "tool_calls": []}
+        else:
+            msg = {"role": "assistant", "content": None, "tool_calls": [
+                {"id": f"call_{len(self.calls)}_{i}", "type": "function",
+                 "function": {"name": name, "arguments": json.dumps(args, ensure_ascii=False)}}
+                for i, (name, args) in enumerate(item)]}
+        return {"message": msg, "tokens": 0, "ms": 0}
