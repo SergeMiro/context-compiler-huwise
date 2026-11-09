@@ -79,3 +79,4 @@ LOGGING = {"version": 1, "disable_existing_loggers": False,
            "loggers": {"httpx": {"level": "WARNING"}, "elastic_transport": {"level": "WARNING"},
                        "neo4j": {"level": "WARNING"}}}
 ES_INDEX = env("ES_INDEX", "cards")  # alias; physical indices are <alias>_v<N>
+CELERY_BEAT_SCHEDULE = {"scan-all-portals": {"task": "ctx.tasks.scan_all", "schedule": 3600.0}}
