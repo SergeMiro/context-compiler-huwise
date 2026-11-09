@@ -109,6 +109,9 @@ def render(ds):
             line += f" · {extra}"
         if f.sample_values and not f.is_pii:
             line += " · e.g. " + ", ".join(_q(str(v)[:40]) for v in f.sample_values[:5])
+        if f.type in ("date", "datetime"):
+            # years stored as dates: session='2025' is a type error on the API, year(session)=2025 works
+            line += f" · filter by year: year({f.name})=2025"
         field_lines.append(line)
     full = "\n".join(_fit(full_head + ["### Fields"], field_lines, tail, FULL_BUDGET,
                           "- … {n} more fields not shown"))

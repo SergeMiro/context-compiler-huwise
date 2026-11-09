@@ -33,3 +33,14 @@ Probe set (11 questions, not reused in the golden set): top-1 / top-5
 - `log2p` multiply: 7 / 10; `log1p` sum: 8 / 10
 
 Risk: tuned on 11 questions; the golden-set eval (T12) is the real check.
+
+## T11 — what the golden set taught (09.11.2026)
+
+Writing reference queries by hand failed 11 times out of 30 on the first run — the same traps an agent falls into:
+- **Years are `date` fields** in 9 datasets (`session`, `rentree_scolaire`, `annee`): `session='2025'` → API error
+  "Incompatible types… date vs text"; `year(session)=2025` works. Full cards now say so for every date field.
+- **One department, three formats:** Côte-d'Or is `'021'` (annuaire, bac par département, DNB), `'21'`
+  (IPS `code_du_departement`, écoles effectifs) and `"COTE D'OR"` as a label. Cards show sample values of key fields.
+- **Numbers stored as text:** `ips` in IPS écoles / `ips_etab` in IPS lycées are `text`: `avg()` fails, `order_by desc`
+  sorts lexicographically. Those questions were replaced (collèges: numeric `ips`).
+- `academie='DIJON'` in IPS/bac datasets vs `libelle_academie='Dijon'` in the directory.

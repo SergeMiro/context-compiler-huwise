@@ -1,0 +1,469 @@
+[
+ {
+  "slug": "colleges-publics-cote-dor",
+  "question": "Combien de collèges publics y a-t-il en Côte-d'Or ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='021' and type_etablissement='Collège' and statut_public_prive='Public'"
+  },
+  "tags": [
+   "count",
+   "filter",
+   "code-format"
+  ]
+ },
+ {
+  "slug": "ecoles-france",
+  "question": "Combien d'écoles compte la France ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "type_etablissement='Ecole'"
+  },
+  "tags": [
+   "count"
+  ]
+ },
+ {
+  "slug": "lycees-prives-academie-dijon",
+  "question": "Combien de lycées privés dans l'académie de Dijon ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_academie='Dijon' and type_etablissement='Lycée' and statut_public_prive='Privé'"
+  },
+  "tags": [
+   "count",
+   "filter"
+  ]
+ },
+ {
+  "slug": "etablissements-rep-plus",
+  "question": "Combien d'établissements sont classés en REP+ ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "appartenance_education_prioritaire='REP+'"
+  },
+  "tags": [
+   "count",
+   "filter"
+  ]
+ },
+ {
+  "slug": "lycees-internat-bfc",
+  "question": "Combien de lycées proposent un internat en Bourgogne-Franche-Comté ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "type_etablissement='Lycée' and hebergement='1' and libelle_region='Bourgogne-Franche-Comté'"
+  },
+  "tags": [
+   "count",
+   "filter",
+   "synonym"
+  ]
+ },
+ {
+  "slug": "colleges-segpa-nord",
+  "question": "Combien de collèges du Nord ont une SEGPA ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='059' and type_etablissement='Collège' and segpa='1'"
+  },
+  "tags": [
+   "count",
+   "filter",
+   "code-format"
+  ]
+ },
+ {
+  "slug": "etablissements-ulis",
+  "question": "Combien d'établissements disposent d'un dispositif ULIS ?",
+  "datasets": [
+   "fr-en-annuaire-education",
+   "fr-en-ulis"
+  ],
+  "odsql": {
+   "where": "ulis='1'"
+  },
+  "tags": [
+   "count",
+   "filter"
+  ]
+ },
+ {
+  "slug": "ecoles-dijon",
+  "question": "Combien d'écoles y a-t-il à Dijon ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Dijon' and type_etablissement='Ecole'"
+  },
+  "tags": [
+   "count",
+   "filter"
+  ]
+ },
+ {
+  "slug": "second-degre-public-cote-dor",
+  "question": "Combien d'établissements publics du second degré (collèges et lycées) en Côte-d'Or ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='021' and type_etablissement in ('Collège','Lycée') and statut_public_prive='Public'"
+  },
+  "tags": [
+   "count",
+   "filter",
+   "synonym",
+   "code-format"
+  ]
+ },
+ {
+  "slug": "ips-moyen-colleges-cote-dor",
+  "question": "Quel est l'IPS moyen des collèges de Côte-d'Or à la rentrée 2025-2026 ?",
+  "datasets": [
+   "fr-en-ips-colleges-ap2023"
+  ],
+  "odsql": {
+   "select": "avg(ips) as v",
+   "where": "code_du_departement='21' and rentree_scolaire='2025-2026'"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "code-format",
+   "trap"
+  ]
+ },
+ {
+  "slug": "college-ips-max-academie-dijon",
+  "question": "Quel collège de l'académie de Dijon a l'IPS le plus élevé à la rentrée 2025-2026 ?",
+  "datasets": [
+   "fr-en-ips-colleges-ap2023"
+  ],
+  "odsql": {
+   "select": "nom_de_l_etablissement, ips",
+   "where": "academie='DIJON' and rentree_scolaire='2025-2026'",
+   "order_by": "ips desc",
+   "limit": 1
+  },
+  "answer": "field:nom_de_l_etablissement",
+  "tags": [
+   "text",
+   "order"
+  ]
+ },
+ {
+  "slug": "ips-colleges-prives-2025",
+  "question": "Quel est l'IPS moyen des collèges privés sous contrat à la rentrée 2025-2026 ?",
+  "datasets": [
+   "fr-en-ips-colleges-ap2023"
+  ],
+  "odsql": {
+   "select": "avg(ips) as v",
+   "where": "secteur='privé sous contrat' and rentree_scolaire='2025-2026'"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "filter"
+  ]
+ },
+ {
+  "slug": "colleges-publics-ips-sous-80",
+  "question": "Combien de collèges publics avaient un IPS inférieur à 80 à la rentrée 2025-2026 ?",
+  "datasets": [
+   "fr-en-ips-colleges-ap2023"
+  ],
+  "odsql": {
+   "where": "ips < 80 and secteur='public' and rentree_scolaire='2025-2026'"
+  },
+  "tags": [
+   "count",
+   "filter"
+  ]
+ },
+ {
+  "slug": "bac-general-admis-dijon-2025",
+  "question": "Combien de candidats ont été admis au bac général dans l'académie de Dijon en 2025 ?",
+  "datasets": [
+   "fr-en-baccalaureat-par-academie"
+  ],
+  "odsql": {
+   "select": "sum(nombre_d_admis_totaux) as v",
+   "where": "academie='DIJON' and year(session)=2025 and voie='BAC GENERAL'"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "filter",
+   "date-year"
+  ]
+ },
+ {
+  "slug": "bac-admis-cote-dor-2025",
+  "question": "Combien d'admis au baccalauréat en Côte-d'Or en 2025, toutes voies confondues ?",
+  "datasets": [
+   "fr-en-baccalaureat-par-departement"
+  ],
+  "odsql": {
+   "select": "sum(nombre_d_admis_a_l_examen) as v",
+   "where": "code_departement='021' and year(session)=2025"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "code-format",
+   "date-year"
+  ]
+ },
+ {
+  "slug": "bac-pro-filles-2024",
+  "question": "Combien de filles ont obtenu un bac professionnel en France en 2024 ?",
+  "datasets": [
+   "fr-en-baccalaureat-par-departement"
+  ],
+  "odsql": {
+   "select": "sum(nombre_d_admis_a_l_examen) as v",
+   "where": "voie='Professionnelle' and genre='Féminin' and year(session)=2024"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "filter",
+   "date-year"
+  ]
+ },
+ {
+  "slug": "dnb-admis-cote-dor-2021",
+  "question": "Combien de candidats ont été admis au brevet en Côte-d'Or en 2021 ?",
+  "datasets": [
+   "fr-en-dnb-par-etablissement"
+  ],
+  "odsql": {
+   "select": "sum(admis) as v",
+   "where": "code_departement='021' and session='2021'"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "code-format"
+  ]
+ },
+ {
+  "slug": "eleves-colleges-paris-2025",
+  "question": "Combien d'élèves étaient scolarisés dans les collèges de Paris à la rentrée 2025 ?",
+  "datasets": [
+   "fr-en-college-effectifs-niveau-sexe-lv"
+  ],
+  "odsql": {
+   "select": "sum(nombre_eleves_total) as v",
+   "where": "departement='PARIS' and year(rentree_scolaire)=2025"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "date-year"
+  ]
+ },
+ {
+  "slug": "classes-ecoles-cote-dor-2024",
+  "question": "Combien de classes comptaient les écoles de Côte-d'Or à la rentrée 2024 ?",
+  "datasets": [
+   "fr-en-ecoles-effectifs-nb_classes"
+  ],
+  "odsql": {
+   "select": "sum(nombre_total_classes) as v",
+   "where": "code_departement='21' and year(rentree_scolaire)=2024"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "code-format",
+   "date-year"
+  ]
+ },
+ {
+  "slug": "eleves-cp-public-2024",
+  "question": "Combien d'élèves en CP dans les écoles publiques à la rentrée 2024 ?",
+  "datasets": [
+   "fr-en-ecoles-effectifs-nb_classes"
+  ],
+  "odsql": {
+   "select": "sum(nombre_eleves_cp_hors_ulis) as v",
+   "where": "secteur='PUBLIC' and year(rentree_scolaire)=2024"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "filter",
+   "date-year"
+  ]
+ },
+ {
+  "slug": "filles-seconde-gt-2025",
+  "question": "Combien de filles en seconde générale et technologique à la rentrée 2025 ?",
+  "datasets": [
+   "fr-en-lycee_gt-effectifs-niveau-sexe-lv"
+  ],
+  "odsql": {
+   "select": "sum(`2ndes_gt_filles`) as v",
+   "where": "year(rentree_scolaire)=2025"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "field-name",
+   "date-year"
+  ]
+ },
+ {
+  "slug": "cpge-filles-scientifique-2020",
+  "question": "Combien de filles en première année de prépa scientifique dans le public en 2020 ?",
+  "datasets": [
+   "fr-en-effectifs-etudiants-cpge-par-annee-et-par-sexe"
+  ],
+  "odsql": {
+   "select": "sum(nombre_de_filles_dans_le_public) as v",
+   "where": "rentree_scolaire='2020' and filiere='Scientifique' and annee='Première année'"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "synonym"
+  ]
+ },
+ {
+  "slug": "zone-vacances-dijon",
+  "question": "Dans quelle zone de vacances scolaires se trouve l'académie de Dijon ?",
+  "datasets": [
+   "fr-en-calendrier-scolaire"
+  ],
+  "odsql": {
+   "select": "zones",
+   "where": "location='Dijon'",
+   "limit": 1
+  },
+  "answer": "field:zones",
+  "tags": [
+   "text"
+  ]
+ },
+ {
+  "slug": "lycees-metiers-bfc",
+  "question": "Combien de lycées des métiers en Bourgogne-Franche-Comté ?",
+  "datasets": [
+   "fr-en-lycees-metiers",
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_region='Bourgogne-Franche-Comté'"
+  },
+  "tolerance": 0.1,
+  "tags": [
+   "count",
+   "trap"
+  ]
+ },
+ {
+  "slug": "dnb-reussite-colleges-publics-dijon-2025",
+  "question": "Quel est le taux de réussite moyen au brevet des collèges publics de l'académie de Dijon en 2025 ?",
+  "datasets": [
+   "fr-en-indicateurs-valeur-ajoutee-colleges"
+  ],
+  "odsql": {
+   "select": "avg(taux_de_reussite_g) as v",
+   "where": "academie='DIJON' and year(session)=2025 and secteur='PU'"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "code-format",
+   "trap",
+   "date-year"
+  ]
+ },
+ {
+  "slug": "bac-reussite-lycees-publics-paris-2025",
+  "question": "Quel est le taux de réussite moyen au bac des lycées publics de Paris en 2025 ?",
+  "datasets": [
+   "fr-en-indicateurs-de-resultat-des-lycees-gt_v2"
+  ],
+  "odsql": {
+   "select": "avg(taux_reu_total) as v",
+   "where": "libelle_departement='PARIS' and year(annee)=2025 and secteur='public'"
+  },
+  "answer": "field:v",
+  "tags": [
+   "aggregate",
+   "trap",
+   "date-year"
+  ]
+ },
+ {
+  "slug": "academie-plus-ecoles",
+  "question": "Quelle académie compte le plus d'écoles ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "select": "libelle_academie, count(*) as n",
+   "where": "type_etablissement='Ecole'",
+   "group_by": "libelle_academie",
+   "order_by": "n desc",
+   "limit": 1
+  },
+  "answer": "field:libelle_academie",
+  "tags": [
+   "text",
+   "group"
+  ]
+ },
+ {
+  "slug": "departement-plus-colleges-prives",
+  "question": "Quel département compte le plus de collèges privés ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "select": "libelle_departement, count(*) as n",
+   "where": "type_etablissement='Collège' and statut_public_prive='Privé'",
+   "group_by": "libelle_departement",
+   "order_by": "n desc",
+   "limit": 1
+  },
+  "answer": "field:libelle_departement",
+  "tags": [
+   "text",
+   "group"
+  ]
+ },
+ {
+  "slug": "no-data-medecins",
+  "question": "Combien de médecins généralistes exercent en Côte-d'Or ?",
+  "datasets": [],
+  "tags": [
+   "no-data"
+  ]
+ },
+ {
+  "slug": "no-data-piscine",
+  "question": "Quels sont les horaires de la piscine olympique de Dijon ?",
+  "datasets": [],
+  "tags": [
+   "no-data"
+  ]
+ }
+]

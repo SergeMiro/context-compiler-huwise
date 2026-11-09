@@ -7,8 +7,9 @@ class EvalCase(models.Model):
     portal = models.ForeignKey(Portal, on_delete=models.CASCADE, related_name="eval_cases")
     slug = models.SlugField(max_length=100)
     question = models.TextField()
-    expected_dataset = models.CharField(max_length=255, blank=True)  # blank = "no data on this portal"
-    reference_odsql = models.JSONField(default=dict)  # {select, where, group_by}
+    expected_datasets = models.JSONField(default=list)  # any of these is right; [] = "no data on this portal"
+    reference_odsql = models.JSONField(default=dict)  # run on expected_datasets[0] by golden_refresh
+    answer_path = models.CharField(max_length=100, default="total_count")  # "total_count" or "field:<name>"
     expected_value = models.JSONField(null=True)  # filled by golden_refresh, never by hand
     tolerance = models.FloatField(default=0.05)
     tags = models.JSONField(default=list)
