@@ -1,0 +1,101 @@
+"""Run golden cases through the agent and score them deterministically (no LLM judge)."""
+import re
+import statistics
+import unicodedata
+
+from django.utils import timezone
+
+import llm as llm_mod
+from catalog.models import Dataset
+from ctx.compile import current
+from evals.agent import run_agent
+from evals.golden import NO_DATA
+from evals.models import EvalCase, EvalResult, EvalRun
+
+NUM = re.compile(r"-?\d{1,3}(?:[   ]\d{3})+(?:[.,]\d+)?|-?\d+(?:[.,]\d+)?")
+NO_DATA_MARKERS = ("pas de donnees", "aucune donnee", "pas disponible", "n'existe pas")
+
+
+def norm(text):
+    text = unicodedata.normalize("NFKD", str(text)).encode("ascii", "ignore").decode().lower()
+    return re.sub(r"\s+", " ", text.replace("’", "'")).strip()
+
+
+def numbers(text):
+    out = []
+    for m in NUM.findall(text or ""):
+        m = re.sub(r"[   ]", "", m).replace(",", ".")
+        try:
+            out.append(float(m))
+        except ValueError:
+            pass
+    return out
+
+
+def answer_ok(case, answer):
+    if case.expected_value == NO_DATA:
+        return any(k in norm(answer) for k in NO_DATA_MARKERS)
+    if isinstance(case.expected_value, (int, float)):
+        exp = float(case.expected_value)
+        asked = set(numbers(case.question))
+        # numbers taken from the question (years, "80") do not count as the answer
+        return any(abs(n - exp) <= max(abs(exp) * case.tolerance, 0.5) for n in numbers(answer) if n not in asked)
+    return norm(case.expected_value) in norm(answer)
+
+
+def score(case, res):
+    queries = res["queries"]
+    found = next((q["dataset_id"] for q in reversed(queries) if q["ok"]), queries[-1]["dataset_id"] if queries else "")
+    ok = answer_ok(case, res["answer"])
+    return dict(found_dataset=found, answer=res["answer"][:2000], answer_ok=ok,
+                dataset_ok=(found in case.expected_datasets) if case.expected_datasets else ok,
+                odsql_valid_first_try=bool(queries) and queries[0]["ok"], steps=res["steps"], ms=res["ms"],
+                tokens=res["tokens"], transcript=res["transcript"])
+
+
+def _pct(xs):
+    return round(100 * sum(xs) / len(xs), 1) if xs else None
+
+
+def metrics(rows, cases):
+    tags = sorted({t for c in cases for t in c.tags})
+    ms = [r["ms"] for r in rows]
+    with_q = [r for r in rows if r["found_dataset"]]
+    return {
+        "n": len(rows), "answer_ok": _pct([r["answer_ok"] for r in rows]),
+        "dataset_ok": _pct([r["dataset_ok"] for r in rows]),
+        "odsql_first_try": _pct([r["odsql_valid_first_try"] for r in with_q]),
+        "ms_median": int(statistics.median(ms)) if ms else 0,
+        "ms_p95": int(statistics.quantiles(ms, n=20)[18]) if len(ms) >= 2 else (ms[0] if ms else 0),
+        "steps_avg": round(statistics.mean(r["steps"] for r in rows), 2) if rows else 0,
+        "tokens": sum(r["tokens"] for r in rows),
+        "by_tag": {t: _pct([r["answer_ok"] for r, c in zip(rows, cases) if t in c.tags]) for t in tags},
+    }
+
+
+def run_eval(portal, mode, chat=None, slugs=None, model=None):
+    cases = list(EvalCase.objects.filter(portal=portal).order_by("id"))
+    if slugs:
+        cases = [c for c in cases if c.slug in slugs]
+    ids = {d for c in cases for d in c.expected_datasets}
+    versions = {ds.dataset_id: getattr(current(ds), "version", None)
+                for ds in Dataset.objects.filter(portal=portal, dataset_id__in=ids)}
+    run = EvalRun.objects.create(portal=portal, mode=mode, model=model or llm_mod.model_name(), card_versions=versions)
+    rows = []
+    for case in cases:
+        row = score(case, run_agent(portal.domain, case.question, mode, chat=chat))
+        EvalResult.objects.create(run=run, case=case, **{k: v for k, v in row.items() if k != "dataset_ok"})
+        rows.append(row)
+    run.metrics = metrics(rows, cases)
+    run.metrics["per_case"] = {c.slug: {"answer_ok": r["answer_ok"], "dataset_ok": r["dataset_ok"]} for c, r in zip(cases, rows)}
+    run.finished_at = timezone.now()
+    run.save()
+    return run
+
+
+def table(runs):
+    keys = [("answer_ok", "correct answer %"), ("dataset_ok", "right dataset %"), ("odsql_first_try", "valid query 1st try %"),
+            ("steps_avg", "steps / question"), ("ms_median", "median ms"), ("ms_p95", "p95 ms"), ("tokens", "tokens")]
+    head = "| metric | " + " | ".join(r.mode for r in runs) + " |\n|---|" + "---|" * len(runs)
+    lines = [f"| {label} | " + " | ".join(str(r.metrics.get(k)) for r in runs) + " |" for k, label in keys]
+    return f"model: {runs[0].model} · cases: {runs[0].metrics['n']}\n\n" + head + "\n" + "\n".join(lines)
