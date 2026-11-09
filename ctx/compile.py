@@ -126,14 +126,17 @@ def compile_dataset(ds):
                                tokens_short=tokens(short), tokens_full=tokens(full), content_hash=h)
 
 
-def compile_portal(portal):
-    done = unchanged = 0
+def compile_portal(portal, with_ids=False):
+    changed, unchanged = [], 0
     for ds in Dataset.objects.filter(portal=portal).prefetch_related("fields", "edits"):
         if compile_dataset(ds):
-            done += 1
+            changed.append(ds.dataset_id)
         else:
             unchanged += 1
-    return {"compiled": done, "unchanged": unchanged}
+    out = {"compiled": len(changed), "unchanged": unchanged}
+    if with_ids:
+        out["changed"] = changed
+    return out
 
 
 def current(ds):

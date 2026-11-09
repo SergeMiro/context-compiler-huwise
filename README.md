@@ -24,3 +24,6 @@ cp .env.example .env
 .venv/bin/python manage.py migrate
 .venv/bin/python manage.py test
 ```
+
+Background work (Celery on RabbitMQ): `.venv/bin/celery -A context worker -B` — hourly scan of every portal,
+then compile and project only what changed.
