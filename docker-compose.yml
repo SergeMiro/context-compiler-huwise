@@ -55,7 +55,61 @@ services:
       interval: 10s
       retries: 20
 
+  # Public read-only MCP: docker compose --profile public up -d --build mcp
+  # Behind the server's traefik (network infra_web), https://context.smiro.dev/mcp, 5 req/s per IP.
+  mcp:
+    profiles: [public]
+    build: .
+    env_file: .env
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: "3306"
+      ES_URL: http://es:9200
+      NEO4J_URL: bolt://neo4j:7687
+      DJANGO_DEBUG: "0"
+      CTXC_MCP_ALLOWED_HOSTS: context.smiro.dev
+      CTXC_LLM_API_KEY: ""   # the hot path never calls a model
+    depends_on:
+      mariadb: {condition: service_healthy}
+      es: {condition: service_healthy}
+      neo4j: {condition: service_healthy}
+    mem_limit: 384m
+    restart: unless-stopped
+    networks: [default, web]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=infra_web"
+      - "traefik.http.routers.ctxc-mcp.rule=Host(`context.smiro.dev`) && PathPrefix(`/mcp`)"
+      - "traefik.http.routers.ctxc-mcp.entrypoints=websecure"
+      - "traefik.http.routers.ctxc-mcp.tls.certresolver=myresolver"
+      - "traefik.http.routers.ctxc-mcp.middlewares=ctxc-ratelimit"
+      - "traefik.http.middlewares.ctxc-ratelimit.ratelimit.average=5"
+      - "traefik.http.middlewares.ctxc-ratelimit.ratelimit.burst=20"
+      - "traefik.http.services.ctxc-mcp.loadbalancer.server.port=8796"
+
+  # Static showcase built by `manage.py build_site <domain> site/`, served at https://context.smiro.dev/
+  site:
+    profiles: [public]
+    image: nginx:1.27-alpine
+    volumes: [./site:/usr/share/nginx/html:ro, ./docker/site-nginx.conf:/etc/nginx/conf.d/default.conf:ro]
+    mem_limit: 64m
+    restart: unless-stopped
+    networks: [web]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=infra_web"
+      - "traefik.http.routers.ctxc-site.rule=Host(`context.smiro.dev`)"
+      - "traefik.http.routers.ctxc-site.entrypoints=websecure"
+      - "traefik.http.routers.ctxc-site.tls.certresolver=myresolver"
+      - "traefik.http.routers.ctxc-site.middlewares=ctxc-ratelimit"
+      - "traefik.http.services.ctxc-site.loadbalancer.server.port=80"
+
 volumes:
   dbdata:
   esdata:
   neo4jdata:
+
+networks:
+  web:
+    name: infra_web
+    external: true

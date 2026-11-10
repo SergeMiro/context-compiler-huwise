@@ -15,5 +15,8 @@ Prepared stand: `scripts/bootstrap.sh` done, a model set in `.env`, `manage.py r
 7. **Scale in one sentence.** From 1 to 5 000 portals nothing changes in the code: database size, workers, ES
    routing, cache.
 
+Live: <https://context.smiro.dev/> (showcase with the eval table) and `https://context.smiro.dev/mcp` (connect
+Claude, ask « Combien de collèges publics en Côte-d'Or ? »).
+
 Fallback without a model: `scripts/mcp_smoke.py` (find → explain → 58, and the rejected `departement='21'` with
 "similar fields: code_departement").
