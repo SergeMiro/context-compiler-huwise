@@ -110,7 +110,11 @@ LLM features (eval, improve) need any OpenAI-compatible endpoint in `.env`: `CTX
 | `eval <domain> --mode naked\|compiled\|both` | run the golden set, print the comparison table |
 | `improve <domain> --mode propose\|auto` | propose / test / keep or revert card edits |
 | `mcp [--host]`, `bench <domain>` | MCP server; latency p50/p95 |
-| `build_site <domain> <dir>` | static showcase: `index.html` (traps, eval table, a card, an edit) + `llms.txt` + pages |
+| `build_site <domain> <dir>` | showcase in French: `index.html` (architecture, comparison, agent duel, live tools, eval bars, traps, a card, an edit) + `eval.json` (recorded duel) + `llms.txt` + pages |
+
+The showcase calls a small read-only JSON API served by the MCP container: `/api/find`, `/api/explain`,
+`/api/query` (validated), `/api/raw` (generic pass-through, the baseline) and `/api/agent?slug=&mode=` — a live run of
+the eval agent on a golden question (the only endpoint that calls a model: 40 runs/day, cached 1 h, 2 at a time).
 
 Public deployment (this server): `docker compose --profile public up -d --build mcp site` — the MCP container and an
 nginx serving `site/`, behind the host's traefik (`infra_web`, Let's Encrypt, 5 req/s per IP). Django admin is not

@@ -56,7 +56,7 @@ services:
       retries: 20
 
   # Public read-only MCP: docker compose --profile public up -d --build mcp
-  # Behind the server's traefik (network infra_web), https://context.smiro.dev/mcp, 5 req/s per IP.
+  # Behind the server's traefik (network infra_web), https://context.smiro.dev/mcp and /api/* (showcase), 5 req/s per IP.
   mcp:
     profiles: [public]
     build: .
@@ -68,7 +68,8 @@ services:
       NEO4J_URL: bolt://neo4j:7687
       DJANGO_DEBUG: "0"
       CTXC_MCP_ALLOWED_HOSTS: context.smiro.dev
-      CTXC_LLM_API_KEY: ""   # the hot path never calls a model
+      # the MCP tools never call a model; only /api/agent (live duel on the site) does, capped per day
+      CTXC_LIVE_RUNS_PER_DAY: "40"
     depends_on:
       mariadb: {condition: service_healthy}
       es: {condition: service_healthy}
@@ -79,7 +80,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=infra_web"
-      - "traefik.http.routers.ctxc-mcp.rule=Host(`context.smiro.dev`) && PathPrefix(`/mcp`)"
+      - "traefik.http.routers.ctxc-mcp.rule=Host(`context.smiro.dev`) && (PathPrefix(`/mcp`) || PathPrefix(`/api/`))"
       - "traefik.http.routers.ctxc-mcp.entrypoints=websecure"
       - "traefik.http.routers.ctxc-mcp.tls.certresolver=myresolver"
       - "traefik.http.routers.ctxc-mcp.middlewares=ctxc-ratelimit"
