@@ -1,127 +1,884 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Context Compiler</title>
-<meta name="description" content="A Huwise / Opendatasoft data portal compiled into tested context for AI agents.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f766e'/%3E%3Cpath d='M10 11h12M10 16h12M10 21h8' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="description" content="Un portail de données Huwise / Opendatasoft compilé en contexte testé pour les agents IA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#fbfaf7;--fg:#1d1d1b;--muted:#6b6a64;--line:#e4e1d8;--card:#fff;--accent:#0b6e4f;--code:#f3f1ea;--bad:#a23b2a}
-@media (prefers-color-scheme:dark){:root{--bg:#141413;--fg:#ecebe6;--muted:#a3a29b;--line:#2f2e2a;--card:#1c1c1a;--accent:#4fc39a;--code:#22221f;--bad:#e2806f}}
+:root{
+  --bg:#f5f7fa;--surface:#fff;--surface-2:#f0f3f7;--ink:#0d1626;--ink-2:#334155;--muted:#64748b;--line:#e2e7ee;
+  --accent:#0f766e;--accent-2:#14b8a6;--accent-soft:#e6f7f4;--indigo:#4f46e5;--indigo-soft:#eef0ff;
+  --amber:#b45309;--amber-soft:#fff4e0;--slate:#475569;--slate-soft:#eef1f5;
+  --good:#15803d;--good-soft:#e7f7ec;--bad:#c2410c;--bad-soft:#fdeee6;
+  --shadow:0 1px 2px rgba(13,22,38,.04),0 8px 24px rgba(13,22,38,.06);
+  --grid:rgba(13,22,38,.06);--scroll:rgba(100,116,139,.45);
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#090d14;--surface:#101723;--surface-2:#151d2b;--ink:#e7ebf3;--ink-2:#c4ccd8;--muted:#8a95a8;--line:#222b3a;
+  --accent:#2dd4bf;--accent-2:#5eead4;--accent-soft:rgba(45,212,191,.1);--indigo:#a5b4fc;--indigo-soft:rgba(129,140,248,.12);
+  --amber:#fbbf24;--amber-soft:rgba(251,191,36,.1);--slate:#a3b0c2;--slate-soft:rgba(148,163,184,.1);
+  --good:#4ade80;--good-soft:rgba(74,222,128,.1);--bad:#fb923c;--bad-soft:rgba(251,146,60,.1);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);--grid:rgba(255,255,255,.05);--scroll:rgba(148,163,184,.4);
+  color-scheme:dark;
+}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:860px;margin:0 auto;padding:40px 16px 80px}
-h1{font-size:2rem;line-height:1.2;margin:0 0 8px}
-h2{font-size:1.25rem;margin:48px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
-p,li{color:var(--fg)} .muted{color:var(--muted)}
-a{color:var(--accent)}
-code,pre{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--code);border-radius:6px}
-code{padding:1px 5px} pre{padding:14px;overflow-x:auto;white-space:pre}
-pre.wrap{white-space:pre-wrap}
-table{border-collapse:collapse;width:100%;font-size:15px;display:block;overflow-x:auto}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--muted);font-weight:600}
-td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.stats{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}
-.stat{flex:1 1 140px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-.stat b{display:block;font-size:1.5rem}
-del{color:var(--bad)} ins{color:var(--accent);text-decoration:none}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+/* scrollbars: thin, invisible until the pointer is over the scrolling block */
+*{scrollbar-width:thin;scrollbar-color:transparent transparent}
+*:hover{scrollbar-color:var(--scroll) transparent}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:6px}
+:hover::-webkit-scrollbar-thumb{background:var(--scroll)}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+code,pre,.mono{font-family:var(--mono)}
+code{font-size:.86em;background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+pre{margin:0;font-size:12.5px;line-height:1.55;overflow:auto}
+.wrap{max-width:1160px;margin:0 auto;padding:0 16px}
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:20px;height:56px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--ink);white-space:nowrap}
+.brand:hover{text-decoration:none}
+.logo{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--indigo));display:grid;place-items:center;color:#fff}
+.links{display:flex;gap:4px;overflow-x:auto;flex:1;min-width:0}
+.links a{color:var(--muted);font-size:14px;padding:6px 10px;border-radius:8px;white-space:nowrap}
+.links a:hover,.links a.on{color:var(--ink);background:var(--surface-2);text-decoration:none}
+.gh{font-size:14px;font-weight:600;white-space:nowrap;margin-left:auto}
+@media (max-width:640px){.links{display:none}}
+/* hero */
+header{padding:28px 0 24px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:13px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:4px 12px}
+h1{font-size:clamp(26px,3.4vw,38px);line-height:1.12;letter-spacing:-.025em;margin:12px 0 10px;max-width:900px}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--indigo));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:16.5px;color:var(--ink-2);max-width:820px;margin:0}
+.ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px Inter,sans-serif;border-radius:10px;padding:10px 16px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn:hover{text-decoration:none;transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:disabled{opacity:.55;cursor:default;transform:none;box-shadow:none}
+/* architecture board */
+.board{position:relative;margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:22px;
+  background-image:radial-gradient(var(--grid) 1px,transparent 1px);background-size:18px 18px}
+.board-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.board-h h2{margin:0;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.lane{border:1px dashed var(--line);border-radius:16px;padding:16px;background:color-mix(in srgb,var(--surface) 88%,transparent)}
+.lane-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.pill{font:700 11.5px/1 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:6px 10px}
+.pill.cold{background:var(--indigo-soft);color:var(--indigo)} .pill.hot{background:var(--accent-soft);color:var(--accent)}
+.lane-h span{font-size:13.5px;color:var(--muted)}
+.pipe{display:flex;align-items:center}
+.pipe>.fan,.pipe>.col,.pipe>.tools{align-self:stretch}
+.node{position:relative;display:flex;gap:10px;align-items:flex-start;flex:1 1 0;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;color:var(--ink);transition:border-color .15s,transform .15s,box-shadow .15s}
+a.node:hover{text-decoration:none;border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+.node .t{font-weight:650;font-size:14.5px;line-height:1.25}
+.node .s{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:3px}
+.ic{flex:0 0 34px;height:34px;border-radius:10px;display:grid;place-items:center}
+.ic svg{width:18px;height:18px}
+.k-ext .ic{background:var(--slate-soft);color:var(--slate)}
+.k-store .ic{background:var(--indigo-soft);color:var(--indigo)}
+.k-comp .ic{background:var(--accent-soft);color:var(--accent)}
+.k-llm .ic{background:var(--amber-soft);color:var(--amber)}
+.num{position:absolute;top:-9px;right:-7px;min-width:22px;height:22px;border-radius:999px;background:var(--ink);color:var(--bg);font:700 11.5px/22px Inter,sans-serif;text-align:center;padding:0 6px;box-shadow:0 0 0 3px var(--surface)}
+.conn{flex:0 0 74px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;min-width:0}
+.conn small{font:500 10.5px/1.2 var(--mono);color:var(--muted);text-align:center}
+.conn svg{width:100%;height:14px;overflow:visible}
+.flow{stroke:var(--accent);stroke-width:2;fill:none;stroke-dasharray:5 6;animation:flow 1.1s linear infinite}
+.flow.cold{stroke:var(--indigo)}
+@keyframes flow{to{stroke-dashoffset:-22}}
+@keyframes vflow{to{background-position:0 22px}}
+@media (prefers-reduced-motion:reduce){.flow,.conn::after,.fan::after{animation:none!important}*{scroll-behavior:auto!important}}
+.fan{flex:0 0 46px;display:flex}
+.fan svg{width:100%;height:100%}
+.col{display:grid;grid-template-rows:repeat(3,1fr);gap:10px;flex:1.15 1 0;min-width:0}
+.col .node{flex:none}
+.loops{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;justify-content:center}
+.loop{display:flex;align-items:center;gap:10px;background:var(--amber-soft);border:1px solid color-mix(in srgb,var(--amber) 25%,transparent);border-radius:12px;padding:8px 12px;color:var(--ink);font-size:13px;position:relative}
+a.loop:hover{text-decoration:none;border-color:var(--amber)}
+.loop b{font-weight:650} .loop .mono{font-size:11.5px;color:var(--muted)}
+.loop .num{top:-9px;right:-7px}
+.badge-llm{font:700 10.5px/1 Inter,sans-serif;background:var(--amber);color:var(--surface);border-radius:6px;padding:4px 6px;letter-spacing:.04em}
+.bridge{display:flex;justify-content:center;align-items:center;gap:10px;height:46px;color:var(--muted);font:500 12px var(--mono)}
+.bridge svg{width:14px;height:40px}
+.tools{display:grid;gap:10px;flex:2.3 1 0;min-width:0}
+.tool{position:relative;display:grid;grid-template-columns:minmax(150px,1fr) 26px minmax(0,2.2fr) auto;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--ink);transition:border-color .15s,transform .15s}
+a.tool:hover{text-decoration:none;border-color:var(--accent);transform:translateX(2px)}
+.tool .fn{font:600 13px var(--mono);color:var(--accent)}
+.tool .fn small{display:block;font-weight:400;color:var(--muted);font-size:11px}
+.tool .to{font-size:13px;color:var(--ink-2);line-height:1.4}
+.tool .m{font:600 12px var(--mono);color:var(--good);background:var(--good-soft);border-radius:6px;padding:3px 7px;white-space:nowrap}
+.tool .m.lock{color:var(--slate);background:var(--slate-soft)}
+.tool svg.arr{width:26px;height:12px}
+.stack-h{margin:20px 0 10px;font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center}
+.marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.track{display:flex;gap:12px;width:max-content;animation:marquee 60s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+@keyframes marquee{to{transform:translateX(calc(-50% - 6px))}}
+.tech{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 14px 8px 10px;white-space:nowrap;transition:border-color .2s,transform .2s}
+.tech:hover{border-color:var(--c);transform:translateY(-2px)}
+.tech .lg{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 10%,transparent)}
+.tech svg{width:18px;height:18px;fill:var(--c)}
+.tech b{display:block;font-size:13.5px;line-height:1.2}
+.tech small{display:block;font:11px var(--mono);color:var(--muted)}
+@media (prefers-color-scheme:dark){.tech{--c:var(--cd)!important}.tech svg{fill:var(--cd)}.tech .lg{background:color-mix(in srgb,var(--cd) 14%,transparent)}}
+@media (prefers-reduced-motion:reduce){.track{animation:none;flex-wrap:wrap;width:auto;justify-content:center}.track .tech[aria-hidden]{display:none}.marquee{-webkit-mask-image:none;mask-image:none}}
+@media (max-width:980px){
+  .pipe{flex-direction:column;align-items:stretch}
+  .conn{flex:0 0 44px;flex-direction:row;gap:10px}
+  .conn small{flex:1;text-align:right} .conn small:last-child{text-align:left}
+  .conn svg,.fan svg{display:none}
+  .conn::after,.fan::after{content:"";order:1;flex:0 0 2px;width:2px;height:34px;align-self:center;
+    background:repeating-linear-gradient(180deg,var(--indigo) 0 5px,transparent 5px 11px);background-size:2px 22px;animation:vflow 1.1s linear infinite}
+  .conn small:last-child{order:2}
+  .lane.hot .conn::after{background-image:repeating-linear-gradient(180deg,var(--accent) 0 5px,transparent 5px 11px)}
+  .fan{flex:0 0 40px;justify-content:center}
+  .loops{padding-left:0}
+  .tool{grid-template-columns:1fr;gap:4px}
+  .tool svg.arr{display:none}
+  .tool .m{justify-self:start}
+}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+.kpi b{display:block;font-size:28px;letter-spacing:-.02em;line-height:1.15}
+.kpi b .from{color:var(--muted);font-weight:600} .kpi b .to{color:var(--accent)}
+.kpi>span{font-size:13.5px;color:var(--muted)}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.kpi b{font-size:22px}}
+/* sections */
+section{padding:72px 0 8px}
+.sh{display:flex;gap:14px;align-items:flex-start;margin-bottom:22px}
+.sh .num{position:static;flex:0 0 auto;height:30px;min-width:30px;line-height:30px;font-size:14px;box-shadow:none;margin-top:4px}
+.sh h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.02em;line-height:1.2;margin:0}
+.sh p{margin:6px 0 0;color:var(--ink-2);max-width:780px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.muted{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+/* problem */
+.q{display:flex;gap:12px;align-items:center;justify-content:center;margin-bottom:18px}
+.bubble{background:var(--ink);color:var(--bg);border-radius:18px 18px 18px 4px;padding:12px 18px;font-weight:600;font-size:17px}
+.agent{padding:18px}
+.agent h3{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:16px}
+.tag{font:600 11.5px Inter,sans-serif;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.tag.bad{background:var(--bad-soft);color:var(--bad)} .tag.good{background:var(--good-soft);color:var(--good)}
+.tag.neutral{background:var(--slate-soft);color:var(--slate)} .tag.live{background:var(--amber-soft);color:var(--amber)}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:s}
+.steps li{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:start;font-size:14.5px}
+.steps li::before{counter-increment:s;content:counter(s);width:26px;height:26px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;font:600 12px Inter,sans-serif;color:var(--muted)}
+.outcome{margin-top:16px;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:600}
+.outcome.bad{background:var(--bad-soft);color:var(--bad)} .outcome.good{background:var(--good-soft);color:var(--good)}
+.outcome b{font-size:24px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14.5px}
+table.cmp th,table.cmp td{padding:12px 16px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.cmp tr:last-child td{border-bottom:0}
+table.cmp th{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+table.cmp td:first-child{font-weight:600;white-space:nowrap}
+table.cmp td.no{color:var(--muted)} table.cmp td.yes{color:var(--ink)}
+td .mk{display:inline-block;width:18px;font-weight:700} td.no .mk{color:var(--bad)} td.yes .mk{color:var(--good)}
+.tablewrap{overflow-x:auto}
+/* duel */
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font:500 13.5px Inter,sans-serif;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:7px 13px;cursor:pointer;transition:all .15s;text-align:left}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font:500 14px Inter,sans-serif;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 10px;max-width:100%}
+.duel-q{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;margin:18px 0}
+.duel-q .bubble{font-size:16px}
+.expect{font-size:14px;color:var(--muted)} .expect b{color:var(--ink)}
+.side{padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.side-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.side-h h3{margin:0;font-size:16px;display:flex;align-items:center;gap:8px}
+.dot{width:10px;height:10px;border-radius:99px;display:inline-block}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.metric{background:var(--surface-2);border-radius:12px;padding:10px 12px}
+.metric span{display:block;font-size:12px;color:var(--muted)}
+.metric b{font-size:20px;letter-spacing:-.01em}
+.metric .bar{height:4px;border-radius:4px;background:var(--line);margin-top:6px;overflow:hidden}
+.metric .bar i{display:block;height:100%;border-radius:4px;transition:width .6s}
+.verdicts{display:flex;gap:8px;flex-wrap:wrap}
+.answer{border-radius:12px;padding:12px 14px;font-size:14.5px;border:1px solid}
+.answer.ok{background:var(--good-soft);border-color:color-mix(in srgb,var(--good) 30%,transparent)}
+.answer.ko{background:var(--bad-soft);border-color:color-mix(in srgb,var(--bad) 30%,transparent)}
+.answer small{display:block;font-size:12px;color:var(--muted);margin-bottom:2px}
+.trace{list-style:none;margin:0;padding:0;display:grid;gap:0;max-height:420px;overflow-y:auto}
+.trace li{position:relative;padding:0 0 14px 26px}
+.trace li::before{content:"";position:absolute;left:8px;top:20px;bottom:0;width:2px;background:var(--line)}
+.trace li:last-child::before{display:none}
+.trace .pt{position:absolute;left:2px;top:5px;width:14px;height:14px;border-radius:99px;border:3px solid var(--surface);box-shadow:0 0 0 1px var(--line)}
+.trace .pt.ok{background:var(--good)} .trace .pt.ko{background:var(--bad)}
+.trace .tn{font:600 12.5px var(--mono);color:var(--ink)}
+.trace .ta{font:12px/1.5 var(--mono);color:var(--ink-2);background:var(--surface-2);border-radius:8px;padding:6px 8px;margin-top:4px;white-space:pre-wrap;word-break:break-word}
+.trace .tr{font-size:12.5px;color:var(--muted);margin-top:4px;word-break:break-word}
+.trace .tr.ko{color:var(--bad)}
+.loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px;padding:18px 0}
+.spin{width:16px;height:16px;border-radius:99px;border:2px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.live-note{font-size:12.5px;color:var(--muted)}
+.c-naked{background:var(--bad)} .c-comp{background:var(--accent)}
+.verdict{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+@media (max-width:760px){.verdict{grid-template-columns:repeat(2,1fr)}}
+.vd{background:var(--surface-2);border-radius:12px;padding:10px 12px;border:1px solid transparent}
+.vd span{display:block;font-size:12px;color:var(--muted)} .vd b{font-size:14.5px;line-height:1.3;display:block}
+.vd.win{background:var(--good-soft);border-color:color-mix(in srgb,var(--good) 25%,transparent)} .vd.win b{color:var(--good)}
+.vd.lose{background:var(--bad-soft)} .vd.lose b{color:var(--bad)}
+/* tools demo */
+.lab{display:grid;grid-template-columns:330px minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.lab{grid-template-columns:minmax(0,1fr)}}
+.lab-l{padding:16px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+#presets{display:grid;gap:8px}
+.lab-l h4{margin:4px 0 0;font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.preset{display:block;width:100%;text-align:left;font:inherit;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--ink);transition:all .15s}
+.preset:hover{border-color:var(--accent)} .preset.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.preset .tag{display:inline-block;margin-bottom:4px}
+.preset div{font-size:14px;line-height:1.35}
+.search{display:flex;gap:8px}
+.search input{flex:1;min-width:0;font:15px Inter,sans-serif;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:9px 12px}
+.search input:focus,select:focus,.chip:focus-visible,.btn:focus-visible,.preset:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sugg{display:flex;flex-wrap:wrap;gap:6px}
+.sugg .chip{font-size:12.5px;padding:5px 10px}
+.lab-r{padding:18px;min-height:420px;display:grid;gap:12px;align-content:start}
+.empty{display:grid;place-items:center;text-align:center;color:var(--muted);min-height:380px;font-size:15px}
+.step{border:1px solid var(--line);border-radius:14px;overflow:hidden;animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.step-h{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);font-size:13.5px}
+.step-h .fn{font:600 13px var(--mono);color:var(--accent)}
+.step-h .ms{margin-left:auto;font:500 12px var(--mono);color:var(--muted)}
+.step-b{padding:12px 14px;font-size:14px;display:grid;gap:8px}
+.rank{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.rank li{display:flex;gap:10px;align-items:baseline;font-size:13.5px;padding:6px 8px;border-radius:8px}
+.rank li.hit{background:var(--good-soft)}
+.rank li b{font:600 12px var(--mono);color:var(--muted);min-width:22px}
+.rank li .mono{font-size:12.5px;word-break:break-all}
+.rank li button{margin-left:auto;font:600 12px Inter,sans-serif;color:var(--accent);background:none;border:0;cursor:pointer;padding:0 4px;white-space:nowrap}
+.hl{font:12.5px/1.55 var(--mono);background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:6px;padding:8px 10px;white-space:pre-wrap;word-break:break-word}
+details summary{cursor:pointer;font-size:13px;color:var(--accent);font-weight:600}
+details pre{margin-top:8px;background:var(--surface-2);border-radius:10px;padding:12px;max-height:300px;white-space:pre-wrap}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.vs{grid-template-columns:1fr}}
+.res{border-radius:12px;padding:12px;border:1px solid var(--line);display:grid;gap:6px;align-content:start}
+.res.ok{background:var(--good-soft);border-color:color-mix(in srgb,var(--good) 30%,transparent)}
+.res.ko{background:var(--bad-soft);border-color:color-mix(in srgb,var(--bad) 30%,transparent)}
+.res h5{margin:0;font-size:13px;display:flex;justify-content:space-between;gap:8px}
+.res pre{font-size:12px;white-space:pre-wrap;word-break:break-word;color:var(--ink-2)}
+.res .big{font-size:26px;font-weight:750;letter-spacing:-.02em}
+.res .why{font-size:13px;color:var(--ink-2)}
+.qform{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.qform label{font-size:12px;color:var(--muted);display:grid;gap:3px}
+.qform input{font:13px var(--mono);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 9px;min-width:0}
+.qform .full{grid-column:1/-1}
+.rows{width:100%;border-collapse:collapse;font-size:12.5px}
+.rows th,.rows td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:left;white-space:nowrap}
+.rows th{color:var(--muted);font-weight:600}
+/* results */
+.bars{padding:22px;display:grid;gap:20px}
+.brow{display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:center}
+@media (max-width:640px){.brow{grid-template-columns:1fr;gap:6px}}
+.brow .l{font-weight:600;font-size:14.5px}
+.bpair{display:grid;gap:6px}
+.btrack{display:grid;grid-template-columns:1fr 64px;gap:10px;align-items:center}
+.btrack .bg{height:22px;border-radius:7px;background:var(--surface-2);overflow:hidden}
+.btrack .bg i{display:block;height:100%;border-radius:7px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.btrack .v{font:600 13px var(--mono);text-align:right}
+.legend2{display:flex;gap:18px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.legend2 i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px}
+.minis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.minis{grid-template-columns:1fr}}
+.mini{background:var(--surface-2);border-radius:14px;padding:14px}
+.mini span{font-size:12.5px;color:var(--muted)} .mini b{display:block;font-size:20px}
+/* traps */
+.traps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.traps{grid-template-columns:1fr 1fr}} @media (max-width:600px){.traps{grid-template-columns:1fr}}
+.trap{padding:16px;display:grid;gap:10px;align-content:start}
+.trap h3{margin:0;font-size:15.5px}
+.trap .x,.trap .v{font:12.5px/1.5 var(--mono);border-radius:8px;padding:8px 10px;word-break:break-word}
+.trap .x{background:var(--bad-soft);color:var(--bad)} .trap .v{background:var(--good-soft);color:var(--good)}
+.trap p{margin:0;font-size:13.5px;color:var(--ink-2)}
+/* card, usage, improve */
+.cardview{padding:0;overflow:hidden}
+.cardview .bar-top{display:flex;gap:6px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface-2);font:12px var(--mono);color:var(--muted)}
+.cardview .bar-top i{width:10px;height:10px;border-radius:99px;background:var(--line)}
+.cardview pre{padding:16px;max-height:440px;white-space:pre-wrap;word-break:break-word}
+.annot{display:grid;gap:12px;align-content:start}
+.an{display:grid;grid-template-columns:30px 1fr;gap:12px;padding:14px;align-items:start}
+.an b{font-size:14.5px} .an p{margin:2px 0 0;font-size:13.5px;color:var(--ink-2)}
+.an .ic{flex:none;width:30px;height:30px}
+.usage{padding:20px;display:grid;gap:12px}
+.urow{display:grid;grid-template-columns:minmax(0,1fr) 70px;gap:12px;align-items:center}
+.urow .t{font-size:13.5px;line-height:1.3} .urow .t small{display:block;font:11.5px var(--mono);color:var(--muted);word-break:break-all}
+.urow .bg{height:8px;border-radius:8px;background:var(--surface-2);overflow:hidden;margin-top:6px}
+.urow .bg i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:8px}
+.urow .n{font:600 13px var(--mono);text-align:right}
+.story{padding:20px;display:grid;gap:14px;align-content:start}
+.rankcmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rankcmp div{border-radius:12px;padding:12px;background:var(--surface-2)} .rankcmp b{display:block;font-size:26px}
+.cycle{display:grid;grid-template-columns:repeat(4,1fr);gap:0;align-items:stretch;padding:20px}
+@media (max-width:860px){.cycle{grid-template-columns:1fr 1fr;gap:12px}}
+.cy{position:relative;padding:14px;border-radius:14px;background:var(--surface-2);margin-right:22px}
+.cy::after{content:"→";position:absolute;right:-19px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700}
+.cy:last-child::after{content:"↺";}
+@media (max-width:860px){.cy{margin-right:0}.cy::after{display:none}}
+.cy b{display:block;font-size:14.5px;margin-bottom:2px} .cy span{font-size:13px;color:var(--ink-2)}
+.cy .badge-llm{position:absolute;top:10px;right:10px}
+.diff{padding:16px;display:grid;gap:10px}
+.diff .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px}
+.diff pre{border-radius:10px;padding:12px;white-space:pre-wrap;word-break:break-word}
+.diff .del{background:var(--bad-soft);color:var(--bad)} .diff .ins{background:var(--good-soft);color:var(--good)}
+.scale{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:860px){.scale{grid-template-columns:1fr 1fr}} @media (max-width:560px){.scale{grid-template-columns:1fr}}
+.sc{padding:16px} .sc span{font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.sc b{display:block;font-size:19px;margin:4px 0 6px} .sc p{margin:0;font-size:13.5px;color:var(--ink-2)}
+.sec{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 24px;padding:20px;margin-top:14px}
+@media (max-width:700px){.sec{grid-template-columns:1fr}}
+.sec div{display:flex;gap:10px;font-size:14px} .sec div::before{content:"✓";color:var(--good);font-weight:700}
+.connect{padding:22px;display:grid;gap:14px}
+.codebox{position:relative;background:var(--ink);color:var(--bg);border-radius:12px;padding:14px 92px 14px 16px}
+.codebox pre{font-size:13px;white-space:pre-wrap;word-break:break-all}
+.codebox button{position:absolute;top:10px;right:10px;font:600 12px Inter,sans-serif;border:0;border-radius:8px;padding:6px 10px;cursor:pointer;background:color-mix(in srgb,var(--bg) 18%,transparent);color:var(--bg)}
+footer{padding:56px 0 48px;color:var(--muted);font-size:13.5px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:20px}
 </style>
 </head>
 <body>
-<main>
-<h1>Context Compiler</h1>
-<p class="muted">A Huwise / Opendatasoft data portal compiled into tested context for AI agents.
-Development portal: <a href="https://{{ domain }}">{{ domain }}</a>.</p>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v13c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-13M4.5 12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></symbol>
+  <symbol id="i-graph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.6"/><circle cx="18" cy="8" r="2.6"/><circle cx="10" cy="18" r="2.6"/><path d="M8.4 7 15.5 7.7M7.2 8.3l1.9 7.2M16.4 10l-4.6 6"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M14 3H7a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V9z"/><path d="M14 3v6h6"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="7" width="16" height="12" rx="4"/><path d="M12 3v4M9 12.5v1M15 12.5v1M2 12v3M22 12v3"/></symbol>
+  <symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/></symbol>
+  <symbol id="i-loop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l7.5 3v6c0 4.4-3.2 7.9-7.5 9-4.3-1.1-7.5-4.6-7.5-9V6z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+</svg>
 
-<p>A portal already gives agents an API for every dataset. What agents lack is <b>context</b>: which of five similar
-datasets is the right one, what a field means, how its values are written. This project compiles the portal's catalog
-into one short card per dataset, serves the cards over MCP with search boosted by real usage, and measures with a
-golden set whether the cards make an agent answer better.</p>
+<nav aria-label="Sections">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="logo"><svg width="14" height="14"><use href="#i-card"/></svg></span>Context Compiler</a>
+    <div class="links">
+      <a href="#architecture">Architecture</a><a href="#probleme">Comparaison</a><a href="#duel">Duel d'agents</a>
+      <a href="#outils">Outils en direct</a><a href="#resultats">Résultats</a><a href="#pieges">Pièges</a>
+      <a href="#fiche">Fiche</a><a href="#amelioration">Amélioration</a><a href="#echelle">Échelle</a>
+    </div>
+    <a class="gh" href="https://github.com/SergeMiro/context-compiler-huwise">GitHub ↗</a>
+  </div>
+</nav>
 
-<div class="stats">
-  <div class="stat"><b>{{ datasets }}</b><span class="muted">datasets</span></div>
-  <div class="stat"><b>{{ fields }}</b><span class="muted">fields</span></div>
-  <div class="stat"><b>{{ cards }}</b><span class="muted">cards</span></div>
-  <div class="stat"><b>3</b><span class="muted">MCP tools</span></div>
-</div>
+<header id="top">
+  <div class="wrap">
+    <span class="eyebrow">Huwise · Opendatasoft · MCP</span>
+    <h1>Le <em>contexte</em> qui manque aux agents IA pour interroger un portail de données.</h1>
+    <p class="lead">Context Compiler compile le catalogue d'un portail en fiches courtes et testées : quel jeu de données
+      choisir, ce que signifie chaque champ, comment ses valeurs sont écrites. Les agents les lisent via MCP — et
+      répondent juste.</p>
+    <div class="ctas">
+      <a class="btn primary" href="#duel">Lancer le duel d'agents ↓</a>
+      <a class="btn" href="#outils">Tester les outils en direct</a>
+      <a class="btn" href="#connecter">Connecter via MCP</a>
+    </div>
 
-<h2>Try it</h2>
-<p>Live, read-only MCP server (streamable HTTP): <code>https://context.smiro.dev/mcp</code>. Tools:
-<code>find_dataset</code>, <code>explain_dataset</code>, <code>query</code> (ODSQL is checked against the real schema
-before it reaches the portal).</p>
-<pre>claude mcp add --transport http context https://context.smiro.dev/mcp --header "X-Domain: {{ domain }}"</pre>
-<p>Then ask: <i>« Combien de collèges publics en Côte-d'Or ? »</i> → 58.</p>
-<p>For agents without MCP: <a href="llms.txt">llms.txt</a> and {{ pages }} pages in <a href="datasets/">datasets/</a>.
-Source: <a href="https://github.com/SergeMiro/context-compiler-huwise">github.com/SergeMiro/context-compiler-huwise</a>.</p>
+    <div class="board" id="architecture" role="figure" aria-label="Architecture de Context Compiler">
+      <div class="board-h">
+        <h2>Architecture</h2>
+        <div class="legend"><span><i style="background:var(--slate)"></i>externe</span><span><i style="background:var(--indigo)"></i>stockage</span><span><i style="background:var(--accent)"></i>calcul</span><span><i style="background:var(--amber)"></i>LLM</span><span>① … ⑨ = sections ci-dessous</span></div>
+      </div>
 
-<h2>Traps an agent falls into</h2>
-<p>Writing 30 reference queries by hand failed 11 times on the first run, on exactly these:</p>
-<table>
-<tr><th>trap</th><th>example</th></tr>
-<tr><td>one department, three formats</td><td>Côte-d'Or is <code>'021'</code> in the directory, <code>'21'</code> in IPS datasets, <code>"COTE D'OR"</code> as a label</td></tr>
-<tr><td>years stored as dates</td><td><code>session='2025'</code> → API type error; <code>year(session)=2025</code> works</td></tr>
-<tr><td>numbers stored as text</td><td><code>avg(ips)</code> fails on IPS écoles; <code>order_by ips_etab desc</code> sorts as strings</td></tr>
-<tr><td>case differs</td><td><code>academie='DIJON'</code> vs <code>libelle_academie='Dijon'</code></td></tr>
-</table>
-<p>Cards carry real sample values for key fields and a hint for every date field, so the agent reads the format
-instead of guessing it.</p>
+      <div class="lane">
+        <div class="lane-h"><span class="pill cold">Chemin froid</span><span>commandes et Celery · hors ligne · le seul endroit où un LLM est appelé</span></div>
+        <div class="pipe">
+          <a class="node k-ext" href="#echelle"><span class="ic"><svg><use href="#i-globe"/></svg></span><div><div class="t">API Explore</div><div class="s">catalogue v2.1 du portail</div></div><span class="num">9</span></a>
+          <div class="conn"><small>scan</small><svg viewBox="0 0 74 14" preserveAspectRatio="none"><line class="flow cold" x1="2" y1="7" x2="64" y2="7"/><path d="M62 2l8 5-8 5" fill="none" stroke="var(--indigo)" stroke-width="2"/></svg><small>incrémental</small></div>
+          <a class="node k-store" href="#echelle"><span class="ic"><svg><use href="#i-db"/></svg></span><div><div class="t">MariaDB</div><div class="s">Portal · Dataset · Field<br>source unique de vérité</div></div></a>
+          <div class="conn"><small>compile</small><svg viewBox="0 0 74 14" preserveAspectRatio="none"><line class="flow cold" x1="2" y1="7" x2="64" y2="7"/><path d="M62 2l8 5-8 5" fill="none" stroke="var(--indigo)" stroke-width="2"/></svg><small>déterministe</small></div>
+          <a class="node k-comp" href="#fiche"><span class="ic"><svg><use href="#i-card"/></svg></span><div><div class="t">Fiches v1…vN</div><div class="s">courte ≤ 400 · complète ≤ 1 500 jetons<br>← ContextEdit gardée</div></div><span class="num">6</span></a>
+          <div class="fan" aria-hidden="true"><svg viewBox="0 0 46 300" preserveAspectRatio="none"><path class="flow cold" vector-effect="non-scaling-stroke" d="M0 150 C 24 150, 22 50, 46 50M0 150 H46M0 150 C 24 150, 22 250, 46 250"/></svg></div>
+          <div class="col">
+            <a class="node k-store" href="#usage"><span class="ic"><svg><use href="#i-search"/></svg></span><div><div class="t">Elasticsearch</div><div class="s">index cards · routage par portail · signal d'usage</div></div><span class="num">7</span></a>
+            <a class="node k-store" href="#fiche"><span class="ic"><svg><use href="#i-graph"/></svg></span><div><div class="t">Neo4j</div><div class="s">jeux joignables (clés partagées) · lignage</div></div><span class="num">6</span></a>
+            <a class="node k-comp" href="llms.txt"><span class="ic"><svg><use href="#i-file"/></svg></span><div><div class="t">llms.txt</div><div class="s">+ datasets/&lt;id&gt;.md · {{ pages }} pages</div></div></a>
+          </div>
+        </div>
+        <div class="loops">
+          <a class="loop" href="#resultats"><span class="badge-llm">LLM</span><div><b>Éval</b><div class="mono">EvalCase → agent → EvalRun / EvalResult</div></div><span class="num">4</span></a>
+          <a class="loop" href="#amelioration"><span class="badge-llm">LLM</span><div><b>Amélioration</b><div class="mono">échecs → LLM propose → compile → éval → gardée | annulée</div></div><span class="num">8</span></a>
+        </div>
+      </div>
 
-<h2>Usage signal</h2>
-<p>The portal publishes the log of its own MCP server (39 675 agent calls, Feb–Nov 2026). It is used as a search
-signal: plain BM25 does not put the directory in the top 5 for « combien d'écoles en France »; with the signal it is #1.</p>
-<table>
-<tr><th>most used by agents</th><th class="num">calls</th></tr>
-{% for d in top %}<tr><td><code>{{ d.dataset_id }}</code><br><span class="muted">{{ d.title }}</span></td><td class="num">{{ d.usage_count }}</td></tr>
-{% endfor %}</table>
+      <div class="bridge"><svg viewBox="0 0 14 40"><line class="flow" x1="7" y1="2" x2="7" y2="32"/><path d="M2 30l5 8 5-8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg>les projections servent le chemin chaud</div>
 
-<h2>Does it help? Same agent, two toolsets</h2>
-{% if pair %}
-<p>The same model and prompt answer the golden set ({{ pair.1.metrics.n }} questions) with generic catalog tools
-(<b>naked</b>) and with the compiled cards (<b>compiled</b>). Scored by comparing numbers with expected answers computed
-from the API, no LLM judge. Model: <code>{{ pair.1.model }}</code>, run {{ pair.1.finished_at|date:"d.m.Y" }}.</p>
-<table>
-<tr><th>metric</th><th class="num">naked</th><th class="num">compiled</th></tr>
-{% for label, a, b in rows %}<tr><td>{{ label }}</td><td class="num">{{ a }}</td><td class="num">{{ b }}</td></tr>
-{% endfor %}</table>
-{% else %}
-<p class="muted">No full eval run yet: <code>manage.py eval {{ domain }} --mode both</code>.</p>
-{% endif %}
+      <div class="lane hot">
+        <div class="lane-h"><span class="pill hot">Chemin chaud</span><span>serveur MCP · aucun LLM · lecture seule (sauf le journal ToolCall)</span></div>
+        <div class="pipe">
+          <a class="node k-ext" href="#duel" style="flex:.8 1 0"><span class="ic"><svg><use href="#i-bot"/></svg></span><div><div class="t">Agent IA</div><div class="s">Claude, ChatGPT…<br>en-tête X-Domain</div></div><span class="num">2</span></a>
+          <div class="conn"><small>MCP</small><svg viewBox="0 0 74 14" preserveAspectRatio="none"><line class="flow" x1="2" y1="7" x2="64" y2="7"/><path d="M62 2l8 5-8 5" fill="none" stroke="var(--accent)" stroke-width="2"/></svg><small>HTTP</small></div>
+          <a class="node k-comp" href="#connecter" style="flex:.8 1 0"><span class="ic"><svg><use href="#i-plug"/></svg></span><div><div class="t">Serveur MCP</div><div class="s">3 outils · limite de débit par portail</div></div></a>
+          <div class="conn"><small>appelle</small><svg viewBox="0 0 74 14" preserveAspectRatio="none"><line class="flow" x1="2" y1="7" x2="64" y2="7"/><path d="M62 2l8 5-8 5" fill="none" stroke="var(--accent)" stroke-width="2"/></svg><small>&nbsp;</small></div>
+          <div class="tools">
+            <a class="tool" href="#outils"><div class="fn">find_dataset<small>(question)</small></div><svg class="arr" viewBox="0 0 26 12"><path d="M1 6h20M17 2l5 4-5 4" fill="none" stroke="var(--muted)" stroke-width="1.6"/></svg><div class="to">Elasticsearch (filtre + routage par portail) + signal d'usage → fiches courtes</div><span class="m">p95 13 ms</span><span class="num">3</span></a>
+            <a class="tool" href="#outils"><div class="fn">explain_dataset<small>(id)</small></div><svg class="arr" viewBox="0 0 26 12"><path d="M1 6h20M17 2l5 4-5 4" fill="none" stroke="var(--muted)" stroke-width="1.6"/></svg><div class="to">fiche complète + jeux joignables + lignage (Neo4j)</div><span class="m">p95 23 ms</span><span class="num">3</span></a>
+            <a class="tool" href="#outils"><div class="fn">query<small>(id, odsql)</small></div><svg class="arr" viewBox="0 0 26 12"><path d="M1 6h20M17 2l5 4-5 4" fill="none" stroke="var(--muted)" stroke-width="1.6"/></svg><div class="to">validateur ODSQL → API Explore (clé du client transmise, limit ≤ 100)</div><span class="m lock">validé</span><span class="num">3</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="stack-h">Pile, la même que Huwise</div>
+      <div class="marquee" aria-label="Pile technique : {% for t in stack %}{{ t.label }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+        <div class="track">{% for pass in "12" %}{% for t in stack %}<div class="tech" style="--c:{{ t.light }};--cd:{{ t.dark }}"{% if pass == "2" %} aria-hidden="true"{% endif %}><span class="lg">{{ t.svg|safe }}</span><span><b>{{ t.label }}</b><small>{{ t.detail }}</small></span></div>{% endfor %}{% endfor %}</div>
+      </div>
+    </div>
+
+    <div class="kpis">
+      {% if pair %}<div class="kpi"><b><span class="from">{{ pair.0.metrics.answer_ok|floatformat:0 }} %</span> → <span class="to">{{ pair.1.metrics.answer_ok|floatformat:0 }} %</span></b><span>réponses correctes, même modèle, {{ pair.1.metrics.n }} questions</span></div>{% endif %}
+      <div class="kpi"><b>{{ datasets }}</b><span>jeux de données compilés · {{ fields }} champs</span></div>
+      <div class="kpi"><b>13 ms</b><span>p95 de find_dataset, sans LLM</span></div>
+      <div class="kpi"><b>+2 %</b><span>de jetons pour les fiches</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="probleme">
+  <div class="sh"><span class="num">1</span><div><h2>Même question, deux systèmes</h2><p>Un serveur MCP générique donne à l'agent l'accès à tout le catalogue. Ce qui lui manque, c'est le contexte : sur ce portail, la Côte-d'Or s'écrit de trois façons — <code>'021'</code>, <code>'21'</code> et <code>"COTE D'OR"</code>.</p></div></div>
+  <div class="q"><div class="bubble">« Combien de collèges publics y a-t-il en Côte-d'Or ? »</div></div>
+  <div class="grid2">
+    <div class="panel agent">
+      <h3><span class="dot c-naked"></span>Serveur MCP générique <span class="tag bad">sans contexte</span></h3>
+      <ol class="steps">
+        <li><div><code>search_assets</code> — recherche BM25 sur les titres</div></li>
+        <li><div><code>get_asset</code> — schéma brut : <code>code_departement · text</code>, aucun exemple de valeur</div></li>
+        <li><div>L'agent devine : <code>code_departement = '21'</code></div></li>
+      </ol>
+      <div class="outcome bad"><span>0 ligne → réponse fausse</span><b>0</b></div>
+    </div>
+    <div class="panel agent">
+      <h3><span class="dot c-comp"></span>Context Compiler <span class="tag good">fiches compilées</span></h3>
+      <ol class="steps">
+        <li><div><code>find_dataset</code> — BM25 + usage réel des agents : l'annuaire en tête</div></li>
+        <li><div><code>explain_dataset</code> — la fiche montre <code>code_departement (e.g. '021')</code></div></li>
+        <li><div><code>query</code> validée : <code>code_departement = '021'</code></div></li>
+      </ol>
+      <div class="outcome good"><span>réponse exacte, vérifiée sur l'API</span><b>58</b></div>
+    </div>
+  </div>
+  <div class="panel tablewrap" style="margin-top:16px">
+    <table class="cmp">
+      <tr><th></th><th>Serveur MCP générique</th><th>Context Compiler</th></tr>
+      <tr><td>Recherche</td><td class="no"><span class="mk">✗</span>BM25 sur titres et descriptions</td><td class="yes"><span class="mk">✓</span>BM25 + signal d'usage réel des agents (journal MCP du portail)</td></tr>
+      <tr><td>Ce que lit l'agent</td><td class="no"><span class="mk">✗</span>schéma brut + 3 enregistrements</td><td class="yes"><span class="mk">✓</span>fiche courte : formats réels des valeurs, clés de jointure, fraîcheur, licence, indications de requête</td></tr>
+      <tr><td>Requête</td><td class="no"><span class="mk">✗</span>transmise telle quelle, l'erreur coûte du quota</td><td class="yes"><span class="mk">✓</span>validée contre le vrai schéma, champs proches suggérés</td></tr>
+      <tr><td>Jointures</td><td class="no"><span class="mk">✗</span>à deviner</td><td class="yes"><span class="mk">✓</span>graphe Neo4j des jeux joignables par clé partagée</td></tr>
+      <tr><td>Mesure</td><td class="no"><span class="mk">✗</span>aucune</td><td class="yes"><span class="mk">✓</span>éval sur 30 questions de référence, sans juge LLM</td></tr>
+      <tr><td>Amélioration</td><td class="no"><span class="mk">✗</span>manuelle, à l'aveugle</td><td class="yes"><span class="mk">✓</span>le LLM propose, l'éval décide, un humain valide</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="duel">
+  <div class="sh"><span class="num">2</span><div><h2>Duel d'agents : vitesse, qualité, logique</h2><p>Même modèle, même prompt, même question. À gauche l'agent avec des outils génériques, à droite avec les fiches compilées. Les résultats enregistrés viennent de l'éval complète ; « Relancer en direct » exécute les deux agents maintenant.</p></div></div>
+  <div class="panel" style="padding:18px">
+    <div class="controls" id="duel-chips"></div>
+    <div class="controls" style="margin-top:10px">
+      <select id="duel-select" aria-label="Toutes les questions"></select>
+      <button class="btn" id="duel-live" type="button"><svg width="16" height="16"><use href="#i-loop"/></svg>Relancer en direct</button>
+      <span class="live-note">modèle gratuit · 20–60 s · quota quotidien limité</span>
+    </div>
+    <div class="duel-q"><div class="bubble" id="duel-question">…</div><div class="expect">Réponse attendue (calculée depuis l'API) : <b id="duel-expected">…</b></div></div>
+    <div class="verdict" id="duel-verdict" aria-live="polite"></div>
+    <div class="grid2">
+      <div class="panel side" id="side-naked" style="box-shadow:none"></div>
+      <div class="panel side" id="side-compiled" style="box-shadow:none"></div>
+    </div>
+  </div>
+</section>
+
+<section id="outils">
+  <div class="sh"><span class="num">3</span><div><h2>Les outils MCP, en direct</h2><p>Choisissez un piège : le serveur cherche le jeu de données, lit sa fiche et exécute la requête validée sur l'API du portail. À côté, la requête qu'écrit un agent sans contexte (relevée dans les transcriptions de l'éval), exécutée elle aussi. Aucun LLM ici : tout est réel et instantané.</p></div></div>
+  <div class="lab">
+    <div class="panel lab-l">
+      <h4>Pièges à essayer</h4>
+      <div id="presets"></div>
+      <h4>Ou cherchez librement</h4>
+      <form class="search" id="free"><input id="free-q" placeholder="ex. résultats du brevet par collège" aria-label="Question libre"><button class="btn primary" type="submit">Chercher</button></form>
+      <div class="sugg" id="sugg"></div>
+    </div>
+    <div class="panel lab-r" id="lab-out"><div class="empty"><div><svg width="40" height="40" style="color:var(--accent)"><use href="#i-search"/></svg><p>Choisissez un piège à gauche<br>ou posez votre propre question.</p></div></div></div>
+  </div>
+</section>
+
+<section id="resultats">
+  <div class="sh"><span class="num">4</span><div><h2>Résultats sur {{ pair.1.metrics.n|default:"30" }} questions</h2>{% if pair %}<p>Modèle <code>{{ pair.1.model }}</code>, température 0, au plus 6 étapes, éval du {{ pair.1.finished_at|date:"d.m.Y" }}. Notation sans juge LLM : le nombre de la réponse est comparé à la valeur calculée depuis l'API.</p>{% endif %}</div></div>
+  {% if pair %}
+  <div class="panel bars" id="bars">
+    <div class="legend2"><span><i class="c-naked"></i>Serveur MCP générique</span><span><i class="c-comp"></i>Context Compiler</span></div>
+    {% for b in bars %}
+    <div class="brow"><div class="l">{{ b.label }}</div><div class="bpair">
+      <div class="btrack"><div class="bg"><i class="c-naked" data-w="{{ b.naked }}"></i></div><span class="v">{{ b.naked|floatformat:0 }} %</span></div>
+      <div class="btrack"><div class="bg"><i class="c-comp" data-w="{{ b.compiled }}"></i></div><span class="v">{{ b.compiled|floatformat:0 }} %</span></div>
+    </div></div>
+    {% endfor %}
+    <div class="minis">
+      <div class="mini"><span>Étapes par question</span><b>{{ steps.0 }} → {{ steps.1 }}</b></div>
+      <div class="mini"><span>Jetons, total</span><b>{{ tokens.0 }} → {{ tokens.1 }}</b></div>
+      <div class="mini"><span>Ce qui échoue encore</span><b><a href="https://github.com/SergeMiro/context-compiler-huwise/blob/prod/NOTES.md">NOTES.md ↗</a></b></div>
+    </div>
+  </div>
+  {% else %}<p class="muted">Pas encore d'éval complète : <code>manage.py eval {{ domain }} --mode both</code>.</p>{% endif %}
+</section>
+
+<section id="pieges">
+  <div class="sh"><span class="num">5</span><div><h2>Les pièges du portail</h2><p>Écrire 30 requêtes de référence à la main a échoué 11 fois au premier essai — exactement sur ces pièges. Les fiches les rendent visibles.</p></div></div>
+  <div class="traps">
+    <div class="panel trap"><h3>Un département, trois formats</h3><div class="x">code_departement='21'  → 0 ligne</div><div class="v">code_departement='021' → 58</div><p>Annuaire : <code>'021'</code>, jeux IPS : <code>'21'</code>, libellé : <code>"COTE D'OR"</code>.</p></div>
+    <div class="panel trap"><h3>Années stockées en dates</h3><div class="x">session='2025' → erreur de type</div><div class="v">year(session)=2025</div><p>Neuf jeux stockent l'année en <code>date</code>. La fiche donne le filtre pour chaque champ date.</p></div>
+    <div class="panel trap"><h3>Nombres stockés en texte</h3><div class="x">avg(ips) → erreur (IPS écoles)</div><div class="v">ips · double (IPS collèges)</div><p><code>order_by ips_etab desc</code> trie comme des chaînes. La fiche affiche le type réel.</p></div>
+    <div class="panel trap"><h3>Casse différente</h3><div class="x">libelle_academie='DIJON' → 0</div><div class="v">libelle_academie='Dijon'</div><p>Les jeux IPS et bac écrivent <code>'DIJON'</code>, l'annuaire <code>'Dijon'</code>.</p></div>
+    <div class="panel trap"><h3>Apostrophe dans une valeur</h3><div class="x">departement='COTE-D''OR' → syntaxe</div><div class="v">departement="COTE D'OR"</div><p>L'échappement SQL n'existe pas en ODSQL : guillemets doubles.</p></div>
+    <div class="panel trap"><h3>Champ qui commence par un chiffre</h3><div class="x">sum(2ndes_gt_filles) → syntaxe</div><div class="v">sum(`2ndes_gt_filles`)</div><p>Accents graves obligatoires. Et pas de <code>DISTINCT</code> : on liste avec <code>group_by</code>.</p></div>
+  </div>
+</section>
 
 {% if card %}
-<h2>One card</h2>
-<p class="muted">Short card (≤ 400 tokens) returned by <code>find_dataset</code>, version {{ card.version }}.</p>
-<pre class="wrap">{{ card.short }}</pre>
+<section id="fiche">
+  <div class="sh"><span class="num">6</span><div><h2>À quoi ressemble une fiche</h2><p>La fiche courte que renvoie <code>find_dataset</code> pour l'annuaire, version {{ card.version }}. Compilée de façon déterministe depuis MariaDB : nouvelle version seulement si le texte change.</p></div></div>
+  <div class="grid2">
+    <div class="panel cardview"><div class="bar-top"><i></i><i></i><i></i><span>fr-en-annuaire-education · courte · {{ card.tokens_short }} jetons</span></div><pre>{{ card.short }}</pre></div>
+    <div class="annot">
+      <div class="panel an"><span class="ic k-comp" style="background:var(--accent-soft);color:var(--accent)"><svg><use href="#i-card"/></svg></span><div><b>Ce que c'est, en une phrase</b><p>Titre, description coupée, volume, fraîcheur, licence, producteur.</p></div></div>
+      <div class="panel an"><span class="ic" style="background:var(--indigo-soft);color:var(--indigo)"><svg><use href="#i-graph"/></svg></span><div><b>Clés de jointure avec leur vrai format</b><p><code>code_departement (e.g. '059')</code> : l'agent voit les trois chiffres. Neo4j relie les jeux qui partagent ces clés.</p></div></div>
+      <div class="panel an"><span class="ic" style="background:var(--amber-soft);color:var(--amber)"><svg><use href="#i-clock"/></svg></span><div><b>Types et indications</b><p>Champ date → filtre <code>year(…)</code> ; limites de l'API ; codes en texte avec zéros initiaux.</p></div></div>
+      <div class="panel an"><span class="ic" style="background:var(--slate-soft);color:var(--slate)"><svg><use href="#i-shield"/></svg></span><div><b>Pas de données personnelles</b><p>Les champs <code>mail</code>, <code>telephone</code>, <code>adresse</code>… n'ont jamais d'exemples de valeurs.</p></div></div>
+    </div>
+  </div>
+</section>
 {% endif %}
 
-{% if edit %}
-<h2>One card edit</h2>
-<p>The improve loop proposes one edit per failing dataset; it is kept only if failing questions get fixed and no
-passing one breaks. A human reviews the diff in Django admin.</p>
-<p class="muted"><code>{{ edit.dataset.dataset_id }}</code> · {{ edit.kind }} · {{ edit.source }} · <b>{{ edit.status }}</b></p>
-{% if edit.before %}<pre class="wrap"><del>{{ edit.before }}</del></pre>{% endif %}
-<pre class="wrap"><ins>{{ edit.after }}</ins></pre>
-{% if edit.rationale %}<p class="muted">{{ edit.rationale }}</p>{% endif %}
-{% endif %}
+<section id="usage">
+  <div class="sh"><span class="num">7</span><div><h2>Le signal d'usage</h2><p>Le portail publie le journal de son propre serveur MCP : 39 675 appels d'agents (févr.–nov. 2026). Ce journal sert de signal de recherche : ce que les agents utilisent vraiment remonte.</p></div></div>
+  <div class="grid2">
+    <div class="panel usage">
+      {% for d in top %}<div class="urow"><div class="t">{{ d.title }}<small>{{ d.id }}</small><div class="bg"><i style="width:{{ d.pct }}%"></i></div></div><div class="n">{{ d.n }}</div></div>{% endfor %}
+    </div>
+    <div class="panel story">
+      <b>« Combien d'écoles en France ? »</b>
+      <div class="rankcmp"><div><span class="muted">BM25 seul</span><b>hors top 5</b><span class="muted">l'annuaire n'a ni « école » ni « collège » dans son titre</span></div><div style="background:var(--good-soft)"><span class="muted">BM25 + usage</span><b style="color:var(--good)">n° 1</b><span class="muted">+ 0,05 × √appels</span></div></div>
+      <p class="muted" style="margin:0">Sur 11 questions de sonde : top-1 7 → 8, top-5 9 → 11. Les vecteurs denses ne viendront que si l'éval montre que le rappel est le goulot.</p>
+    </div>
+  </div>
+</section>
 
-<h2>Architecture</h2>
-<pre>COLD PATH (commands / Celery; the only place an LLM is ever called)
-  Explore API --scan--> Portal / Dataset / Field   (MariaDB = single source of truth)
-                          | compile (deterministic)
-                          v
-                        Card v1..vN  &lt;-- kept ContextEdit
-             +------------+-------------+
-             v            v             v
-        ES `cards`     Neo4j          llms.txt + datasets/&lt;id&gt;.md
-  eval:    EvalCase -&gt; agent -&gt; EvalRun / EvalResult
-  improve: failures -&gt; LLM proposes edit -&gt; compile -&gt; eval -&gt; kept | reverted
+<section id="amelioration">
+  <div class="sh"><span class="num">8</span><div><h2>La boucle d'amélioration</h2><p>Le seul autre endroit où un LLM intervient. Il propose une modification par jeu de données en échec ; l'éval décide si elle reste. Un humain relit le diff dans l'admin Django.</p></div></div>
+  <div class="panel cycle">
+    <div class="cy"><b>Échecs</b><span>questions ratées de la dernière éval compilée</span></div>
+    <div class="cy"><span class="badge-llm">LLM</span><b>Proposition</b><span>une note, un synonyme ou un modèle de requête</span></div>
+    <div class="cy"><b>Recompilation + éval</b><span>sur les questions touchées</span></div>
+    <div class="cy"><b>Gardée ou annulée</b><span>gardée si des échecs passent et que rien ne casse</span></div>
+  </div>
+  {% if edit %}
+  <div class="panel diff" style="margin-top:16px">
+    <div class="meta"><code>{{ edit.dataset.dataset_id }}</code><span class="tag neutral">{{ edit.kind }}</span><span class="tag neutral">{{ edit.source }}</span><span class="tag {% if edit.status == 'kept' %}good{% elif edit.status == 'proposed' %}live{% else %}bad{% endif %}">{{ edit_status }}</span></div>
+    {% if edit.before %}<pre class="del">− {{ edit.before }}</pre>{% endif %}
+    <pre class="ins">+ {{ edit.after }}</pre>
+    {% if edit.rationale %}<p class="muted" style="margin:0;font-size:13.5px">{{ edit.rationale }}</p>{% endif %}
+  </div>
+  {% endif %}
+</section>
 
-HOT PATH (MCP, no LLM, no writes except the ToolCall log)
-  find_dataset(question) -&gt; ES (filter + routing by portal) + usage boost -&gt; short cards
-  explain_dataset(id)    -&gt; full card + joinable datasets + lineage (Neo4j)
-  query(id, odsql)       -&gt; validator -&gt; Explore API (client key passed through, limit &lt;= 100)</pre>
-<p class="muted">Stack, the same as Huwise: Django + DRF, MariaDB, Celery + RabbitMQ, Elasticsearch, Neo4j, MCP Python
-SDK. <code>find_dataset</code> p95 13 ms, <code>explain_dataset</code> p95 23 ms in process.</p>
+<section id="echelle">
+  <div class="sh"><span class="num">9</span><div><h2>De 1 à 5 000 portails</h2><p>Rien ne change dans le code : taille de base, nombre de workers, routage Elasticsearch, cache.</p></div></div>
+  <div class="scale">
+    <div class="panel sc"><span>Données</span><b>~750 000 jeux · ~15 M champs</b><p>MariaDB, index (portail, modified) et (jeu, nom).</p></div>
+    <div class="panel sc"><span>Scan</span><b>1 requête par scan complet</b><p>Celery sur RabbitMQ, portails étalés sur l'heure, un verrou par portail, ≤ 5 % du quota API quotidien.</p></div>
+    <div class="panel sc"><span>Recherche</span><b>un seul index</b><p><code>routing</code> + <code>filter</code> par portail : isolation et vitesse.</p></div>
+    <div class="panel sc"><span>Graphe</span><b>linéaire en clés</b><p><code>(:Dataset)-[:HAS_KEY]-&gt;(:Key)</code> : 79 arêtes au lieu de 3 081 pour <code>uai</code>.</p></div>
+    <div class="panel sc"><span>Chemin chaud</span><b>1 requête ES + cache</b><p>Serveur MCP sans état, mise à l'échelle horizontale.</p></div>
+    <div class="panel sc"><span>LLM</span><b>hors ligne uniquement</b><p>Budget quotidien par portail, jamais sur le chemin d'une requête d'agent.</p></div>
+  </div>
+  <div class="panel sec">
+    <div>Isolation des portails dans chaque requête : MariaDB, ES, Neo4j — avec tests</div>
+    <div>La clé API du client (<code>X-Apikey</code>) est transmise, jamais stockée ni journalisée</div>
+    <div>ODSQL en liste blanche : vrais noms de champs, <code>limit ≤ 100</code>, pas de commentaires</div>
+    <div>Champs personnels sans exemples, jamais envoyés au LLM</div>
+    <div>Limite de débit par portail (serveur) et par IP (proxy)</div>
+    <div>Le journal ToolCall garde l'outil, la latence et le code d'erreur — jamais la question</div>
+  </div>
+</section>
+
+<section id="connecter">
+  <div class="sh"><span class="num" style="background:var(--accent)">↗</span><div><h2>Connecter votre agent</h2><p>Serveur MCP en lecture seule, HTTP « streamable ». Le portail se choisit avec l'en-tête <code>X-Domain</code>, comme chez Huwise.</p></div></div>
+  <div class="panel connect">
+    <div class="codebox"><pre id="cmd">claude mcp add --transport http context https://context.smiro.dev/mcp --header "X-Domain: {{ domain }}"</pre><button type="button" id="copy">Copier</button></div>
+    <div class="controls"><a class="btn" href="llms.txt">llms.txt</a><a class="btn" href="datasets/">{{ pages }} pages de jeux de données</a><a class="btn" href="https://github.com/SergeMiro/context-compiler-huwise">Code source (MIT)</a><a class="btn" href="https://{{ domain }}">Portail : {{ domain }}</a></div>
+  </div>
+</section>
 </main>
+
+<footer><div class="wrap"><span>Context Compiler — Django, MariaDB, Celery, Elasticsearch, Neo4j, MCP.</span><span>Données : {{ domain }}, Licence Ouverte v2.0 (Etalab).</span></div></footer>
+
+{{ traps|json_script:"traps-data" }}
+<script>
+(() => {
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
+const nf = new Intl.NumberFormat("fr-FR", {maximumFractionDigits: 1});
+const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+const fmt = v => typeof v === "number" ? nf.format(v) : (v === null || v === undefined || v === "" ? "—" : String(v));
+const TRAPS = JSON.parse($("#traps-data").textContent);
+
+async function api(kind, params) {
+  const t0 = performance.now();
+  try {
+    const r = await fetch("/api/" + kind + "?" + new URLSearchParams(params));
+    const body = await r.json().catch(() => ({error: "réponse illisible (" + r.status + ")"}));
+    return {body, status: r.status, ms: Math.round(performance.now() - t0)};
+  } catch (e) {
+    return {body: {error: "serveur injoignable"}, status: 0, ms: Math.round(performance.now() - t0)};
+  }
+}
+const pick = (o, keys) => Object.fromEntries(keys.filter(k => o[k] !== undefined && o[k] !== "").map(k => [k, o[k]]));
+const odsqlText = p => ["select", "where", "group_by", "order_by", "limit"].filter(k => p[k] !== undefined && p[k] !== "").map(k => k + " " + p[k]).join("\n");
+function valueOf(body, path) {
+  if (!body || body.error) return null;
+  if (path === "total_count") return body.total_count;
+  const f = path.replace(/^field:/, "");
+  return body.results && body.results[0] ? body.results[0][f] : null;
+}
+function same(v, exp) {
+  if (v === null || v === undefined) return false;
+  if (typeof exp === "number") { const n = Number(v); return Math.abs(n - exp) <= Math.max(Math.abs(exp) * 0.05, 0.5); }
+  return String(v).toLowerCase().includes(String(exp).toLowerCase());
+}
+
+/* ---------- bars: animate when visible ---------- */
+const bars = $("#bars");
+if (bars) new IntersectionObserver((es, o) => es.forEach(e => {
+  if (e.isIntersecting) { bars.querySelectorAll("i[data-w]").forEach(i => i.style.width = i.dataset.w + "%"); o.disconnect(); }
+}), {threshold: .3}).observe(bars);
+
+/* ---------- nav: highlight current section ---------- */
+const navLinks = [...document.querySelectorAll(".links a")];
+const secObs = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) navLinks.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+}), {rootMargin: "-45% 0px -50% 0px"});
+navLinks.forEach(a => { const s = document.querySelector(a.getAttribute("href")); if (s) secObs.observe(s); });
+
+/* ---------- copy ---------- */
+$("#copy").addEventListener("click", async e => {
+  try { await navigator.clipboard.writeText($("#cmd").textContent); e.target.textContent = "Copié ✓"; }
+  catch { e.target.textContent = "Sélectionnez le texte"; }
+  setTimeout(() => e.target.textContent = "Copier", 1800);
+});
+
+/* ---------- duel ---------- */
+const DUEL = {data: null, slug: null, live: {}};
+const SIDES = {naked: {name: "Serveur MCP générique", dot: "c-naked"}, compiled: {name: "Context Compiler", dot: "c-comp"}};
+
+function summarize(step) {
+  const r = step.result || "";
+  const err = (r.match(/"error": "((?:[^"\\]|\\.)*)/) || [])[1];
+  if (err) return {ok: false, text: err.replace(/\\"/g, '"')};
+  if (step.tool === "find_dataset" || step.tool === "search_assets") {
+    const ids = [...r.matchAll(/"dataset_id": "([^"]+)"/g)].map(m => m[1]);
+    return {ok: true, text: ids.length ? "top : " + ids.slice(0, 3).join(", ") + (ids.length > 3 ? "…" : "") : "aucun résultat"};
+  }
+  if (step.tool === "explain_dataset" || step.tool === "get_asset") return {ok: true, text: "fiche / schéma lu"};
+  const tc = (r.match(/"total_count": (\d+)/) || [])[1];
+  const first = (r.match(/"results": \[\{([^}]{0,140})/) || [])[1];
+  return {ok: true, text: (tc !== undefined ? tc + " ligne(s)" : "") + (first ? " · " + first : (tc === "0" ? "" : ""))};
+}
+function argsText(step) {
+  const a = step.args || {};
+  if (a.question) return a.question;
+  if (step.tool === "explain_dataset" || step.tool === "get_asset") return a.dataset_id || "";
+  return [a.dataset_id, odsqlText(a)].filter(Boolean).join("\n");
+}
+function renderSide(mode, row, other, source) {
+  const el = $("#side-" + mode), s = SIDES[mode];
+  if (!row) { el.innerHTML = `<div class="side-h"><h3><span class="dot ${s.dot}"></span>${s.name}</h3></div><div class="loading"><span class="spin"></span>Agent en cours… <span class="mono" data-timer>0 s</span></div>`; return; }
+  if (row.error) { el.innerHTML = `<div class="side-h"><h3><span class="dot ${s.dot}"></span>${s.name}</h3></div><div class="answer ko">${esc(row.error)}</div>`; return; }
+  const mx = (k) => Math.max(row[k] || 0, (other && other[k]) || 0) || 1;
+  const metric = (label, val, k, unit) => `<div class="metric"><span>${label}</span><b>${val}${unit || ""}</b><div class="bar"><i class="${s.dot}" style="width:${Math.round(100 * (row[k] || 0) / mx(k))}%"></i></div></div>`;
+  const trace = (row.trace || []).map(st => { const sm = summarize(st); return `<li><span class="pt ${sm.ok ? "ok" : "ko"}"></span><div class="tn">${esc(st.tool)}</div><div class="ta">${esc(argsText(st))}</div><div class="tr ${sm.ok ? "" : "ko"}">${esc(sm.text)}</div></li>`; }).join("");
+  el.innerHTML = `
+    <div class="side-h"><h3><span class="dot ${s.dot}"></span>${s.name}</h3><span class="tag ${source.live ? "live" : "neutral"}">${esc(source.label)}</span></div>
+    <div class="metrics">${metric("Temps", nf.format((row.ms || 0) / 1000), "ms", " s")}${metric("Étapes", row.steps, "steps")}${metric("Jetons", nf.format(row.tokens || 0), "tokens")}</div>
+    <div class="verdicts"><span class="tag ${row.dataset_ok ? "good" : "bad"}">${row.dataset_ok ? "✓" : "✗"} bon jeu de données</span><span class="tag ${row.answer_ok ? "good" : "bad"}">${row.answer_ok ? "✓" : "✗"} réponse correcte</span>${row.found_dataset ? `<span class="tag neutral mono">${esc(row.found_dataset)}</span>` : ""}</div>
+    <div class="answer ${row.answer_ok ? "ok" : "ko"}"><small>Réponse finale</small>${row.answer ? md(row.answer) : "(aucune réponse : étapes épuisées)"}</div>
+    <div><div class="muted" style="font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Logique de l'agent</div><ol class="trace">${trace || '<li><div class="tr">aucun appel d\'outil</div></li>'}</ol></div>`;
+}
+function showCase(slug) {
+  const c = DUEL.data.cases.find(x => x.slug === slug); if (!c) return;
+  DUEL.slug = slug;
+  document.querySelectorAll("#duel-chips .chip").forEach(b => b.classList.toggle("on", b.dataset.slug === slug));
+  $("#duel-select").value = slug;
+  $("#duel-question").textContent = "« " + c.question + " »";
+  $("#duel-expected").textContent = fmt(c.expected);
+  const rec = {label: "enregistré · " + DUEL.data.date, live: false};
+  const L = DUEL.live[slug] || {};
+  const n = L.naked || c.naked, k = L.compiled || c.compiled;
+  renderSide("naked", n, k, L.naked ? L.naked._src : rec);
+  renderSide("compiled", k, n, L.compiled ? L.compiled._src : rec);
+  renderVerdict(n, k);
+}
+function renderVerdict(n, k) {
+  const el = $("#duel-verdict");
+  if (!n || !k || n.error || k.error) { el.innerHTML = ""; return; }
+  const q = k.answer_ok && !n.answer_ok ? ["win", "Context Compiler juste, générique faux"] : n.answer_ok && !k.answer_ok ? ["lose", "seul le générique répond juste"]
+    : k.answer_ok ? ["", "les deux répondent juste"] : ["", "aucun des deux ne répond juste"];
+  const dt = ((n.ms || 0) - (k.ms || 0)) / 1000, ds = (n.steps || 0) - (k.steps || 0);
+  const dk = n.tokens ? Math.round(100 * ((k.tokens || 0) - n.tokens) / n.tokens) : 0;
+  const cell = (cls, label, text) => `<div class="vd ${cls}"><span>${label}</span><b>${text}</b></div>`;
+  el.innerHTML = cell(q[0], "Qualité", q[1]) +
+    cell(Math.abs(dt) < 1 ? "" : dt > 0 ? "win" : "lose", "Vitesse", Math.abs(dt) < 1 ? "temps équivalent" : nf.format(Math.abs(dt)) + " s " + (dt > 0 ? "plus rapide" : "plus lent")) +
+    cell(ds > 0 ? "win" : ds < 0 ? "lose" : "", "Logique", ds > 0 ? ds + " étape" + (ds > 1 ? "s" : "") + " de moins" : ds < 0 ? -ds + " étape" + (ds < -1 ? "s" : "") + " de plus" : "même nombre d'étapes") +
+    cell(dk < -2 ? "win" : dk > 2 ? "lose" : "", "Jetons", dk === 0 ? "équivalent" : (dk > 0 ? "+" : "−") + Math.abs(dk) + " % de jetons");
+}
+async function runLive() {
+  const slug = DUEL.slug, btn = $("#duel-live"); if (!slug) return;
+  btn.disabled = true;
+  const t0 = performance.now();
+  renderSide("naked", null); renderSide("compiled", null); $("#duel-verdict").innerHTML = "";
+  const timer = setInterval(() => document.querySelectorAll("[data-timer]").forEach(t => t.textContent = Math.round((performance.now() - t0) / 1000) + " s"), 500);
+  const run = async mode => {
+    const {body, status} = await api("agent", {slug, mode});
+    if (status !== 200) {
+      const msg = status === 429 ? "Quota du jour atteint : voici le résultat enregistré." : (body.error || "erreur") + " — résultat enregistré affiché.";
+      const c = DUEL.data.cases.find(x => x.slug === slug);
+      DUEL.live[slug] = DUEL.live[slug] || {};
+      DUEL.live[slug][mode] = Object.assign({}, c[mode], {_src: {label: msg, live: false}});
+    } else {
+      const label = body.cached_s !== undefined ? "en direct · il y a " + Math.max(1, Math.round(body.cached_s / 60)) + " min" : "en direct · à l'instant";
+      DUEL.live[slug] = DUEL.live[slug] || {};
+      DUEL.live[slug][mode] = Object.assign(body, {_src: {label, live: true}});
+    }
+    if (DUEL.slug === slug) {
+      const L = DUEL.live[slug], c = DUEL.data.cases.find(x => x.slug === slug);
+      const other = L[mode === "naked" ? "compiled" : "naked"] || c[mode === "naked" ? "compiled" : "naked"];
+      renderSide(mode, L[mode], other, L[mode]._src);
+      if (L.naked && L.compiled) renderVerdict(L.naked, L.compiled);
+    }
+  };
+  await Promise.all([run("naked"), run("compiled")]);
+  clearInterval(timer);
+  btn.disabled = false;
+  if (DUEL.slug === slug) showCase(slug);
+}
+fetch("eval.json").then(r => r.ok ? r.json() : Promise.reject()).then(d => {
+  DUEL.data = d;
+  const byslug = Object.fromEntries(d.cases.map(c => [c.slug, c]));
+  $("#duel-chips").innerHTML = d.featured.map(s => `<button type="button" class="chip" data-slug="${esc(s)}">${esc(byslug[s].question)}</button>`).join("");
+  $("#duel-select").innerHTML = `<option value="" disabled>Toutes les ${d.cases.length} questions…</option>` + d.cases.map(c => `<option value="${esc(c.slug)}">${c.compiled.answer_ok ? "✓" : "✗"} Context Compiler · ${c.naked.answer_ok ? "✓" : "✗"} générique — ${esc(c.question)}</option>`).join("");
+  $("#duel-chips").addEventListener("click", e => { const b = e.target.closest(".chip"); if (b) showCase(b.dataset.slug); });
+  $("#duel-select").addEventListener("change", e => showCase(e.target.value));
+  $("#duel-live").addEventListener("click", runLive);
+  showCase(d.featured[0] || d.cases[0].slug);
+}).catch(() => {
+  $("#side-naked").innerHTML = '<div class="answer ko">Pas encore de résultats enregistrés.</div>';
+  $("#duel-live").disabled = true;
+});
+
+/* ---------- tools lab ---------- */
+const out = $("#lab-out");
+$("#presets").innerHTML = TRAPS.map((t, i) => `<button type="button" class="preset" data-i="${i}"><span class="tag bad">${esc(t.trap)}</span><div>${esc(t.question)}</div></button>`).join("");
+const SUGG = ["indice de position sociale", "résultats du brevet", "calendrier scolaire", "effectifs des lycées", "taux de réussite au bac"];
+$("#sugg").innerHTML = SUGG.map(s => `<button type="button" class="chip">${esc(s)}</button>`).join("");
+let runId = 0;
+function stepEl(fn, title) {
+  const d = document.createElement("div"); d.className = "step";
+  d.innerHTML = `<div class="step-h"><span class="fn">${esc(fn)}</span><span>${esc(title)}</span><span class="ms"><span class="spin" style="display:inline-block;width:12px;height:12px;vertical-align:-2px"></span></span></div><div class="step-b"></div>`;
+  out.appendChild(d); return d;
+}
+const done = (el, ms) => { $(".ms", el).textContent = ms + " ms"; };
+function rankList(results, hit) {
+  return `<ol class="rank">` + results.map((r, i) => {
+    const title = (r.card || "").split("\n")[0].replace(/^##\s*[^—]*—\s*/, "");
+    return `<li class="${r.dataset_id === hit ? "hit" : ""}"><b>#${i + 1}</b><div><div>${esc(title)}</div><div class="mono muted">${esc(r.dataset_id)}</div></div><button type="button" data-open="${esc(r.dataset_id)}">Lire la fiche</button></li>`;
+  }).join("") + `</ol>`;
+}
+function rowsTable(body) {
+  if (body.error) return `<div class="res ko"><pre>${esc(body.error)}</pre></div>`;
+  const rows = body.results || [];
+  const cols = rows[0] ? Object.keys(rows[0]).slice(0, 6) : [];
+  return `<div class="muted" style="font-size:13px">total_count : <b style="color:var(--ink)">${fmt(body.total_count)}</b></div>` +
+    (rows.length ? `<div style="overflow-x:auto"><table class="rows"><tr>${cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr>${rows.slice(0, 8).map(r => `<tr>${cols.map(c => `<td>${esc(typeof r[c] === "object" ? JSON.stringify(r[c]) : fmt(r[c]))}</td>`).join("")}</tr>`).join("")}</table></div>` : "");
+}
+async function runTrap(t) {
+  const my = ++runId; out.innerHTML = "";
+  const head = document.createElement("div");
+  head.innerHTML = `<div class="bubble" style="display:inline-block">« ${esc(t.question)} »</div>`;
+  out.appendChild(head);
+  const s1 = stepEl("find_dataset", "recherche + signal d'usage");
+  const f = await api("find", {q: t.question}); if (my !== runId) return; done(s1, f.ms);
+  const res = f.body.results || [];
+  const pos = res.findIndex(r => r.dataset_id === t.dataset);
+  $(".step-b", s1).innerHTML = (f.body.error ? `<div class="res ko"><pre>${esc(f.body.error)}</pre></div>` : rankList(res, t.dataset)) +
+    `<div class="muted" style="font-size:13px">${pos >= 0 ? `Le bon jeu de données est n° ${pos + 1} sur ${res.length} : l'agent lit les fiches courtes et choisit.` : "Le bon jeu de données n'est pas dans le top 5 : c'est un échec de recherche connu (voir NOTES.md)."}</div>`;
+  const s2 = stepEl("explain_dataset", t.dataset);
+  const x = await api("explain", {id: t.dataset}); if (my !== runId) return; done(s2, x.ms);
+  const card = x.body.card || "";
+  const all = card.split("\n");
+  const own = all.filter(l => l.startsWith("- " + t.field + " ") || l.startsWith("- `" + t.field));
+  const lines = (own.length ? own : all.filter(l => l.includes(t.field) && l.length < 240)).slice(0, 3);
+  $(".step-b", s2).innerHTML = x.body.error ? `<div class="res ko"><pre>${esc(x.body.error)}</pre></div>` :
+    `<div class="muted" style="font-size:13px">Ce que la fiche dit du champ <code>${esc(t.field)}</code> :</div><div class="hl">${esc(lines.join("\n") || "(champ non trouvé dans la fiche)")}</div>` +
+    ((x.body.joinable || []).length ? `<div class="muted" style="font-size:13px">Joignable avec : ${(x.body.joinable || []).slice(0, 4).map(j => `<code>${esc(j.dataset_id)}</code> par ${esc(j.on.join(", "))}`).join(" · ")}</div>` : "") +
+    `<details><summary>Voir la fiche complète</summary><pre>${esc(card)}</pre></details>`;
+  const s3 = stepEl("query", "requête validée vs requête sans contexte");
+  const lim = t.path === "total_count" ? 0 : (t.odsql.limit || 1);
+  const good = Object.assign(pick(t.odsql, ["select", "where", "group_by", "order_by"]), {id: t.dataset, limit: lim});
+  const bad = Object.assign(pick(t.naive, ["select", "where", "group_by", "order_by"]), {id: t.dataset, limit: lim});
+  const [g, b] = await Promise.all([api("query", good), api("raw", bad)]); if (my !== runId) return;
+  done(s3, Math.max(g.ms, b.ms));
+  const gv = valueOf(g.body, t.path), bv = valueOf(b.body, t.path);
+  const gOk = same(gv, t.expected), bOk = same(bv, t.expected);
+  const box = (title, p, body, v, ok, note) => `<div class="res ${ok ? "ok" : "ko"}"><h5><span>${title}</span><span>${ok ? "✓" : "✗"}</span></h5><pre>${esc(odsqlText(pick(p, ["select", "where", "group_by", "order_by"])))}</pre>` +
+    (body.error ? `<div class="why" style="color:var(--bad)">${esc(body.error)}</div>` : `<div class="big">${esc(fmt(v))}</div>`) + `<div class="why">${note}</div></div>`;
+  $(".step-b", s3).innerHTML = `<div class="vs">${box("Sans contexte", t.naive, b.body, bv, bOk, esc(t.why))}${box("Avec la fiche", t.odsql, g.body, gv, gOk, "Attendu : <b>" + esc(fmt(t.expected)) + "</b> (calculé depuis l'API)")}</div>`;
+}
+async function openDataset(id) {
+  const my = ++runId; out.innerHTML = "";
+  const s2 = stepEl("explain_dataset", id);
+  const x = await api("explain", {id}); if (my !== runId) return; done(s2, x.ms);
+  if (x.body.error) { $(".step-b", s2).innerHTML = `<div class="res ko"><pre>${esc(x.body.error)}</pre></div>`; return; }
+  $(".step-b", s2).innerHTML = `<pre style="background:var(--surface-2);border-radius:10px;padding:12px;max-height:280px;white-space:pre-wrap">${esc(x.body.card)}</pre>` +
+    ((x.body.joinable || []).length ? `<div class="muted" style="font-size:13px">Joignable avec : ${x.body.joinable.slice(0, 5).map(j => `<code>${esc(j.dataset_id)}</code>`).join(" ")}</div>` : "");
+  const s3 = document.createElement("div"); s3.className = "step";
+  s3.innerHTML = `<div class="step-h"><span class="fn">query</span><span>essayez une requête ODSQL — elle est validée avant d'atteindre le portail</span></div><div class="step-b"><form class="qform"><label>select<input name="select" value="count(*) as n"></label><label>group_by<input name="group_by"></label><label class="full">where<input name="where" placeholder="ex. code_departement='021'"></label><label>order_by<input name="order_by"></label><label>limit<input name="limit" value="5"></label><div class="full"><button class="btn primary" type="submit">Exécuter</button></div></form><div class="qout"></div></div>`;
+  out.appendChild(s3);
+  $("form", s3).addEventListener("submit", async e => {
+    e.preventDefault();
+    const p = Object.fromEntries(new FormData(e.target)); p.id = id;
+    $(".qout", s3).innerHTML = '<div class="loading"><span class="spin"></span>requête…</div>';
+    const q = await api("query", pick(p, ["id", "select", "where", "group_by", "order_by", "limit"]));
+    $(".qout", s3).innerHTML = `<div class="muted mono" style="font-size:12px">${q.ms} ms</div>` + rowsTable(q.body);
+  });
+}
+async function freeSearch(q) {
+  if (!q.trim()) return;
+  document.querySelectorAll(".preset").forEach(b => b.classList.remove("on"));
+  const my = ++runId; out.innerHTML = "";
+  const s1 = stepEl("find_dataset", q);
+  const f = await api("find", {q}); if (my !== runId) return; done(s1, f.ms);
+  $(".step-b", s1).innerHTML = f.body.error ? `<div class="res ko"><pre>${esc(f.body.error)}</pre></div>` : rankList(f.body.results || [], null) + `<div class="muted" style="font-size:13px">Ouvrez une fiche pour lire ses champs et lancer une requête.</div>`;
+}
+$("#presets").addEventListener("click", e => { const b = e.target.closest(".preset"); if (!b) return; document.querySelectorAll(".preset").forEach(x => x.classList.toggle("on", x === b)); runTrap(TRAPS[+b.dataset.i]); });
+$("#free").addEventListener("submit", e => { e.preventDefault(); freeSearch($("#free-q").value); });
+$("#sugg").addEventListener("click", e => { const b = e.target.closest(".chip"); if (b) { $("#free-q").value = b.textContent; freeSearch(b.textContent); } });
+out.addEventListener("click", e => { const b = e.target.closest("[data-open]"); if (b) openDataset(b.dataset.open); });
+})();
+</script>
 </body>
 </html>

@@ -39,5 +39,6 @@ class SiteTest(TestCase):
             self.assertEqual(build_site(portal, d), 3)
             index = (Path(d) / "index.html").read_text()
             self.assertIn("data.education.gouv.fr", index)
-            self.assertIn("No full eval run yet", index)  # no runs in the test DB
+            self.assertIn("Pas encore d'éval complète", index)  # no runs in the test DB
+            self.assertFalse((Path(d) / "eval.json").exists())
             self.assertTrue((Path(d) / "llms.txt").exists())

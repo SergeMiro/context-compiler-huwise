@@ -1,10 +1,15 @@
 """MCP server (streamable HTTP) over tools/. Portal from the X-Domain header (as Huwise's MCP), else the `portal`
 argument. X-Apikey goes through to the Explore API and is never stored or logged."""
+import json
+import logging
+import os
 import threading
 import time
 
 from django.db import close_old_connections
 from mcp.server.mcpserver import Context, MCPServer
+from starlette.concurrency import run_in_threadpool
+from starlette.responses import Response
 
 import tools
 
@@ -67,3 +72,100 @@ def query(dataset_id: str, ctx: Context, select: str = "", where: str = "", grou
     params = {k: v for k, v in dict(select=select, where=where, group_by=group_by, order_by=order_by).items() if v}
     params["limit"] = limit
     return _call(ctx, portal, tools.query, dataset_id, params)
+
+
+# --- read-only JSON API for the static showcase (same tools as MCP, one portal, same rate limit) ---
+
+log = logging.getLogger(__name__)
+DEMO_PORTAL = os.environ.get("CTXC_DEMO_PORTAL", "data.education.gouv.fr")
+_QUERY_KEYS = ("select", "where", "group_by", "order_by")
+
+
+def api_call(kind, args):
+    """kind: find | explain | query (validated) | raw (generic pass-through, the "naked" baseline). -> (status, body)"""
+    def arg(k, n=300):
+        return (args.get(k) or "").strip()[:n]
+
+    if kind == "find":
+        q = arg("q")
+        return (200, tools.find_dataset(DEMO_PORTAL, q, k=5)) if q else (400, {"error": "q is required"})
+    dataset_id = arg("id", 200)
+    if not dataset_id:
+        return 400, {"error": "id is required"}
+    if kind == "explain":
+        return 200, tools.explain_dataset(DEMO_PORTAL, dataset_id)
+    params = {k: arg(k, 1000) for k in _QUERY_KEYS if arg(k)}
+    try:
+        params["limit"] = max(0, min(int(arg("limit") or 20), 100))
+    except ValueError:
+        return 400, {"error": "limit must be an integer"}
+    fn = tools.query if kind == "query" else tools.naked_query
+    return 200, fn(DEMO_PORTAL, dataset_id, params)
+
+
+def _route(kind):
+    async def handler(request):
+        def run():
+            close_old_connections()
+            if not _allow(DEMO_PORTAL):
+                return 429, {"error": "rate limited: max 10 calls per second"}
+            try:
+                args = dict(request.query_params)
+                return live_agent(args) if kind == "agent" else api_call(kind, args)
+            except Exception:  # upstream timeout, ES down: a clean JSON error for the page, details in the log
+                log.exception("api %s failed", kind)
+                return 502, {"error": "upstream error, try again"}
+        status, body = await run_in_threadpool(run)
+        return Response(json.dumps(body, ensure_ascii=False, default=str), status_code=status,
+                        media_type="application/json", headers={"Cache-Control": "no-store"})
+    return handler
+
+
+# Live agent duel on golden questions only (they can be scored). Costs model calls: capped per day, cached for an hour,
+# at most 2 agents at once. The MCP tools above never call a model.
+LIVE_RUNS_PER_DAY = int(os.environ.get("CTXC_LIVE_RUNS_PER_DAY", "40"))
+LIVE_CACHE_S = 3600
+_live = {"day": None, "runs": 0, "cache": {}}
+_live_slots = threading.Semaphore(2)
+
+
+def live_agent(args):
+    import datetime
+
+    import llm
+    from evals.agent import run_agent
+    from evals.models import EvalCase
+    from evals.runner import public_row, score
+    mode, slug = (args.get("mode") or ""), (args.get("slug") or "")[:100]
+    if mode not in ("naked", "compiled"):
+        return 400, {"error": "mode must be naked or compiled"}
+    case = EvalCase.objects.filter(portal__domain=DEMO_PORTAL, slug=slug).first()
+    if case is None:
+        return 404, {"error": "unknown question"}
+    with _lock:
+        hit = _live["cache"].get((slug, mode))
+        if hit and time.monotonic() - hit[0] < LIVE_CACHE_S:
+            return 200, hit[1] | {"cached_s": int(time.monotonic() - hit[0])}
+        today = datetime.date.today()
+        if _live["day"] != today:
+            _live.update(day=today, runs=0)
+        if _live["runs"] >= LIVE_RUNS_PER_DAY:
+            return 429, {"error": "daily live quota used up"}
+        _live["runs"] += 1
+    if not _live_slots.acquire(timeout=120):
+        return 503, {"error": "busy, try again"}
+    try:
+        row = public_row(score(case, run_agent(DEMO_PORTAL, case.question, mode)))
+    except llm.LLMNotConfigured:
+        return 503, {"error": "no model configured"}
+    finally:
+        _live_slots.release()
+    body = row | {"model": llm.model_name()}
+    with _lock:
+        _live["cache"][(slug, mode)] = (time.monotonic(), body)
+    return 200, body
+
+
+for _kind in ("find", "explain", "query", "raw", "agent"):
+    server.custom_route(f"/api/{_kind}", methods=["GET"])(_route(_kind))
+

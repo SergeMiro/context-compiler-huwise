@@ -1,4 +1,5 @@
 """Run golden cases through the agent and score them deterministically (no LLM judge)."""
+import json
 import re
 import statistics
 import unicodedata
@@ -51,6 +52,31 @@ def score(case, res):
                 dataset_ok=(found in case.expected_datasets) if case.expected_datasets else ok,
                 odsql_valid_first_try=bool(queries) and queries[0]["ok"], steps=res["steps"], ms=res["ms"],
                 tokens=res["tokens"], transcript=res["transcript"])
+
+
+def condense(transcript, result_chars=400):
+    """Transcript -> the agent's logic for a page: [{tool, args, result, ok}], without system/user messages."""
+    steps, pending = [], {}
+    for m in transcript:
+        if m.get("role") == "assistant":
+            for c in m.get("tool_calls") or []:
+                try:
+                    args = json.loads(c["function"]["arguments"] or "{}")
+                except json.JSONDecodeError:
+                    args = {"raw": c["function"]["arguments"]}
+                pending[c["id"]] = {"tool": c["function"]["name"], "args": args}
+        elif m.get("role") == "tool" and m.get("tool_call_id") in pending:
+            step = pending.pop(m["tool_call_id"])
+            text = m.get("content") or ""
+            step.update(ok=not text.startswith('{"error"'), result=text[:result_chars])
+            steps.append(step)
+    return steps
+
+
+def public_row(row):
+    """A scored row as the showcase shows it (no prompt, no raw transcript)."""
+    return {k: row[k] for k in ("answer", "answer_ok", "dataset_ok", "found_dataset", "steps", "ms", "tokens")} | {
+        "trace": condense(row["transcript"])}
 
 
 def _pct(xs):
