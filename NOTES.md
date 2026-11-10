@@ -78,3 +78,24 @@ temperature 0, and the step budget is a harness problem for both modes. Fixed af
 without tools (the agent must answer), and cards say "no DISTINCT" and "backticks". Next: a fresh `--mode both`
 (free quota: 1 000 requests/day per account, a full `both` run is ~300).
 
+## T20 — same eval on `openai/gpt-5.4-mini` (10.11.2026)
+
+Owner's choice of model (paid, OpenRouter, ~$0.35 for a full `--mode both`), runs #10/#11, same 30 questions,
+last step without tools:
+
+| metric | naked | compiled |
+|---|---|---|
+| correct answer % | 40.0 | **90.0** |
+| right dataset % | 56.7 | 86.7 |
+| valid query 1st try % | 41.4 | 75.0 |
+| steps / question | 5.33 | 4.3 |
+| median ms | 6 428 | 5 070 |
+| tokens | 311 222 | 299 390 (−4 %) |
+
+A stronger model raises both columns, the gap stays (+50 points). Naked still fails on years stored as dates (most
+of its 18 failures), on not finding the directory, and once answers "pas de données" when the data exists.
+Gotcha: with tools switched off on the last step, the model sometimes writes a tool call as plain text
+(`to=functions.search_asset_records …`) — scored as wrong, shown as "pas de réponse" on the site.
+Compiled misses 3: `colleges-publics-cote-dor` (search ranks the directory 2nd), `dnb-admis-cote-dor-2021`,
+`cpge-filles-scientifique-2020`.
+

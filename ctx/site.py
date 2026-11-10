@@ -1,39 +1,37 @@
 """Static showcase of a portal (French): index.html + eval.json (recorded agent duel) + llms.txt + datasets/*.md.
-Everything comes from the database; the page calls /api/* on the MCP server for the live parts."""
+Everything comes from the database; the "relancer en direct" button calls /api/agent on the MCP server."""
 import json
 from pathlib import Path
 
+from django.conf import settings
 from django.template.loader import render_to_string
 
 from catalog.models import Dataset, Field
-from ctx.compile import current
 from ctx.export import export_llms
-from ctx.models import Card, ContextEdit
 from evals.golden import NO_DATA
-from evals.models import EvalCase, EvalResult, EvalRun
+from evals.models import EvalResult, EvalRun
 from evals.runner import condense
 
-SHOWCASE_DATASET = "fr-en-annuaire-education"
-# duel chips: wins, a "no data" case and one both agents miss (search ranks the directory 2nd) — not only wins
-FEATURED = ["lycees-prives-academie-dijon", "classes-ecoles-cote-dor-2024", "eleves-colleges-paris-2025",
-            "departement-plus-colleges-prives", "no-data-medecins", "colleges-publics-cote-dor"]
-# tool demo: the golden question + the query an agent without context writes (seen in eval transcripts)
-TRAPS = [
-    {"slug": "colleges-publics-cote-dor", "trap": "Format du code", "field": "code_departement",
-     "naive": {"where": "code_departement='21' and type_etablissement='Collège' and statut_public_prive='Public'"},
-     "why": "Dans l'annuaire, la Côte-d'Or s'écrit '021'. Sans la fiche, l'agent écrit '21' et trouve 0 collège."},
-    {"slug": "bac-admis-cote-dor-2025", "trap": "Année stockée en date", "field": "session",
-     "naive": {"select": "sum(nombre_d_admis_a_l_examen) as v", "where": "code_departement='021' and session='2025'"},
-     "why": "session est de type date : session='2025' est une erreur de type, year(session)=2025 fonctionne."},
-    {"slug": "ips-moyen-colleges-cote-dor", "trap": "Même département, autre format", "field": "code_du_departement",
-     "naive": {"select": "avg(ips) as v", "where": "code_du_departement='021' and rentree_scolaire='2025-2026'"},
-     "why": "Dans les jeux IPS, le même département s'écrit '21' : le format de l'annuaire ne renvoie rien."},
-    {"slug": "lycees-prives-academie-dijon", "trap": "Casse différente", "field": "libelle_academie",
-     "naive": {"where": "libelle_academie='DIJON' and type_etablissement='Lycée' and statut_public_prive='Privé'"},
-     "why": "Les jeux IPS et bac écrivent 'DIJON', l'annuaire écrit 'Dijon' : la mauvaise casse donne 0 ligne."},
-    {"slug": "filles-seconde-gt-2025", "trap": "Champ qui commence par un chiffre", "field": "2ndes_gt_filles",
-     "naive": {"select": "sum(2ndes_gt_filles) as v", "where": "year(rentree_scolaire)=2025"},
-     "why": "Un nom de champ qui commence par un chiffre s'écrit entre accents graves : `2ndes_gt_filles`."},
+# the four examples on the page, one story each; the texts describe the transcripts of STORIES_RUNS and are shown
+# only for that pair (a newer eval keeps the labels and drops the texts until they are rewritten)
+STORIES_RUNS = (10, 11)
+STORIES = [
+    {"slug": "eleves-colleges-paris-2025", "label": "Le piège du format",
+     "naked": "Quatre requêtes refusées par l'API : l'année est stockée comme une date, pas comme du texte. "
+              "Puis « Paris » au lieu de « PARIS » : 0 ligne. Plus d'étapes, pas de réponse.",
+     "compiled": "La fiche montre le format : year(rentree_scolaire)=2025 et departement='PARIS'. Juste du premier coup."},
+    {"slug": "lycees-prives-academie-dijon", "label": "Perdu dans le catalogue",
+     "naked": "Deux recherches sans trouver l'annuaire : son titre ne dit ni « lycée » ni « école ». "
+              "Il prend un autre jeu, devine un code d'académie et trouve 0 ligne.",
+     "compiled": "L'annuaire arrive en tête : c'est le jeu que les agents utilisent le plus sur ce portail. "
+                 "Une recherche, une requête : 47."},
+    {"slug": "departement-plus-colleges-prives", "label": "Faux mais sûr de lui",
+     "naked": "Prend le mauvais jeu de données et répond « le Nord » avec assurance. La bonne réponse est Paris.",
+     "compiled": "Trouve l'annuaire, compte les collèges privés par département : Paris, 103."},
+    {"slug": "academie-plus-ecoles", "label": "Abandonne trop tôt",
+     "naked": "Trois requêtes refusées sur le format de l'année, puis il conclut « pas de données ». "
+              "Les données existent.",
+     "compiled": "Une requête groupée par académie sur l'annuaire : Versailles, 3 353 écoles."},
 ]
 METRICS = [("answer_ok", "Réponse correcte", "%"), ("dataset_ok", "Bon jeu de données", "%"),
            ("odsql_first_try", "Requête valide du 1er coup", "%")]
@@ -57,11 +55,15 @@ def stack():
     return out
 
 
-STATUS_FR = {"proposed": "proposée", "kept": "gardée", "reverted": "annulée", "rejected": "rejetée"}
 
 
 def nb(n):
     return f"{n:,}".replace(",", " ")
+
+
+def stories_for(run_ids, slugs):
+    same = tuple(run_ids) == STORIES_RUNS
+    return [st if same else {"slug": st["slug"], "label": st["label"]} for st in STORIES if st["slug"] in slugs]
 
 
 def latest_pair(portal):
@@ -95,8 +97,9 @@ def duel_data(pair):
             c = r.case
             cases.append({"slug": c.slug, "question": c.question, "tags": c.tags, "expected": _expected(c),
                           "naked": _row(by[r.case_id], naked), "compiled": _row(r, compiled)})
+    stories = stories_for((naked.id, compiled.id), {c["slug"] for c in cases})
     return {"model": compiled.model, "date": compiled.finished_at.strftime("%d.%m.%Y"), "runs": [naked.id, compiled.id],
-            "featured": [s for s in FEATURED if any(c["slug"] == s for c in cases)], "cases": cases}
+            "stories": stories, "cases": cases}
 
 
 def build_site(portal, out_dir):
@@ -105,32 +108,16 @@ def build_site(portal, out_dir):
     pair = latest_pair(portal)
     if pair:
         (out / "eval.json").write_text(json.dumps(duel_data(pair), ensure_ascii=False), encoding="utf-8")
-    cases = {c.slug: c for c in EvalCase.objects.filter(portal=portal)}
-    traps = [t | {"question": cases[t["slug"]].question, "dataset": cases[t["slug"]].expected_datasets[0],
-                  "odsql": cases[t["slug"]].reference_odsql, "path": cases[t["slug"]].answer_path,
-                  "expected": cases[t["slug"]].expected_value} for t in TRAPS if t["slug"] in cases]
-    bars = []
-    if pair:
-        for k, label, unit in METRICS:
-            a, b = pair[0].metrics.get(k) or 0, pair[1].metrics.get(k) or 0
-            bars.append({"label": label, "naked": a, "compiled": b, "unit": unit})
-    ds = Dataset.objects.filter(portal=portal, dataset_id=SHOWCASE_DATASET).first()
-    edit = (ContextEdit.objects.filter(dataset__portal=portal, status="kept").order_by("-decided_at").first()
-            or ContextEdit.objects.filter(dataset__portal=portal).order_by("-created_at").first())
-    top = list(Dataset.objects.filter(portal=portal, usage_count__gt=0).order_by("-usage_count")[:5])
+    bars = [{"label": label, "naked": pair[0].metrics.get(k) or 0, "compiled": pair[1].metrics.get(k) or 0}
+            for k, label, _ in METRICS] if pair else []
     ctx = {
-        "domain": portal.domain, "pages": pages,
+        "domain": portal.domain, "pages": pages, "pair": pair, "bars": bars, "stack": stack(),
+        "live_model": settings.CTXC_LLM_MODEL,
         "datasets": nb(Dataset.objects.filter(portal=portal).count()),
         "fields": nb(Field.objects.filter(dataset__portal=portal).count()),
-        "cards": nb(Card.objects.filter(dataset__portal=portal).values("dataset").distinct().count()),
-        "top": [{"id": d.dataset_id, "title": d.title, "n": nb(d.usage_count),
-                 "pct": round(100 * d.usage_count / top[0].usage_count)} for d in top],
-        "pair": pair, "bars": bars,
-        "tokens": [nb(pair[0].metrics.get("tokens", 0)), nb(pair[1].metrics.get("tokens", 0))] if pair else None,
         "steps": [pair[0].metrics.get("steps_avg"), pair[1].metrics.get("steps_avg")] if pair else None,
-        "card": current(ds) if ds else None,
-        "edit": edit, "edit_status": STATUS_FR.get(edit.status, edit.status) if edit else "",
-        "traps": traps, "stack": stack(),
+        "tokens_pct": round(100 * (pair[1].metrics["tokens"] - pair[0].metrics["tokens"]) / pair[0].metrics["tokens"])
+        if pair and pair[0].metrics.get("tokens") else None,
     }
     (out / "index.html").write_text(render_to_string("ctx/site.html", ctx), encoding="utf-8")
     return pages
