@@ -8,8 +8,13 @@ from ctx.models import Card, ContextEdit
 SHORT_BUDGET, FULL_BUDGET = 400, 1500
 SHORT_FIELDS = 12
 LOW_PRIORITY_TYPES = {"geo_shape", "geo_point_2d", "file", "json_blob"}
-LIMITS = ("records: limit <= 100 per call; to count rows use limit=0 and read total_count; "
-          "string literals in single quotes; codes are text: keep leading zeros.")
+# the apostrophe and limit=0 lines come from eval transcripts: 'COTE-D''OR' is a syntax error, and an aggregate
+# with limit=0 returns no rows
+LIMITS = ("records: limit <= 100 per call; to count rows use limit=0 and read total_count, but with an aggregate "
+          "(count(distinct …), sum, avg, group_by) use limit >= 1; string literals in single quotes, a value with an "
+          "apostrophe in double quotes: \"COTE D'OR\"; codes are text: keep leading zeros; to filter by place "
+          "prefer code_* fields over labels; no DISTINCT: list values with group_by; a field name that starts with a digit "
+          "goes in backticks: `2ndes_gt_filles`.")
 
 
 def tokens(text):

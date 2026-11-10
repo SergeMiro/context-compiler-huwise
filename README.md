@@ -37,6 +37,19 @@ The portal also publishes the log of its own MCP server (`analyse-usage-mcp-et-a
 Feb–Nov 2026). It is used here as the usage signal: the directory `fr-en-annuaire-education` is the most used dataset
 (3 389 calls), yet plain BM25 does not put it in the top 5 for "combien d'écoles en France". With the signal it is #1.
 
+## Result
+
+Same model (`nemotron-3-ultra-550b`, free on OpenRouter), same prompt, 30 golden questions, scored without an LLM judge:
+
+| | naked (generic catalog tools) | compiled (cards) |
+|---|---|---|
+| correct answer | 30 % | **80 %** |
+| right dataset | 53 % | 83 % |
+| valid query on the 1st try | 57 % | 86 % |
+| tokens | 414 k | 424 k |
+
+What still fails and why: [`NOTES.md`](NOTES.md#t17--first-real-eval-10112026).
+
 ## Architecture
 
 ```

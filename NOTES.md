@@ -51,4 +51,30 @@ Writing reference queries by hand failed 11 times out of 30 on the first run —
 30 golden answers, 314 pages in `out/`, in **85 s**. bench right after: find p95 24 ms, explain p95 47 ms (cold);
 warm: 15 / 26 ms.
 
-Open: the real `naked` vs `compiled` table needs a model in `.env` (`CTXC_LLM_*`).
+## T17 — first real eval (10.11.2026)
+
+Model `nvidia/nemotron-3-ultra-550b-a55b:free` (OpenRouter), temperature 0, 30 golden questions, max 6 steps,
+`eval --mode both` (runs #3/#4, same cards v1):
+
+| metric | naked | compiled |
+|---|---|---|
+| correct answer % | 30.0 | **80.0** |
+| right dataset % | 53.3 | 83.3 |
+| valid query 1st try % | 57.1 | 86.2 |
+| steps / question | 5.5 | 4.6 |
+| median ms | 24 524 | 23 670 |
+| tokens | 413 995 | 423 515 |
+
+Cards cost ~2 % more tokens and give 2.7× more correct answers. Naked fails mostly on the department format
+(`'21'` vs `'021'`) and on picking the dataset; compiled failures, read in the transcripts:
+- `'Côte-d''Or'` — SQL-style escaping is an ODSQL syntax error; a value with an apostrophe needs double quotes.
+- `count(distinct …)` with `limit=0` returns no rows (the card said "count with limit=0").
+- `select distinct x` does not exist in ODSQL (use `group_by`); `2ndes_gt_filles` needs backticks.
+- **Step budget:** twice the agent had the right number on step 6 and no step left to say it.
+
+The first two went into the card limits; a compiled-only rerun (#5) gave **73.3 %**: the apostrophe case got fixed,
+three others failed — two of them on the step budget, one on `distinct`. So ±2 questions is run-to-run noise at
+temperature 0, and the step budget is a harness problem for both modes. Fixed after #5: the last step is called
+without tools (the agent must answer), and cards say "no DISTINCT" and "backticks". Next: a fresh `--mode both`
+(free quota: 1 000 requests/day per account, a full `both` run is ~300).
+

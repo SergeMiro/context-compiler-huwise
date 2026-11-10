@@ -18,14 +18,14 @@ METRICS = [("answer_ok", "correct answer, %"), ("dataset_ok", "right dataset, %"
 
 
 def latest_pair(portal):
-    """Latest finished naked + compiled runs of the same model over the full golden set, or None."""
-    runs = EvalRun.objects.filter(portal=portal, finished_at__isnull=False).order_by("-finished_at")
+    """Latest `eval --mode both` over the full golden set: a compiled run right after a naked run of the same model
+    (same cards, same harness), or None."""
     full = portal.eval_cases.count()
-    compiled = next((r for r in runs.filter(mode="compiled") if r.metrics.get("n") == full), None)
-    if compiled is None:
-        return None
-    naked = next((r for r in runs.filter(mode="naked", model=compiled.model) if r.metrics.get("n") == full), None)
-    return (naked, compiled) if naked else None
+    for c in EvalRun.objects.filter(portal=portal, mode="compiled", finished_at__isnull=False).order_by("-id"):
+        n = EvalRun.objects.filter(portal=portal, id=c.id - 1, mode="naked", model=c.model).first()
+        if n and n.metrics.get("n") == c.metrics.get("n") == full:
+            return n, c
+    return None
 
 
 def build_site(portal, out_dir):

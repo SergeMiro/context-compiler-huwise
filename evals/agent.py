@@ -61,8 +61,10 @@ def run_agent(domain, question, mode, chat=None, max_steps=MAX_STEPS):
     messages = [{"role": "system", "content": SYSTEM.format(domain=domain)}, {"role": "user", "content": question}]
     out = {"answer": "", "steps": 0, "tokens": 0, "queries": []}
     t0 = time.monotonic()
-    for _ in range(max_steps):
-        r = chat(messages, tools=[spec for spec, _ in toolset.values()])
+    specs = [spec for spec, _ in toolset.values()]
+    for step in range(max_steps):
+        # last step without tools: the agent must answer with what it has (eval showed answers lost on step 6)
+        r = chat(messages, tools=specs if step < max_steps - 1 else None)
         out["steps"] += 1
         out["tokens"] += r["tokens"]
         msg = r["message"]

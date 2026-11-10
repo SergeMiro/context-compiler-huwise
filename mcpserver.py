@@ -63,7 +63,7 @@ def explain_dataset(dataset_id: str, ctx: Context, portal: str = "") -> dict:
 def query(dataset_id: str, ctx: Context, select: str = "", where: str = "", group_by: str = "",
           order_by: str = "", limit: int = 20, portal: str = "") -> dict:
     """Run an ODSQL query on a dataset's records (read-only, limit <= 100). Only real field names are accepted.
-    To count rows use select='count(*) as n' or limit=0 and read total_count."""
+    To count rows use limit=0 and read total_count; with an aggregate (count(distinct), sum, group_by) use limit >= 1."""
     params = {k: v for k, v in dict(select=select, where=where, group_by=group_by, order_by=order_by).items() if v}
     params["limit"] = limit
     return _call(ctx, portal, tools.query, dataset_id, params)
