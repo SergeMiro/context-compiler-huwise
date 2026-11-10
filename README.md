@@ -39,16 +39,14 @@ Feb–Nov 2026). It is used here as the usage signal: the directory `fr-en-annua
 
 ## Result
 
-Same model (`nemotron-3-ultra-550b`, free on OpenRouter), same prompt, 30 golden questions, scored without an LLM judge:
+Same model, same prompt, 30 golden questions, scored without an LLM judge (correct answers):
 
-| | naked (generic catalog tools) | compiled (cards) |
-|---|---|---|
-| correct answer | 30 % | **80 %** |
-| right dataset | 53 % | 83 % |
-| valid query on the 1st try | 57 % | 86 % |
-| tokens | 414 k | 424 k |
+| model | naked (generic catalog tools) | compiled (cards) | tokens |
+|---|---|---|---|
+| `openai/gpt-5.4-mini` | 40 % | **90 %** | −4 % |
+| `nvidia/nemotron-3-ultra-550b` (free) | 30 % | **80 %** | +2 % |
 
-What still fails and why: [`NOTES.md`](NOTES.md#t17--first-real-eval-10112026).
+What still fails and why: [`NOTES.md`](NOTES.md) (T17, T20).
 
 ## Architecture
 
@@ -114,7 +112,7 @@ LLM features (eval, improve) need any OpenAI-compatible endpoint in `.env`: `CTX
 
 The showcase calls a small read-only JSON API served by the MCP container: `/api/find`, `/api/explain`,
 `/api/query` (validated), `/api/raw` (generic pass-through, the baseline) and `/api/agent?slug=&mode=` — a live run of
-the eval agent on a golden question (the only endpoint that calls a model: 40 runs/day, cached 1 h, 2 at a time).
+the eval agent on a golden question (the only endpoint that calls a model: 15 runs/day, cached 1 h, 2 at a time).
 
 Public deployment (this server): `docker compose --profile public up -d --build mcp site` — the MCP container and an
 nginx serving `site/`, behind the host's traefik (`infra_web`, Let's Encrypt, 5 req/s per IP). Django admin is not

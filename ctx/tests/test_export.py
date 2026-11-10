@@ -42,3 +42,13 @@ class SiteTest(TestCase):
             self.assertIn("Pas encore d'éval complète", index)  # no runs in the test DB
             self.assertFalse((Path(d) / "eval.json").exists())
             self.assertTrue((Path(d) / "llms.txt").exists())
+
+
+
+class StoriesTest(TestCase):
+    def test_story_texts_only_for_their_runs(self):
+        from ctx.site import STORIES, STORIES_RUNS, stories_for
+        slug = STORIES[0]["slug"]
+        self.assertIn("naked", stories_for(STORIES_RUNS, {slug})[0])
+        self.assertEqual(stories_for((-1, -2), {slug}), [{"slug": slug, "label": STORIES[0]["label"]}])
+        self.assertEqual(stories_for(STORIES_RUNS, set()), [])
