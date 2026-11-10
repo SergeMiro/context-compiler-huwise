@@ -27,3 +27,17 @@ class ExportTest(TestCase):
             llms = (Path(a) / "llms.txt").read_text()
             self.assertEqual(llms.count("- ["), 3)
             self.assertIn("(datasets/", llms)
+
+
+class SiteTest(TestCase):
+    def test_site_has_index_llms_and_pages(self):
+        from ctx.site import build_site
+        portal = Portal.objects.create(domain="data.education.gouv.fr")
+        load(portal, CATALOG[:3])
+        compile_portal(portal)
+        with tempfile.TemporaryDirectory() as d:
+            self.assertEqual(build_site(portal, d), 3)
+            index = (Path(d) / "index.html").read_text()
+            self.assertIn("data.education.gouv.fr", index)
+            self.assertIn("No full eval run yet", index)  # no runs in the test DB
+            self.assertTrue((Path(d) / "llms.txt").exists())

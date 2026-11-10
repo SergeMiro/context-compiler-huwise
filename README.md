@@ -14,6 +14,9 @@ whether it helps.
 - an **improve loop**: an LLM proposes one card edit per failing dataset; the edit is kept only if failures get
   fixed and no passing question breaks. A human can review the diff in Django admin.
 
+**Live:** showcase <https://context.smiro.dev/> · read-only MCP `https://context.smiro.dev/mcp`
+(`claude mcp add --transport http context https://context.smiro.dev/mcp --header "X-Domain: data.education.gouv.fr"`).
+
 Development portal: `data.education.gouv.fr` (French Ministry of Education, runs on Huwise).
 Stack — the same as Huwise: Django + DRF, MariaDB, Celery + RabbitMQ, Elasticsearch, Neo4j, MCP Python SDK.
 
@@ -93,7 +96,12 @@ LLM features (eval, improve) need any OpenAI-compatible endpoint in `.env`: `CTX
 | `golden_refresh <domain>` | load `evals/golden/<set>.json`, compute expected answers from the API |
 | `eval <domain> --mode naked\|compiled\|both` | run the golden set, print the comparison table |
 | `improve <domain> --mode propose\|auto` | propose / test / keep or revert card edits |
-| `mcp`, `bench <domain>` | MCP server; latency p50/p95 |
+| `mcp [--host]`, `bench <domain>` | MCP server; latency p50/p95 |
+| `build_site <domain> <dir>` | static showcase: `index.html` (traps, eval table, a card, an edit) + `llms.txt` + pages |
+
+Public deployment (this server): `docker compose --profile public up -d --build mcp site` — the MCP container and an
+nginx serving `site/`, behind the host's traefik (`infra_web`, Let's Encrypt, 5 req/s per IP). Django admin is not
+exposed.
 
 ## Scale: 3 000–5 000 portals
 
@@ -112,7 +120,8 @@ LLM features (eval, improve) need any OpenAI-compatible endpoint in `.env`: `CTX
 - The client's API key (`X-Apikey`) is only passed through to the Explore API: never stored or logged.
 - ODSQL whitelist: only real field names, `limit ≤ 100`, no comments or extra parameters.
 - PII-like fields (`mail`, `telephone`, `adresse`, `nom`…) get no sample values and never reach cards or the LLM.
-- Rate limit per portal on the MCP server; MCP and admin bind to 127.0.0.1 here.
+- Rate limit per portal on the MCP server and per IP at the proxy; admin binds to 127.0.0.1, only MCP and the
+  static site are public.
 - `ToolCall` logs tool, latency and error code — never the question or the query.
 
 ## Not done (on purpose)
@@ -120,6 +129,10 @@ LLM features (eval, improve) need any OpenAI-compatible endpoint in `.env`: `CTX
 No LLM on the hot path · no vector search until the eval shows recall is the bottleneck · no LLM judge · no
 LangChain/LangGraph (the agent loop is ~100 lines) · no glossary model yet (synonyms are card edits).
 Decisions and what did not work: [`NOTES.md`](NOTES.md). Build plan (Russian): [`docs/PLAN.md`](docs/PLAN.md).
+
+## Licence
+
+MIT, see [`LICENSE`](LICENSE).
 
 ## Branches
 

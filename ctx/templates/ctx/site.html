@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Context Compiler</title>
+<meta name="description" content="A Huwise / Opendatasoft data portal compiled into tested context for AI agents.">
+<style>
+:root{--bg:#fbfaf7;--fg:#1d1d1b;--muted:#6b6a64;--line:#e4e1d8;--card:#fff;--accent:#0b6e4f;--code:#f3f1ea;--bad:#a23b2a}
+@media (prefers-color-scheme:dark){:root{--bg:#141413;--fg:#ecebe6;--muted:#a3a29b;--line:#2f2e2a;--card:#1c1c1a;--accent:#4fc39a;--code:#22221f;--bad:#e2806f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:0 auto;padding:40px 16px 80px}
+h1{font-size:2rem;line-height:1.2;margin:0 0 8px}
+h2{font-size:1.25rem;margin:48px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
+p,li{color:var(--fg)} .muted{color:var(--muted)}
+a{color:var(--accent)}
+code,pre{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--code);border-radius:6px}
+code{padding:1px 5px} pre{padding:14px;overflow-x:auto;white-space:pre}
+pre.wrap{white-space:pre-wrap}
+table{border-collapse:collapse;width:100%;font-size:15px;display:block;overflow-x:auto}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}
+.stat{flex:1 1 140px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-size:1.5rem}
+del{color:var(--bad)} ins{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<main>
+<h1>Context Compiler</h1>
+<p class="muted">A Huwise / Opendatasoft data portal compiled into tested context for AI agents.
+Development portal: <a href="https://{{ domain }}">{{ domain }}</a>.</p>
+
+<p>A portal already gives agents an API for every dataset. What agents lack is <b>context</b>: which of five similar
+datasets is the right one, what a field means, how its values are written. This project compiles the portal's catalog
+into one short card per dataset, serves the cards over MCP with search boosted by real usage, and measures with a
+golden set whether the cards make an agent answer better.</p>
+
+<div class="stats">
+  <div class="stat"><b>{{ datasets }}</b><span class="muted">datasets</span></div>
+  <div class="stat"><b>{{ fields }}</b><span class="muted">fields</span></div>
+  <div class="stat"><b>{{ cards }}</b><span class="muted">cards</span></div>
+  <div class="stat"><b>3</b><span class="muted">MCP tools</span></div>
+</div>
+
+<h2>Try it</h2>
+<p>Live, read-only MCP server (streamable HTTP): <code>https://context.smiro.dev/mcp</code>. Tools:
+<code>find_dataset</code>, <code>explain_dataset</code>, <code>query</code> (ODSQL is checked against the real schema
+before it reaches the portal).</p>
+<pre>claude mcp add --transport http context https://context.smiro.dev/mcp --header "X-Domain: {{ domain }}"</pre>
+<p>Then ask: <i>« Combien de collèges publics en Côte-d'Or ? »</i> → 58.</p>
+<p>For agents without MCP: <a href="llms.txt">llms.txt</a> and {{ pages }} pages in <a href="datasets/">datasets/</a>.
+Source: <a href="https://github.com/SergeMiro/context-compiler-huwise">github.com/SergeMiro/context-compiler-huwise</a>.</p>
+
+<h2>Traps an agent falls into</h2>
+<p>Writing 30 reference queries by hand failed 11 times on the first run, on exactly these:</p>
+<table>
+<tr><th>trap</th><th>example</th></tr>
+<tr><td>one department, three formats</td><td>Côte-d'Or is <code>'021'</code> in the directory, <code>'21'</code> in IPS datasets, <code>"COTE D'OR"</code> as a label</td></tr>
+<tr><td>years stored as dates</td><td><code>session='2025'</code> → API type error; <code>year(session)=2025</code> works</td></tr>
+<tr><td>numbers stored as text</td><td><code>avg(ips)</code> fails on IPS écoles; <code>order_by ips_etab desc</code> sorts as strings</td></tr>
+<tr><td>case differs</td><td><code>academie='DIJON'</code> vs <code>libelle_academie='Dijon'</code></td></tr>
+</table>
+<p>Cards carry real sample values for key fields and a hint for every date field, so the agent reads the format
+instead of guessing it.</p>
+
+<h2>Usage signal</h2>
+<p>The portal publishes the log of its own MCP server (39 675 agent calls, Feb–Nov 2026). It is used as a search
+signal: plain BM25 does not put the directory in the top 5 for « combien d'écoles en France »; with the signal it is #1.</p>
+<table>
+<tr><th>most used by agents</th><th class="num">calls</th></tr>
+{% for d in top %}<tr><td><code>{{ d.dataset_id }}</code><br><span class="muted">{{ d.title }}</span></td><td class="num">{{ d.usage_count }}</td></tr>
+{% endfor %}</table>
+
+<h2>Does it help? Same agent, two toolsets</h2>
+{% if pair %}
+<p>The same model and prompt answer the golden set ({{ pair.1.metrics.n }} questions) with generic catalog tools
+(<b>naked</b>) and with the compiled cards (<b>compiled</b>). Scored by comparing numbers with expected answers computed
+from the API, no LLM judge. Model: <code>{{ pair.1.model }}</code>, run {{ pair.1.finished_at|date:"d.m.Y" }}.</p>
+<table>
+<tr><th>metric</th><th class="num">naked</th><th class="num">compiled</th></tr>
+{% for label, a, b in rows %}<tr><td>{{ label }}</td><td class="num">{{ a }}</td><td class="num">{{ b }}</td></tr>
+{% endfor %}</table>
+{% else %}
+<p class="muted">No full eval run yet: <code>manage.py eval {{ domain }} --mode both</code>.</p>
+{% endif %}
+
+{% if card %}
+<h2>One card</h2>
+<p class="muted">Short card (≤ 400 tokens) returned by <code>find_dataset</code>, version {{ card.version }}.</p>
+<pre class="wrap">{{ card.short }}</pre>
+{% endif %}
+
+{% if edit %}
+<h2>One card edit</h2>
+<p>The improve loop proposes one edit per failing dataset; it is kept only if failing questions get fixed and no
+passing one breaks. A human reviews the diff in Django admin.</p>
+<p class="muted"><code>{{ edit.dataset.dataset_id }}</code> · {{ edit.kind }} · {{ edit.source }} · <b>{{ edit.status }}</b></p>
+{% if edit.before %}<pre class="wrap"><del>{{ edit.before }}</del></pre>{% endif %}
+<pre class="wrap"><ins>{{ edit.after }}</ins></pre>
+{% if edit.rationale %}<p class="muted">{{ edit.rationale }}</p>{% endif %}
+{% endif %}
+
+<h2>Architecture</h2>
+<pre>COLD PATH (commands / Celery; the only place an LLM is ever called)
+  Explore API --scan--> Portal / Dataset / Field   (MariaDB = single source of truth)
+                          | compile (deterministic)
+                          v
+                        Card v1..vN  &lt;-- kept ContextEdit
+             +------------+-------------+
+             v            v             v
+        ES `cards`     Neo4j          llms.txt + datasets/&lt;id&gt;.md
+  eval:    EvalCase -&gt; agent -&gt; EvalRun / EvalResult
+  improve: failures -&gt; LLM proposes edit -&gt; compile -&gt; eval -&gt; kept | reverted
+
+HOT PATH (MCP, no LLM, no writes except the ToolCall log)
+  find_dataset(question) -&gt; ES (filter + routing by portal) + usage boost -&gt; short cards
+  explain_dataset(id)    -&gt; full card + joinable datasets + lineage (Neo4j)
+  query(id, odsql)       -&gt; validator -&gt; Explore API (client key passed through, limit &lt;= 100)</pre>
+<p class="muted">Stack, the same as Huwise: Django + DRF, MariaDB, Celery + RabbitMQ, Elasticsearch, Neo4j, MCP Python
+SDK. <code>find_dataset</code> p95 13 ms, <code>explain_dataset</code> p95 23 ms in process.</p>
+</main>
+</body>
+</html>
