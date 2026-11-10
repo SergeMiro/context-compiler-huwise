@@ -286,7 +286,10 @@ footer{padding:56px 0 40px;text-align:center;color:var(--muted);font-size:13.5px
 
 <section id="comment">
   <h2>Comment ça marche</h2>
-  <p class="sub"><span class="arch-simple">Quatre étapes.</span><span class="arch-detailed">Le chemin froid prépare les fiches, le chemin chaud les sert.</span> Un LLM n'intervient qu'à la dernière, hors ligne : quand un agent pose une question, rien n'est généré, tout est lu.</p>
+  <p class="sub"><b>Avant</b>, hors ligne : Context Compiler lit le portail et écrit une fiche par jeu de données.
+    <b>Pendant</b> la question : votre agent interroge le serveur MCP, qui lui renvoie les fiches déjà écrites et vérifie
+    sa requête — sans LLM, rien n'est inventé. <b>Après</b> : un LLM teste les fiches sur 30 questions et propose des
+    corrections.</p>
 <div class="arch-detailed">
     <div class="board" role="figure" aria-label="Architecture de Context Compiler">
       <div class="board-h">
