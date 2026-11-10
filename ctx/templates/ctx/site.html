@@ -322,8 +322,19 @@ ul.ticks svg{margin-top:3px;color:var(--good)} ul.ticks .dash{flex:0 0 16px;colo
 .shell div{white-space:nowrap;color:var(--d-fg)} .shell .p{color:#3FB950;user-select:none} .shell .ok{color:var(--d-muted)}
 .cursor{display:inline-block;width:8px;height:16px;vertical-align:-3px;background:var(--d-fg)}
 .example{display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--bg);font-size:15px}
-footer .wrap{padding-top:24px;padding-bottom:24px;display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;align-items:center;font-size:14px}
-footer nav{display:flex;flex-wrap:wrap;gap:4px 24px} footer nav a{display:inline-block;padding:8px 0}
+footer .wrap{padding-top:28px;padding-bottom:28px;display:flex;flex-direction:column;gap:16px;font:500 11px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.foot-row{display:flex;flex-wrap:wrap;gap:8px 32px;justify-content:space-between;align-items:center}
+.foot-row+.foot-row{padding-top:16px;border-top:1px solid var(--line-2)}
+.foot-brand{display:inline-flex;align-items:center;gap:8px;font:600 15px "IBM Plex Sans",sans-serif;letter-spacing:-.01em;text-transform:none;color:var(--fg)}
+footer nav{display:flex;flex-wrap:wrap;gap:4px 24px} footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
+footer nav a{display:inline-block;padding:8px 0}
+/* signature, as on smiro.dev: the mark stands between given name and family name */
+.made{display:inline-flex;align-items:center;gap:6px}
+.made .sig{display:inline-flex;align-items:center;gap:.3em;white-space:nowrap;color:var(--fg)}
+.craft{width:2em;height:2em;color:var(--accent);stroke-width:1.5;translate:.038em -.153em;padding-bottom:2px;transition:transform .4s cubic-bezier(.2,.75,.2,1),filter .4s}
+.made:hover .craft{transform:rotate(-8deg) scale(1.08);filter:drop-shadow(0 0 7px rgba(9,105,218,.4))}
+.made:hover{color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.craft{transition:none}.made:hover .craft{transform:none}}
 </style>
 </head>
 <body>
@@ -348,6 +359,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:4px 24px} footer nav a{display:inline
   <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+  <symbol id="i-craft" viewBox="0 0 24 24"><path d="M11.5 6C7.022 6 4.782 6 3.391 7.172S2 10.229 2 14s0 5.657 1.391 6.828S7.021 22 11.5 22c4.478 0 6.718 0 8.109-1.172S21 17.771 21 14c0-1.17 0-2.158-.041-3"/><path d="m18.5 2l.258.697c.338.914.507 1.371.84 1.704c.334.334.791.503 1.705.841L22 5.5l-.697.258c-.914.338-1.371.507-1.704.84c-.334.334-.503.791-.841 1.705L18.5 9l-.258-.697c-.338-.914-.507-1.371-.84-1.704c-.334-.334-.791-.503-1.705-.841L15 5.5l.697-.258c.914-.338 1.371-.507 1.704-.84c.334-.334.503-.791.841-1.705z"/><path d="m15.5 12l1.227 1.057c.515.445.773.667.773.943s-.258.498-.773.943L15.5 16m-8-4l-1.227 1.057c-.515.445-.773.667-.773.943s.258.498.773.943L7.5 16m5-5l-2 6"/></symbol>
   <symbol id="i-reload" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol>
 </svg>
 
@@ -754,8 +766,14 @@ footer nav{display:flex;flex-wrap:wrap;gap:4px 24px} footer nav a{display:inline
 
 <footer>
   <div class="wrap">
-    <span class="muted">Context Compiler · MIT · données {{ domain }}, Licence Ouverte v2.0</span>
-    <nav aria-label="Pied de page"><a href="https://github.com/SergeMiro/context-compiler-huwise">Code source</a><a href="llms.txt">llms.txt</a><a href="https://{{ domain }}">Portail {{ domain }}</a></nav>
+    <div class="foot-row">
+      <span class="foot-brand"><svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#1F2328"/><path d="M9 11h8M9 16h14M9 21h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="11" r="2.2" fill="#54AEFF"/></svg>Context Compiler</span>
+      <nav aria-label="Pied de page"><a href="https://github.com/SergeMiro/context-compiler-huwise">Code source</a><a href="llms.txt">llms.txt</a><a href="https://{{ domain }}">Portail {{ domain }}</a></nav>
+    </div>
+    <div class="foot-row">
+      <span>MIT · données {{ domain }} · Licence Ouverte v2.0</span>
+      <a class="made" href="https://smiro.dev">© 2026 Created by<span class="sig">Sergiy<svg class="i craft" aria-hidden="true"><use href="#i-craft"/></svg>Miro</span></a>
+    </div>
   </div>
 </footer>
 
