@@ -35,12 +35,13 @@ STORIES = [
 ]
 METRICS = [("answer_ok", "Réponse correcte", "%"), ("dataset_ok", "Bon jeu de données", "%"),
            ("odsql_first_try", "Requête valide du 1er coup", "%")]
-# (logo file, label, detail, brand colour, colour on dark background) — the stack strip under the architecture
+# (logo file, label, detail, brand colour, colour on dark background) — the stack badges, grouped in the template
+# by position: [:3] application, [3:8] data and queues, [8:] infra
 STACK = [("python", "Python", "3.12", "#3776AB", "#6fa8dc"), ("django", "Django + DRF", "5.2", "#092E20", "#44B78B"),
+         ("modelcontextprotocol", "MCP Python SDK", "2.3", "#000000", "#e7ebf3"),
          ("mariadb", "MariaDB", "11.4", "#003545", "#C49A6C"), ("celery", "Celery", "5.6", "#37814A", "#8dc63f"),
          ("rabbitmq", "RabbitMQ", "4.1", "#FF6600", "#FF6600"), ("elasticsearch", "Elasticsearch", "8.15", "#005571", "#00BFB3"),
-         ("neo4j", "Neo4j", "5.26", "#4581C3", "#6fa3e0"), ("modelcontextprotocol", "MCP Python SDK", "2.3", "#000000", "#e7ebf3"),
-         ("docker", "Docker", "Compose", "#2496ED", "#2496ED"), ("traefikproxy", "Traefik", "proxy + TLS", "#24A1C1", "#24A1C1"),
+         ("neo4j", "Neo4j", "5.26", "#4581C3", "#6fa3e0"), ("docker", "Docker", "Compose", "#2496ED", "#2496ED"), ("traefikproxy", "Traefik", "proxy + TLS", "#24A1C1", "#24A1C1"),
          ("nginx", "Nginx", "site statique", "#009639", "#3ecf6e"), ("letsencrypt", "Let's Encrypt", "HTTPS", "#003A70", "#FFA400")]
 LOGOS = Path(__file__).parent / "logos"
 
@@ -66,15 +67,38 @@ def stories_for(run_ids, slugs):
     return [st if same else {"slug": st["slug"], "label": st["label"]} for st in STORIES if st["slug"] in slugs]
 
 
-def latest_pair(portal):
-    """Latest `eval --mode both` over the full golden set: a compiled run right after a naked run of the same model
-    (same cards, same harness), or None."""
+def full_pairs(portal):
+    """Every `eval --mode both` over the full golden set, newest first: a compiled run right after a naked run of
+    the same model (same cards, same harness)."""
     full = portal.eval_cases.count()
     for c in EvalRun.objects.filter(portal=portal, mode="compiled", finished_at__isnull=False).order_by("-id"):
         n = EvalRun.objects.filter(portal=portal, id=c.id - 1, mode="naked", model=c.model).first()
         if n and n.metrics.get("n") == c.metrics.get("n") == full:
-            return n, c
-    return None
+            yield n, c
+
+
+def latest_pair(portal):
+    return next(full_pairs(portal), None)
+
+
+def tokens_pct(pair):
+    n, c = pair
+    return round(100 * (c.metrics["tokens"] - n.metrics["tokens"]) / n.metrics["tokens"]) if n.metrics.get("tokens") else None
+
+
+def signed(p):
+    """+2 %, −4 %, 0 % (typographic minus)."""
+    return None if p is None else ("0" if p == 0 else f"{p:+d}".replace("-", "−")) + " %"
+
+
+def per_model(portal):
+    """Latest full pair of each model, for the results table."""
+    seen = {}
+    for n, c in full_pairs(portal):
+        seen.setdefault(c.model, {"model": c.model.split("/")[-1].removesuffix(":free"), "free": c.model.endswith(":free"),
+                                  "naked": n.metrics.get("answer_ok"), "compiled": c.metrics.get("answer_ok"),
+                                  "tokens": signed(tokens_pct((n, c)))})
+    return list(seen.values())
 
 
 def _expected(case):
@@ -115,9 +139,9 @@ def build_site(portal, out_dir):
         "live_model": settings.CTXC_LLM_MODEL,
         "datasets": nb(Dataset.objects.filter(portal=portal).count()),
         "fields": nb(Field.objects.filter(dataset__portal=portal).count()),
-        "steps": [pair[0].metrics.get("steps_avg"), pair[1].metrics.get("steps_avg")] if pair else None,
-        "tokens_pct": round(100 * (pair[1].metrics["tokens"] - pair[0].metrics["tokens"]) / pair[0].metrics["tokens"])
-        if pair and pair[0].metrics.get("tokens") else None,
+        "steps": [f"{pair[i].metrics.get('steps_avg') or 0:.2f}".rstrip("0").rstrip(".").replace(".", ",") for i in (0, 1)]
+        if pair else None,
+        "tokens": signed(tokens_pct(pair)) if pair else None, "models": per_model(portal),
     }
     (out / "index.html").write_text(render_to_string("ctx/site.html", ctx), encoding="utf-8")
     return pages
