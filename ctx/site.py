@@ -42,14 +42,18 @@ def nb(n):
 
 
 def triples(portal):
-    """Every `eval --mode abc`: naked, compiled, optimized runs with consecutive ids, same model, suite, split and n.
-    Newest first."""
+    """Every A/B/C comparison: for each finished optimized run, the closest earlier finished compiled and naked runs
+    with the same model, suite, split and n (a re-run C after a crash still pairs with its A and B). Newest first."""
+    key = lambda r: (r.metrics.get("suite"), r.metrics.get("split"), r.metrics.get("n"))  # noqa: E731
+    done = EvalRun.objects.filter(portal=portal, finished_at__isnull=False)
+
+    def prev(c, mode):
+        return next((r for r in done.filter(mode=mode, model=c.model, id__lt=c.id).order_by("-id") if key(r) == key(c)),
+                    None)
     out = []
-    for c in EvalRun.objects.filter(portal=portal, mode="optimized", finished_at__isnull=False).order_by("-id"):
-        b = EvalRun.objects.filter(id=c.id - 1, mode="compiled", model=c.model, portal=portal).first()
-        a = EvalRun.objects.filter(id=c.id - 2, mode="naked", model=c.model, portal=portal).first()
-        key = lambda r: (r.metrics.get("suite"), r.metrics.get("split"), r.metrics.get("n"))  # noqa: E731
-        if a and b and key(a) == key(b) == key(c) and c.metrics.get("n", 0) > 3:
+    for c in done.filter(mode="optimized").order_by("-id"):
+        a, b = prev(c, "naked"), prev(c, "compiled")
+        if a and b and c.metrics.get("n", 0) > 3:
             out.append((a, b, c))
     return out
 

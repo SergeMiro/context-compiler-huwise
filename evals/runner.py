@@ -115,12 +115,13 @@ def _run(domain, question, mode, chat):
     import os
     import time
 
+    import elastic_transport
     import httpx
     tries = int(os.environ.get("CTXC_EVAL_CASE_RETRIES", "3"))
     for attempt in range(tries):
         try:
             return _run_once(domain, question, mode, chat)
-        except (httpx.HTTPStatusError, httpx.TransportError) as e:
+        except (httpx.HTTPStatusError, httpx.TransportError, elastic_transport.TransportError) as e:  # ES times out under memory pressure
             status = getattr(getattr(e, "response", None), "status_code", None)
             if attempt == tries - 1 or (status is not None and status not in llm_mod.RETRY_STATUS):
                 raise
