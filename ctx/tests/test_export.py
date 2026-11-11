@@ -40,7 +40,7 @@ class SiteTest(TestCase):
             self.assertEqual(build_site(portal, d), 3)
             index = (Path(d) / "index.html").read_text()
             self.assertIn("Nous ne remplaçons pas Huwise", index)
-            self.assertIn("Pas encore de run A/B/C complet", index)  # no runs in the test DB
+            self.assertIn("Run A/B/C en cours.", index)  # no runs in the test DB
             self.assertIn("We do not replace Huwise", (Path(d) / "en" / "index.html").read_text())
             arch = json.loads((Path(d) / "data" / "architecture.json").read_text())
             statuses = {n["status"] for n in arch["nodes"]}
