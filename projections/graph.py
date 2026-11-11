@@ -35,6 +35,9 @@ def _batches(rows):
 
 def project_graph(portal):
     """Make the portal's subgraph equal to the database. Idempotent; other portals are untouched."""
+    from django.conf import settings
+    if settings.CTXC_ENV == "preprod":
+        return "skipped (preprod reads the shared graph, never writes it)"
     for c in SCHEMA:
         _run(c)
     p = portal.domain

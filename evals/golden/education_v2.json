@@ -1,0 +1,1646 @@
+[
+ {
+  "slug": "v2-col-dijon",
+  "question": "Combien y a-t-il de collèges à Dijon ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Dijon' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-lyc-lyon",
+  "question": "Combien de lycées à Lyon ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Lyon' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-eco-angers",
+  "question": "Combien y a-t-il de écoles à Angers ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Angers' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-col-toulouse",
+  "question": "Combien de collèges à Toulouse ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Toulouse' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-lyc-nantes",
+  "question": "Combien y a-t-il de lycées à Nantes ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Nantes' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-eco-lille",
+  "question": "Combien de écoles à Lille ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Lille' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-col-rennes",
+  "question": "Combien y a-t-il de collèges à Rennes ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Rennes' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-lyc-strasbourg",
+  "question": "Combien de lycées à Strasbourg ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Strasbourg' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-eco-bordeaux",
+  "question": "Combien y a-t-il de écoles à Bordeaux ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Bordeaux' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-col-nice",
+  "question": "Combien de collèges à Nice ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Nice' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-lyc-montpellier",
+  "question": "Combien y a-t-il de lycées à Montpellier ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Montpellier' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-eco-saint-etienne",
+  "question": "Combien de écoles à Saint-Etienne ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Saint-Etienne' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-col-besançon",
+  "question": "Combien y a-t-il de collèges à Besançon ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Besançon' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-lyc-grenoble",
+  "question": "Combien de lycées à Grenoble ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Grenoble' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-eco-reims",
+  "question": "Combien y a-t-il de écoles à Reims ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Reims' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-col-le-havre",
+  "question": "Combien de collèges à Le Havre ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Le Havre' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-dep-021-col-pub",
+  "question": "Combien de collèges publics en Côte-d'Or ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='021' and type_etablissement='Collège' and statut_public_prive='Public'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-dep-059-lyc-pri",
+  "question": "Combien de lycées privés dans le département Nord ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='059' and type_etablissement='Lycée' and statut_public_prive='Privé'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-dep-069-eco-pub",
+  "question": "Combien de écoles publics en Rhône ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='069' and type_etablissement='Ecole' and statut_public_prive='Public'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-dep-033-col-pri",
+  "question": "Combien de collèges privés dans le département Gironde ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='033' and type_etablissement='Collège' and statut_public_prive='Privé'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-dep-013-lyc-pub",
+  "question": "Combien de lycées publics en Bouches-du-Rhône ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='013' and type_etablissement='Lycée' and statut_public_prive='Public'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-dep-029-eco-pri",
+  "question": "Combien de écoles privés dans le département Finistère ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='029' and type_etablissement='Ecole' and statut_public_prive='Privé'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-dep-031-col-pub",
+  "question": "Combien de collèges publics en Haute-Garonne ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='031' and type_etablissement='Collège' and statut_public_prive='Public'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-dep-067-lyc-pri",
+  "question": "Combien de lycées privés dans le département Bas-Rhin ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='067' and type_etablissement='Lycée' and statut_public_prive='Privé'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-dep-034-eco-pub",
+  "question": "Combien de écoles publics en Hérault ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='034' and type_etablissement='Ecole' and statut_public_prive='Public'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-dep-044-col-pri",
+  "question": "Combien de collèges privés dans le département Loire-Atlantique ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='044' and type_etablissement='Collège' and statut_public_prive='Privé'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-dep-038-lyc-pub",
+  "question": "Combien de lycées publics en Isère ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='038' and type_etablissement='Lycée' and statut_public_prive='Public'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-dep-025-eco-pri",
+  "question": "Combien de écoles privés dans le département Doubs ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='025' and type_etablissement='Ecole' and statut_public_prive='Privé'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "department",
+   "code-format"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-acad-dijon-col",
+  "question": "Combien de collèges dans l'académie de Dijon ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_academie='Dijon' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "academie"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-acad-lyon-lyc",
+  "question": "Combien de lycées dans l'académie de Lyon ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_academie='Lyon' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "academie"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-acad-bordeaux-eco",
+  "question": "Combien de écoles dans l'académie de Bordeaux ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_academie='Bordeaux' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "academie"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-acad-rennes-col",
+  "question": "Combien de collèges dans l'académie de Rennes ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_academie='Rennes' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "academie"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-acad-lille-lyc",
+  "question": "Combien de lycées dans l'académie de Lille ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_academie='Lille' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "academie"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-acad-toulouse-eco",
+  "question": "Combien de écoles dans l'académie de Toulouse ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_academie='Toulouse' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "academie"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-acad-grenoble-col",
+  "question": "Combien de collèges dans l'académie de Grenoble ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_academie='Grenoble' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "academie"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-acad-nantes-lyc",
+  "question": "Combien de lycées dans l'académie de Nantes ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_academie='Nantes' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "academie"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-acad-strasbourg-eco",
+  "question": "Combien de écoles dans l'académie de Strasbourg ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_academie='Strasbourg' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "academie"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-acad-besançon-col",
+  "question": "Combien de collèges dans l'académie de Besançon ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_academie='Besançon' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "academie"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-reg-0-col",
+  "question": "Combien de collèges en Bretagne ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_region='Bretagne' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "region"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-reg-1-lyc",
+  "question": "Combien de lycées en Normandie ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_region='Normandie' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "region"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-reg-2-eco",
+  "question": "Combien de écoles en Occitanie ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_region='Occitanie' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "region"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-reg-3-col",
+  "question": "Combien de collèges en Grand Est ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_region='Grand Est' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "region"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-reg-4-lyc",
+  "question": "Combien de lycées en Hauts-de-France ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_region='Hauts-de-France' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "region"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-reg-5-eco",
+  "question": "Combien de écoles en Nouvelle-Aquitaine ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_region='Nouvelle-Aquitaine' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "region"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-reg-6-col",
+  "question": "Combien de collèges en Pays de la Loire ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_region='Pays de la Loire' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "region"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-reg-7-lyc",
+  "question": "Combien de lycées en Bourgogne-Franche-Comté ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_region='Bourgogne-Franche-Comté' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "region"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-fr-col",
+  "question": "Combien de collèges en France ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "national"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-fr-lyc",
+  "question": "Combien de lycées en France ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "national"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-fr-eco",
+  "question": "Combien de écoles en France ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "national"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-en-lyon-col",
+  "question": "How many middle schools are there in Lyon?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Lyon' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune",
+   "english"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-en-paris-lyc",
+  "question": "How many high schools are there in Paris?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Paris' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune",
+   "english"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-en-toulouse-eco",
+  "question": "How many primary schools are there in Toulouse?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Toulouse' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune",
+   "english"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-en-nantes-col",
+  "question": "How many middle schools are there in Nantes?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Nantes' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune",
+   "english"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-en-lille-lyc",
+  "question": "How many high schools are there in Lille?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Lille' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune",
+   "english"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-en-bordeaux-eco",
+  "question": "How many primary schools are there in Bordeaux?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Bordeaux' and type_etablissement='Ecole'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune",
+   "english"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-en-brest-col",
+  "question": "How many middle schools are there in Brest?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Brest' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune",
+   "english"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-en-rennes-lyc",
+  "question": "How many high schools are there in Rennes?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Rennes' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "commune",
+   "english"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-x-segpa-021",
+  "question": "Combien de collèges en Côte-d'Or ont une SEGPA ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='021' and type_etablissement='Collège' and segpa='1'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "filter",
+   "extra-condition"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-x-ulis-059",
+  "question": "Combien de collèges en Nord ont un dispositif ULIS ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='059' and type_etablissement='Collège' and ulis='1'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "filter",
+   "extra-condition"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-x-internat-069",
+  "question": "Combien de lycées en Rhône proposent un internat ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='069' and type_etablissement='Lycée' and hebergement='1'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "filter",
+   "extra-condition"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-x-restauration-033",
+  "question": "Combien de collèges en Gironde ont une restauration scolaire ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='033' and type_etablissement='Collège' and restauration='1'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "filter",
+   "extra-condition"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-x-segpa-013",
+  "question": "Combien de collèges en Bouches-du-Rhône ont une SEGPA ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='013' and type_etablissement='Collège' and segpa='1'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "filter",
+   "extra-condition"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-x-ulis-029",
+  "question": "Combien de collèges en Finistère ont un dispositif ULIS ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='029' and type_etablissement='Collège' and ulis='1'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "filter",
+   "extra-condition"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-x-internat-031",
+  "question": "Combien de lycées en Haute-Garonne proposent un internat ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='031' and type_etablissement='Lycée' and hebergement='1'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "filter",
+   "extra-condition"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-x-restauration-067",
+  "question": "Combien de collèges en Bas-Rhin ont une restauration scolaire ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='067' and type_etablissement='Collège' and restauration='1'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "filter",
+   "extra-condition"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-rep-021",
+  "question": "Combien d'établissements classés REP+ en Côte-d'Or ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='021' and appartenance_education_prioritaire='REP+'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "filter"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-rep-059",
+  "question": "Combien d'établissements classés REP+ en Nord ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='059' and appartenance_education_prioritaire='REP+'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "filter"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-rep-013",
+  "question": "Combien d'établissements classés REP+ en Bouches-du-Rhône ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "code_departement='013' and appartenance_education_prioritaire='REP+'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "filter"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-lm-occitanie",
+  "question": "Combien de lycées des métiers en Occitanie ?",
+  "datasets": [
+   "fr-en-lycees-metiers"
+  ],
+  "odsql": {
+   "where": "libelle_region='Occitanie'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "trap",
+   "dataset-choice"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-lm-bretagne",
+  "question": "Combien de lycées des métiers en Bretagne ?",
+  "datasets": [
+   "fr-en-lycees-metiers"
+  ],
+  "odsql": {
+   "where": "libelle_region='Bretagne'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "trap",
+   "dataset-choice"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-lm-grand-est",
+  "question": "Combien de lycées des métiers en Grand Est ?",
+  "datasets": [
+   "fr-en-lycees-metiers"
+  ],
+  "odsql": {
+   "where": "libelle_region='Grand Est'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "trap",
+   "dataset-choice"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-ips-21",
+  "question": "Quel est l'IPS moyen des collèges du département Côte-d'Or à la rentrée 2025-2026 ?",
+  "datasets": [
+   "fr-en-ips-colleges-ap2023"
+  ],
+  "odsql": {
+   "select": "avg(ips) as v",
+   "where": "code_du_departement='21' and rentree_scolaire='2025-2026'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "code-format"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-ips-59",
+  "question": "Quel est l'IPS moyen des collèges du département Nord à la rentrée 2025-2026 ?",
+  "datasets": [
+   "fr-en-ips-colleges-ap2023"
+  ],
+  "odsql": {
+   "select": "avg(ips) as v",
+   "where": "code_du_departement='59' and rentree_scolaire='2025-2026'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "code-format"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-ips-69",
+  "question": "Quel est l'IPS moyen des collèges du département Rhône à la rentrée 2025-2026 ?",
+  "datasets": [
+   "fr-en-ips-colleges-ap2023"
+  ],
+  "odsql": {
+   "select": "avg(ips) as v",
+   "where": "code_du_departement='69' and rentree_scolaire='2025-2026'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "code-format"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-ips-33",
+  "question": "Quel est l'IPS moyen des collèges du département Gironde à la rentrée 2025-2026 ?",
+  "datasets": [
+   "fr-en-ips-colleges-ap2023"
+  ],
+  "odsql": {
+   "select": "avg(ips) as v",
+   "where": "code_du_departement='33' and rentree_scolaire='2025-2026'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "code-format"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-ips-13",
+  "question": "Quel est l'IPS moyen des collèges du département Bouches-du-Rhône à la rentrée 2025-2026 ?",
+  "datasets": [
+   "fr-en-ips-colleges-ap2023"
+  ],
+  "odsql": {
+   "select": "avg(ips) as v",
+   "where": "code_du_departement='13' and rentree_scolaire='2025-2026'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "code-format"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-ips-29",
+  "question": "Quel est l'IPS moyen des collèges du département Finistère à la rentrée 2025-2026 ?",
+  "datasets": [
+   "fr-en-ips-colleges-ap2023"
+  ],
+  "odsql": {
+   "select": "avg(ips) as v",
+   "where": "code_du_departement='29' and rentree_scolaire='2025-2026'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "code-format"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-bac-lyon",
+  "question": "Combien de candidats ont été admis au bac général dans l'académie de Lyon en 2025 ?",
+  "datasets": [
+   "fr-en-baccalaureat-par-academie"
+  ],
+  "odsql": {
+   "select": "sum(nombre_d_admis_totaux) as v",
+   "where": "academie='LYON' and year(session)=2025 and voie='BAC GENERAL'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "date-year"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-bac-bordeaux",
+  "question": "Combien de candidats ont été admis au bac général dans l'académie de Bordeaux en 2025 ?",
+  "datasets": [
+   "fr-en-baccalaureat-par-academie"
+  ],
+  "odsql": {
+   "select": "sum(nombre_d_admis_totaux) as v",
+   "where": "academie='BORDEAUX' and year(session)=2025 and voie='BAC GENERAL'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "date-year"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-bac-rennes",
+  "question": "Combien de candidats ont été admis au bac général dans l'académie de Rennes en 2025 ?",
+  "datasets": [
+   "fr-en-baccalaureat-par-academie"
+  ],
+  "odsql": {
+   "select": "sum(nombre_d_admis_totaux) as v",
+   "where": "academie='RENNES' and year(session)=2025 and voie='BAC GENERAL'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "date-year"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-bac-lille",
+  "question": "Combien de candidats ont été admis au bac général dans l'académie de Lille en 2025 ?",
+  "datasets": [
+   "fr-en-baccalaureat-par-academie"
+  ],
+  "odsql": {
+   "select": "sum(nombre_d_admis_totaux) as v",
+   "where": "academie='LILLE' and year(session)=2025 and voie='BAC GENERAL'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "date-year"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-bac-toulouse",
+  "question": "Combien de candidats ont été admis au bac général dans l'académie de Toulouse en 2025 ?",
+  "datasets": [
+   "fr-en-baccalaureat-par-academie"
+  ],
+  "odsql": {
+   "select": "sum(nombre_d_admis_totaux) as v",
+   "where": "academie='TOULOUSE' and year(session)=2025 and voie='BAC GENERAL'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "date-year"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-bac-nantes",
+  "question": "Combien de candidats ont été admis au bac général dans l'académie de Nantes en 2025 ?",
+  "datasets": [
+   "fr-en-baccalaureat-par-academie"
+  ],
+  "odsql": {
+   "select": "sum(nombre_d_admis_totaux) as v",
+   "where": "academie='NANTES' and year(session)=2025 and voie='BAC GENERAL'"
+  },
+  "answer": "field:v",
+  "tolerance": 0.01,
+  "tags": [
+   "aggregate",
+   "date-year"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-grp-acad-col-pub",
+  "question": "Quelle académie compte le plus de collèges publics ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "select": "libelle_academie, count(*) as n",
+   "where": "type_etablissement='Collège' and statut_public_prive='Public'",
+   "group_by": "libelle_academie",
+   "order_by": "n desc",
+   "limit": 1
+  },
+  "answer": "field:libelle_academie",
+  "tolerance": 0.05,
+  "tags": [
+   "text",
+   "group"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-grp-acad-lyc-pri",
+  "question": "Quelle académie compte le plus de lycées privés ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "select": "libelle_academie, count(*) as n",
+   "where": "type_etablissement='Lycée' and statut_public_prive='Privé'",
+   "group_by": "libelle_academie",
+   "order_by": "n desc",
+   "limit": 1
+  },
+  "answer": "field:libelle_academie",
+  "tolerance": 0.05,
+  "tags": [
+   "text",
+   "group"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-grp-acad-eco-pri",
+  "question": "Quelle académie compte le plus de écoles privés ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "select": "libelle_academie, count(*) as n",
+   "where": "type_etablissement='Ecole' and statut_public_prive='Privé'",
+   "group_by": "libelle_academie",
+   "order_by": "n desc",
+   "limit": 1
+  },
+  "answer": "field:libelle_academie",
+  "tolerance": 0.05,
+  "tags": [
+   "text",
+   "group"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-grp-dep-lyc",
+  "question": "Quel département compte le plus de lycées ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "select": "libelle_departement, count(*) as n",
+   "where": "type_etablissement='Lycée'",
+   "group_by": "libelle_departement",
+   "order_by": "n desc",
+   "limit": 1
+  },
+  "answer": "field:libelle_departement",
+  "tolerance": 0.05,
+  "tags": [
+   "text",
+   "group"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-nodata-hopitaux-dijon",
+  "question": "Combien d'hôpitaux y a-t-il à Dijon ?",
+  "datasets": [],
+  "odsql": {},
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "no-data"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-nodata-prix-immo-lyon",
+  "question": "Quel est le prix moyen du mètre carré à Lyon ?",
+  "datasets": [],
+  "odsql": {},
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "no-data"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-nodata-meteo-nantes",
+  "question": "Quelle température fera-t-il demain à Nantes ?",
+  "datasets": [],
+  "odsql": {},
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "no-data"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-nodata-pharmacies-nord",
+  "question": "Combien de pharmacies dans le Nord ?",
+  "datasets": [],
+  "odsql": {},
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "no-data"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-nodata-chomage-bfc",
+  "question": "Quel est le taux de chômage en Bourgogne-Franche-Comté ?",
+  "datasets": [],
+  "odsql": {},
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "no-data"
+  ],
+  "split": "val"
+ },
+ {
+  "slug": "v2-nodata-gares-rennes",
+  "question": "Combien de gares SNCF à Rennes ?",
+  "datasets": [],
+  "odsql": {},
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "no-data"
+  ],
+  "split": "dev"
+ },
+ {
+  "slug": "v2-amb-guadeloupe",
+  "question": "Combien de lycées en Guadeloupe ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "libelle_region='Guadeloupe' and type_etablissement='Lycée'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "ambiguous-place"
+  ],
+  "split": "holdout"
+ },
+ {
+  "slug": "v2-amb-paris-col",
+  "question": "Combien de collèges à Paris ?",
+  "datasets": [
+   "fr-en-annuaire-education"
+  ],
+  "odsql": {
+   "where": "nom_commune='Paris' and type_etablissement='Collège'"
+  },
+  "answer": "total_count",
+  "tolerance": 0.05,
+  "tags": [
+   "count",
+   "ambiguous-place"
+  ],
+  "split": "dev"
+ }
+]

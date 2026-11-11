@@ -15,7 +15,7 @@ class Command(BaseCommand):
         portal = Portal.objects.get(domain=domain)
         self.stdout.write(f"{load_golden(portal, set)} cases loaded")
         bad = 0
-        for slug, value, note in refresh(portal):
+        for slug, value, note in refresh(portal, suite=set):
             bad += value is None or bool(note)
             self.stdout.write(f"{'!!' if value is None or note else 'ok'} {slug}: {value!r} {note}")
         self.stdout.write(f"{bad} problems")

@@ -11,14 +11,16 @@ NO_DATA = "no_data"
 
 
 def load_golden(portal, name):
+    """Load one golden file as suite `name`; cases of other suites are untouched."""
     rows = json.loads((GOLDEN / f"{name}.json").read_text())
     slugs = []
     for r in rows:
         EvalCase.objects.update_or_create(portal=portal, slug=r["slug"], defaults=dict(
             question=r["question"], expected_datasets=r["datasets"], reference_odsql=r.get("odsql", {}),
-            answer_path=r.get("answer", "total_count"), tolerance=r.get("tolerance", 0.05), tags=r.get("tags", [])))
+            answer_path=r.get("answer", "total_count"), tolerance=r.get("tolerance", 0.05), tags=r.get("tags", []),
+            suite=name, split=r.get("split", "")))
         slugs.append(r["slug"])
-    EvalCase.objects.filter(portal=portal).exclude(slug__in=slugs).delete()
+    EvalCase.objects.filter(portal=portal, suite=name).exclude(slug__in=slugs).delete()
     return len(rows)
 
 
@@ -37,9 +39,10 @@ def reference_answer(portal, case):
     return res[0][case.answer_path.split(":", 1)[1]]
 
 
-def refresh(portal):
+def refresh(portal, suite=None):
     out = []
-    for case in EvalCase.objects.filter(portal=portal).order_by("id"):
+    cases = EvalCase.objects.filter(portal=portal).order_by("id")
+    for case in (cases.filter(suite=suite) if suite else cases):
         try:
             value = reference_answer(portal, case)
         except ToolError as e:
