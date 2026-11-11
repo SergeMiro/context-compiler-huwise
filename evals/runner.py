@@ -112,16 +112,19 @@ def metrics(rows, cases):
 def _run(domain, question, mode, chat):
     """One case; a provider outage (5xx/429 after llm.chat's own retries) waits a minute and retries the whole
     case twice, so a free model's bad minute does not kill a 2-hour run. Other errors propagate."""
+    import os
     import time
 
     import httpx
-    for attempt in range(3):
+    tries = int(os.environ.get("CTXC_EVAL_CASE_RETRIES", "3"))
+    for attempt in range(tries):
         try:
             return _run_once(domain, question, mode, chat)
-        except httpx.HTTPStatusError as e:
-            if attempt == 2 or e.response.status_code not in llm_mod.RETRY_STATUS:
+        except (httpx.HTTPStatusError, httpx.TransportError) as e:
+            status = getattr(getattr(e, "response", None), "status_code", None)
+            if attempt == tries - 1 or (status is not None and status not in llm_mod.RETRY_STATUS):
                 raise
-            time.sleep(60)
+            time.sleep(int(os.environ.get("CTXC_EVAL_CASE_PAUSE", "60")))
 
 
 def _run_once(domain, question, mode, chat):

@@ -14,7 +14,7 @@ from django.utils import timezone
 import llm
 import tools
 from catalog.models import Dataset, Field, Portal
-from evals.agent import run_agent
+from evals import runner
 from evals.golden import NO_DATA
 from evals.runner import answer_ok, condense
 from optimizer import cache, evidence, pipeline, router
@@ -70,7 +70,11 @@ class Command(BaseCommand):
                    "model": llm.model_name(), "fixture": s.get("fixture"), "runs": {}}
             if s["kind"] == "recorded":
                 for mode in ("naked", "compiled", "optimized"):
-                    res = pipeline.answer(domain, q) if mode == "optimized" else run_agent(domain, q, mode)
+                    try:
+                        res = runner._run(domain, q, mode, None)  # same provider-outage retries as the evals
+                    except Exception as e:  # keep what was recorded; the page shows "not recorded" for this one
+                        self.stdout.write(f"{s['id']} {mode}: FAILED {type(e).__name__}")
+                        continue
                     row["runs"][mode] = public(res, q, exp)
                     self.stdout.write(f"{s['id']} {mode}: ok={row['runs'][mode]['answer_ok']} "
                                       f"route={row['runs'][mode]['route']} {res['ms']} ms")

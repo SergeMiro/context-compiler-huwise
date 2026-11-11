@@ -73,7 +73,10 @@ def run_agent(domain, question, mode, chat=None, max_steps=MAX_STEPS):
     for step in range(max_steps):
         # last step without tools: the agent must answer with what it has (eval showed answers lost on step 6)
         t_llm = time.monotonic()
-        r = chat(messages, tools=specs if step < max_steps - 1 else None)
+        for _ in range(3):  # free reasoning models sometimes return neither text nor a tool call: ask again
+            r = chat(messages, tools=specs if step < max_steps - 1 else None)
+            if r["message"]["content"] or r["message"]["tool_calls"]:
+                break
         out["spans"].append({"name": "llm", "ms": int((time.monotonic() - t_llm) * 1000), "tokens": r["tokens"]})
         out["steps"] += 1
         out["tokens"] += r["tokens"]
