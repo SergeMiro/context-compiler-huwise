@@ -1,4 +1,4 @@
-"""Record the demo scenarios: A (generic tools), B (cards), C (cards + optimizer) on the same question, same model,
+"""Record the demo scenarios: A (real Huwise MCP), 0 (generic tools), B (cards), C (cards + optimizer) on the same question, same model,
 real Explore API; simulated scenarios run the optimizer against a deliberate fixture. -> ctx/traces/scenarios.json"""
 import json
 import subprocess
@@ -69,7 +69,7 @@ class Command(BaseCommand):
                    "recorded_at": timezone.now().isoformat(timespec="seconds"), "commit": commit,
                    "model": llm.model_name(), "fixture": s.get("fixture"), "runs": {}}
             if s["kind"] == "recorded":
-                for mode in ("naked", "compiled", "optimized"):
+                for mode in ("huwise", "naked", "compiled", "optimized"):  # huwise = real Huwise MCP (A)
                     try:
                         res = runner._run(domain, q, mode, None)  # same provider-outage retries as the evals
                     except Exception as e:  # keep what was recorded; the page shows "not recorded" for this one

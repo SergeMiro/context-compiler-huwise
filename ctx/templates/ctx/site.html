@@ -221,7 +221,7 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
   <div class="sh"><span class="eyebrow good">{{ t.trace_eyebrow }}</span><h2>{{ t.trace_title }}</h2><p>{{ t.trace_lead }}</p></div>
   <div class="tracebar">
     <label>{{ t.scenario }}<select id="scen"></select></label>
-    <label>{{ t.config }}<span class="seg" id="cfg" role="group"><button data-cfg="naked" aria-pressed="false">{{ t.cfg_naked }}</button><button data-cfg="compiled" aria-pressed="false">{{ t.cfg_compiled }}</button><button data-cfg="optimized" aria-pressed="true">{{ t.cfg_optimized }}</button></span></label>
+    <label>{{ t.config }}<span class="seg" id="cfg" role="group"><button data-cfg="huwise" aria-pressed="false">{{ t.cfg_huwise }}</button><button data-cfg="naked" aria-pressed="false">{{ t.cfg_naked }}</button><button data-cfg="compiled" aria-pressed="false">{{ t.cfg_compiled }}</button><button data-cfg="optimized" aria-pressed="true">{{ t.cfg_optimized }}</button></span></label>
     <button class="btn primary" id="replay"><svg class="i"><use href="#i-play"/></svg>{{ t.replay }}</button>
     <button class="btn" id="live" title="{{ t.live_note }}">{{ t.live_btn }}</button>
   </div>
@@ -423,7 +423,7 @@ $('#scen').onchange = () => { live = null; renderTrace(); };
 const short = (v, n = 900) => { const s = typeof v === 'string' ? v : JSON.stringify(v, null, 1); return s && s.length > n ? s.slice(0, n) + ' …' : (s || ''); };
 function stepsOf(run, kind) {
   const trace = [...(run.trace || [])], q = [...(run.queries || [])], out = [];
-  const userNode = cfg === 'naked' ? ['user', 'mcp'] : ['user', 'opt'];
+  const userNode = cfg === 'naked' || cfg === 'huwise' ? ['user', 'mcp'] : ['user', 'opt'];
   for (const s of run.spans || []) {
     if (s.name === 'llm') { out.push({tool: 'LLM', nodes: userNode, ms: s.ms, tokens: s.tokens, input: '(prompt + tool results)', output: '→ next tool call or final answer'}); continue; }
     if (s.name === 'route') { out.push({tool: 'route()', nodes: ['opt'], ms: s.ms, input: run.question || '', output: `${s.route}${s.note ? ' · ' + s.note : ''}\n${(run.reasons || []).join('\n')}`, source: s.policy}); continue; }
@@ -476,7 +476,7 @@ $$('#erreur [data-q]').forEach(b => b.onclick = async () => {
   } catch (e) { out.textContent = 'API: ' + e.message; }
 });
 const ct = scen['code-format'];
-if (ct) $('#errtrace').innerHTML = `<div class="grid">${['naked', 'optimized'].filter(m => ct.runs[m]).map(m => { const r = ct.runs[m];
+if (ct) $('#errtrace').innerHTML = `<div class="grid">${['huwise', 'naked', 'optimized'].filter(m => ct.runs[m]).map(m => { const r = ct.runs[m];
   const qs = (r.queries || []).map(q => `${q.ok ? '✓' : '✗'} ${esc(q.dataset_id)} ${esc(JSON.stringify(q.params))} → ${esc(q.result ? q.result.total_count : 'error')}`).join('\n');
   return `<div class="card"><h3>${T['cfg_' + m]} <span class="st st-RECORDED">RECORDED</span> ${r.answer_ok ? '<span class="st st-ok">✓</span>' : '<span class="st st-ko">✗</span>'}</h3><p class="muted" style="margin:0">${esc(ct.question)}</p><pre class="pre">${qs || '—'}</pre><div>${esc(r.answer)}</div><div class="mono muted" style="font-size:12px">${T.route}: ${esc(r.route)} · ${T.evidence}: ${esc(r.evidence.status)} · ${r.llm_calls} ${T.model_calls} · ${r.ms} ms</div></div>`; }).join('')}</div>`;
 
@@ -502,16 +502,16 @@ function summ(rows, m) {
 function renderCmp() {
   const c = C[+$('#cmpset').value]; if (!c) return;
   const tag = $('#cmptag').value, rows = tag ? c.rows.filter(r => r.tags.includes(tag)) : c.rows;
-  const S = Object.fromEntries(['naked', 'compiled', 'optimized'].map(m => [m, summ(rows, m)]));
-  const line = (lab, f, best) => `<tr><td>${lab}</td>${['naked', 'compiled', 'optimized'].map(m => `<td class="num">${f(S[m])}</td>`).join('')}</tr>`;
-  let h = `<div class="tscroll"><table class="tbl"><tr><th>n = ${rows.length}</th><th class="num">${T.cfg_naked}</th><th class="num">${T.cfg_compiled}</th><th class="num">${T.cfg_optimized}</th></tr>` +
+  const M = c.modes || ['naked', 'compiled', 'optimized'], S = Object.fromEntries(M.map(m => [m, summ(rows, m)]));
+  const line = (lab, f, best) => `<tr><td>${lab}</td>${M.map(m => `<td class="num">${f(S[m])}</td>`).join('')}</tr>`;
+  let h = `<div class="tscroll"><table class="tbl"><tr><th>n = ${rows.length}</th>${M.map(m => `<th class="num">${T['cfg_' + m]}</th>`).join('')}</tr>` +
     line(T.m_acc, s => fmtPct(s.acc)) + line(T.m_wrong, s => s.wrong) + line(T.m_verified, s => fmtPct(s.ver)) +
     line(T.m_p50, s => s.p50 == null ? '—' : (s.p50 / 1000).toFixed(1) + ' s') + line(T.m_p95, s => s.p95 == null ? '—' : (s.p95 / 1000).toFixed(1) + ' s') +
     line(T.m_calls, s => s.calls) + line(T.m_tokens, s => s.tokens.toLocaleString(L)) + line(T.m_routes, s => s.routes || '—') + '</table></div>';
-  if (!tag) h += `<p class="mono muted" style="font-size:13px;margin:0">${T.cmp_diff}: ` + Object.entries(c.diffs).map(([k, d]) => `${k.replace('naked', 'A').replace('compiled', 'B').replace('optimized', 'C').replace('-', ' vs ')}: ${d.pp > 0 ? '+' : ''}${d.pp} pp [${d.ci[0]}; ${d.ci[1]}] p=${d.p}`).join(' · ') + `</p>`;
+  if (!tag) h += `<p class="mono muted" style="font-size:13px;margin:0">${T.cmp_diff}: ` + Object.entries(c.diffs).map(([k, d]) => `${k.replace('huwise', 'A').replace('naked', '0').replace('compiled', 'B').replace('optimized', 'C').replace('-', ' vs ')}: ${d.pp > 0 ? '+' : ''}${d.pp} pp [${d.ci[0]}; ${d.ci[1]}] p=${d.p}`).join(' · ') + `</p>`;
   h += `<p class="mono muted" style="font-size:12px;margin:0">${esc(c.model)} · ${c.date} · runs #${c.runs.join('/#')}${c.commit ? ' · commit ' + esc(c.commit) : ''}</p>`;
-  h += `<details class="only-tech"><summary class="muted">${T.cmp_cases}</summary><div class="tscroll" style="margin-top:10px"><table class="tbl"><tr><th>question</th><th>split</th><th class="num">A</th><th class="num">B</th><th class="num">C</th><th>route C</th></tr>` +
-    rows.map(r => `<tr><td>${esc(r.q)}</td><td class="mono">${esc(r.split || '—')}</td>${['naked', 'compiled', 'optimized'].map(m => `<td class="num ${r[m].answer_ok ? 'ok' : 'ko'}">${r[m].answer_ok ? '✓' : r[m].abstained ? '∅' : '✗'}</td>`).join('')}<td class="mono">${esc(r.optimized.route || '')}</td></tr>`).join('') + '</table></div></details>';
+  h += `<details class="only-tech"><summary class="muted">${T.cmp_cases}</summary><div class="tscroll" style="margin-top:10px"><table class="tbl"><tr><th>question</th><th>split</th>${M.map(m => `<th class="num">${({huwise: 'A', naked: '0', compiled: 'B', optimized: 'C'})[m]}</th>`).join('')}<th>route C</th></tr>` +
+    rows.map(r => `<tr><td>${esc(r.q)}</td><td class="mono">${esc(r.split || '—')}</td>${M.map(m => `<td class="num ${r[m].answer_ok ? 'ok' : 'ko'}">${r[m].answer_ok ? '✓' : r[m].abstained ? '∅' : '✗'}</td>`).join('')}<td class="mono">${esc(r.optimized.route || '')}</td></tr>`).join('') + '</table></div></details>';
   $('#cmp').innerHTML = h;
 }
 $('#cmpset').onchange = () => { $('#cmptag').innerHTML = `<option value="">${T.cmp_all}</option>` + tagsOf(C[+$('#cmpset').value]).map(t => `<option>${esc(t)}</option>`).join(''); renderCmp(); };
@@ -522,7 +522,7 @@ function renderLabMode() {
   const c = C[0];
   if (!c) { $('#labmode').innerHTML = `<p class="muted">${T.cmp_none}</p>`; return; }
   const s = c.summary;
-  $('#labmode').innerHTML = `<div class="grid">${['naked', 'compiled', 'optimized'].map(m => `<div class="card"><h3>${T['cfg_' + m]} <span class="st st-RECORDED">RECORDED</span></h3><div style="font:600 34px var(--mono)">${fmtPct(s[m].accuracy)}</div><div class="muted mono" style="font-size:13px">${T.m_acc} · n=${c.n}<br>${T.m_wrong}: ${s[m].wrong_confident} · ${T.m_calls}: ${s[m].llm_calls} · p50 ${(s[m].p50 / 1000).toFixed(1)} s</div></div>`).join('')}</div><p class="muted mono" style="font-size:12px">${esc(label(c))} · <a href="#comparer">${T.nav_cmp} →</a></p>`;
+  $('#labmode').innerHTML = `<div class="grid">${(c.modes || ['naked', 'compiled', 'optimized']).map(m => `<div class="card"><h3>${T['cfg_' + m]} <span class="st st-RECORDED">RECORDED</span></h3><div style="font:600 34px var(--mono)">${fmtPct(s[m].accuracy)}</div><div class="muted mono" style="font-size:13px">${T.m_acc} · n=${c.n}<br>${T.m_wrong}: ${s[m].wrong_confident} · ${T.m_calls}: ${s[m].llm_calls} · p50 ${(s[m].p50 / 1000).toFixed(1)} s</div></div>`).join('')}</div><p class="muted mono" style="font-size:12px">${esc(label(c))} · <a href="#comparer">${T.nav_cmp} →</a></p>`;
 }
 setMode('today'); select('mcp');
 })();

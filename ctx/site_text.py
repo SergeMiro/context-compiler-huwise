@@ -42,10 +42,10 @@ TEXT = {
 
     "trace_eyebrow": {"fr": "Écran 3 · Une question, étape par étape", "en": "Screen 3 · One question, step by step"},
     "trace_title": {"fr": "« Combien y a-t-il de collèges à Dijon ? »", "en": "“How many middle schools in Dijon?”"},
-    "trace_lead": {"fr": "Chaque étape vraiment faite, avec temps et jetons. A utilise les noms d'outils de Huwise, mais ce n'est pas le serveur Huwise (il demande une clé API).",
-                   "en": "Every step really made, with time and tokens. A uses Huwise's tool names, but it is not the Huwise server (it needs an API key)."},
+    "trace_lead": {"fr": "Chaque étape vraiment faite, avec temps et jetons. A appelle le vrai serveur MCP de Huwise.",
+                   "en": "Every step really made, with time and tokens. A calls the real Huwise MCP server."},
     "scenario": {"fr": "Cas", "en": "Case"}, "config": {"fr": "Version", "en": "Version"},
-    "cfg_naked": {"fr": "A · outils de base", "en": "A · basic tools"}, "cfg_compiled": {"fr": "B · fiches", "en": "B · cards"},
+    "cfg_huwise": {"fr": "A · Huwise MCP", "en": "A · Huwise MCP"}, "cfg_naked": {"fr": "0 · outils de base", "en": "0 · basic tools"}, "cfg_compiled": {"fr": "B · fiches", "en": "B · cards"},
     "cfg_optimized": {"fr": "C · fiches + Optimizer", "en": "C · cards + Optimizer"},
     "replay": {"fr": "Rejouer", "en": "Replay"},
     "live_btn": {"fr": "Lancer C en direct", "en": "Run C live"},
@@ -78,8 +78,8 @@ TEXT = {
 
     "cmp_eyebrow": {"fr": "Écran 6 · Comparer A / B / C", "en": "Screen 6 · Compare A / B / C"},
     "cmp_title": {"fr": "Mêmes questions, même modèle, trois versions", "en": "Same questions, same model, three versions"},
-    "cmp_lead": {"fr": "A : outils de base (noms Huwise, pas le serveur Huwise). B : nos fiches. C : fiches + Optimizer. Pas de note par une IA : on compare au chiffre de l'API.",
-                 "en": "A: basic tools (Huwise names, not the Huwise server). B: our cards. C: cards + Optimizer. No AI grading: we compare with the API's number."},
+    "cmp_lead": {"fr": "A : le vrai serveur MCP de Huwise. 0 : outils de base (contrôle). B : nos fiches. C : fiches + Optimizer. Même modèle partout. Pas de note par une IA : on compare au chiffre de l'API.",
+                 "en": "A: the real Huwise MCP server. 0: basic tools (control). B: our cards. C: cards + Optimizer. Same model everywhere. No AI grading: we compare with the API's number."},
     "cmp_set": {"fr": "Questions", "en": "Questions"}, "cmp_tag": {"fr": "Type", "en": "Type"}, "cmp_all": {"fr": "tous", "en": "all"},
     "m_acc": {"fr": "Bonne réponse", "en": "Right answer"}, "m_ds": {"fr": "Bon jeu de données", "en": "Right dataset"},
     "m_p50": {"fr": "Temps (médian)", "en": "Time (median)"}, "m_p95": {"fr": "Temps (95 %)", "en": "Time (95 %)"},
@@ -92,8 +92,8 @@ TEXT = {
     "cmp_none": {"fr": "Run A/B/C en cours.", "en": "A/B/C run in progress."},
     "cmp_legacy": {"fr": "Anciens tests internes (A contre B, 30 questions écrites avec les fiches) : historique, pas une preuve.",
                    "en": "Old internal tests (A vs B, 30 questions written with the cards): history, not proof."},
-    "cmp_caveat": {"fr": "Le vrai serveur Huwise envoie plus d'infos que notre A. A est donc sans doute plus faible que Huwise. Pour le vrai test, il faut une clé API.",
-                   "en": "The real Huwise server sends more info than our A, so A is probably weaker than Huwise. A real test needs an API key."},
+    "cmp_caveat": {"fr": "A utilise la clé d'un compte utilisateur ordinaire (données publiques seulement) et notre modèle gratuit : on teste le serveur MCP de Huwise, pas Huwy.",
+                   "en": "A uses an ordinary user account key (public data only) and our free model: we test Huwise's MCP server, not Huwy."},
 
     "chk_title": {"fr": "Tests de l'Optimizer sans IA", "en": "Optimizer tests without AI"},
     "chk_recipes": {"fr": "Questions répondues sans IA / justes", "en": "Questions answered without AI / right"},
@@ -152,7 +152,7 @@ METHODS = [
 ]
 
 LIMITS = [
-    {"fr": "A n'est pas le serveur Huwise. Pour le tester vraiment, il faut une clé API du portail.", "en": "A is not the Huwise server. A real test needs a portal API key."},
+    {"fr": "A est le vrai serveur MCP de Huwise, mais piloté par notre modèle gratuit et notre prompt : ce n'est pas Huwy.", "en": "A is the real Huwise MCP server, but driven by our free model and our prompt: it is not Huwy."},
     {"fr": "Modèle IA gratuit : les résultats varient d'un run à l'autre, et les échantillons sont petits.", "en": "Free AI model: results vary between runs, and samples are small."},
     {"fr": "Les 30 anciennes questions ont servi à construire les fiches. La mesure propre, ce sont les questions de contrôle du jeu v2, écrites par le même auteur.",
      "en": "The 30 old questions were used to build the cards. The clean measure is the v2 test questions, written by the same author."},

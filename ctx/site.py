@@ -24,7 +24,6 @@ STACK = [("python", "Python", "3.12", "#3776AB"), ("django", "Django + DRF", "5.
          ("elasticsearch", "Elasticsearch", "8.15", "#005571"), ("neo4j", "Neo4j", "5.26", "#4581C3"),
          ("docker", "Docker", "Compose", "#2496ED"), ("traefikproxy", "Traefik", "proxy + TLS", "#24A1C1"),
          ("nginx", "Nginx", "site", "#009639"), ("letsencrypt", "Let's Encrypt", "HTTPS", "#003A70")]
-MODES = ("naked", "compiled", "optimized")
 
 
 def stack():
@@ -54,7 +53,8 @@ def triples(portal):
     for c in done.filter(mode="optimized").order_by("-id"):
         a, b = prev(c, "naked"), prev(c, "compiled")
         if a and b and c.metrics.get("n", 0) > 3:
-            out.append((a, b, c))
+            h = prev(c, "huwise")  # optional: the real Huwise MCP run on the same questions, when one exists
+            out.append(((h,) if h else ()) + (a, b, c))
     return out
 
 
@@ -88,9 +88,10 @@ def comparison(portal):
     cases = {c.slug: c for c in EvalCase.objects.filter(portal=portal)}
     out = []
     for runs in triples(portal):
-        slugs = [s for s in runs[2].metrics["per_case"] if all(s in r.metrics["per_case"] for r in runs)]
+        modes = [r.mode for r in runs]
+        slugs = [s for s in runs[-1].metrics["per_case"] if all(s in r.metrics["per_case"] for r in runs)]
         per = {r.mode: r.metrics["per_case"] for r in runs}
-        ok = {m: [int(per[m][s]["answer_ok"]) for s in slugs] for m in MODES}
+        ok = {m: [int(per[m][s]["answer_ok"]) for s in slugs] for m in modes}
         summary = {}
         for r in runs:
             pc = [per[r.mode][s] for s in slugs]
@@ -105,15 +106,16 @@ def comparison(portal):
                 "routes": r.metrics.get("routes") or {}}
         diffs = {f"{y}-{x}": {"ci": boot_ci(ok[x], ok[y]), "p": round(mcnemar(ok[x], ok[y]), 3),
                               "pp": round(100 * (sum(ok[y]) - sum(ok[x])) / len(slugs), 1)}
-                 for x, y in (("naked", "compiled"), ("compiled", "optimized"), ("naked", "optimized"))}
+                 for x, y in (("huwise", "compiled"), ("huwise", "optimized"), ("naked", "compiled"),
+                              ("compiled", "optimized"), ("naked", "optimized")) if x in modes}
         rows = [{"slug": s, "q": cases[s].question if s in cases else s, "tags": cases[s].tags if s in cases else [],
                  "split": cases[s].split if s in cases else "",
                  **{m: {k: per[m][s].get(k) for k in ("answer_ok", "route", "evidence", "ms", "tokens", "llm_calls",
-                                                      "abstained")} for m in MODES}} for s in slugs]
-        a = runs[0]
+                                                      "abstained")} for m in modes}} for s in slugs]
+        a = runs[-1]
         out.append({"suite": a.metrics.get("suite"), "split": a.metrics.get("split"), "n": len(slugs),
-                    "model": a.model, "date": runs[2].finished_at.strftime("%d.%m.%Y"),
-                    "commit": runs[2].metrics.get("commit", ""), "runs": [r.id for r in runs],
+                    "model": a.model, "date": a.finished_at.strftime("%d.%m.%Y"), "modes": modes,
+                    "commit": a.metrics.get("commit", ""), "runs": [r.id for r in runs],
                     "summary": summary, "diffs": diffs, "rows": rows})
     return out
 

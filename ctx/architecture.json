@@ -296,8 +296,8 @@
     "en": "4 tools · API key required"
    },
    "purpose": {
-    "fr": "Le serveur qui donne les outils de Huwise aux agents IA : analyze_catalog, search_assets, get_asset, search_asset_records. Sans clé API : refusé (testé le 11.11.2026).",
-    "en": "The server that gives Huwise's tools to AI agents: analyze_catalog, search_assets, get_asset, search_asset_records. Without an API key: refused (tested 11.11.2026)."
+    "fr": "Le serveur qui donne les outils de Huwise aux agents IA : analyze_catalog, search_assets, get_asset, search_asset_records. Sans clé API : refusé. Avec une clé de compte utilisateur : c'est notre configuration A (testé le 11.11.2026).",
+    "en": "The server that gives Huwise's tools to AI agents: analyze_catalog, search_assets, get_asset, search_asset_records. Without an API key: refused. With a user account key: this is our configuration A (tested 11.11.2026)."
    },
    "io": {
     "fr": "Entre : appel d'un agent · Sort : jeux, schéma, lignes",
@@ -872,6 +872,10 @@
   }
  },
  "tool_nodes": {
+  "analyze_catalog": [
+   "mcp",
+   "catalog"
+  ],
   "search_assets": [
    "mcp",
    "catalog"

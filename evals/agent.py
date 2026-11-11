@@ -1,5 +1,6 @@
-"""Minimal tool-calling loop, no framework. Same model, same prompt, two toolsets:
-`compiled` (our cards) vs `naked` (generic catalog access, named like Huwise's MCP tools)."""
+"""Minimal tool-calling loop, no framework. Same model, same prompt, toolsets: `huwise` (the real Huwise MCP
+server, evals/huwise_mcp.py), `naked` (generic catalog access named like Huwise's tools), `compiled` (our cards),
+`optimized` (cards + grounded query)."""
 import json
 import time
 
@@ -51,7 +52,7 @@ TOOLSETS = {
 TOOLSETS["optimized"] = dict(TOOLSETS["compiled"])  # same tools, the query is grounded (cache + value hints)
 TOOLSETS["optimized"]["query"] = (TOOLSETS["compiled"]["query"][0],
                                   lambda d, a: _grounded()(d, a["dataset_id"], _params(a)))
-QUERY_TOOLS = {"query", "search_asset_records"}
+QUERY_TOOLS = {"query", "search_asset_records"}  # same name in our A and in the real Huwise MCP
 
 
 def _grounded():
@@ -65,7 +66,11 @@ def _params(args):
 
 def run_agent(domain, question, mode, chat=None, max_steps=MAX_STEPS):
     chat = chat or llm_mod.chat
-    toolset = TOOLSETS[mode]
+    if mode == "huwise":  # the real Huwise MCP server's tools (needs HUWISE_API_KEY)
+        from evals import huwise_mcp
+        toolset = huwise_mcp.toolset(domain)
+    else:
+        toolset = TOOLSETS[mode]
     messages = [{"role": "system", "content": SYSTEM.format(domain=domain)}, {"role": "user", "content": question}]
     out = {"answer": "", "steps": 0, "tokens": 0, "queries": [], "spans": []}
     t0 = time.monotonic()
@@ -91,12 +96,12 @@ def run_agent(domain, question, mode, chat=None, max_steps=MAX_STEPS):
             try:
                 args = json.loads(call["function"]["arguments"] or "{}")
                 result = toolset[name][1](domain, args) if name in toolset else {"error": f"unknown tool {name}"}
-            except (json.JSONDecodeError, KeyError, TypeError) as e:
+            except (json.JSONDecodeError, KeyError, TypeError, RuntimeError) as e:
                 args, result = {}, {"error": f"bad arguments: {e}"}
             ok = isinstance(result, dict) and "error" not in result
             out["spans"].append({"name": name, "ms": int((time.monotonic() - t_tool) * 1000), "ok": ok})
             if name in QUERY_TOOLS:
-                out["queries"].append({"dataset_id": args.get("dataset_id", ""), "ok": ok, "params": _params(args),
+                out["queries"].append({"dataset_id": args.get("dataset_id") or args.get("slug", ""), "ok": ok, "params": _params(args),
                                        "result": {"total_count": result.get("total_count"),
                                                   "results": (result.get("results") or [])[:20]} if ok else None})
             messages.append({"role": "tool", "tool_call_id": call["id"],

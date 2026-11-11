@@ -11,8 +11,8 @@ class Command(BaseCommand):
 
     def add_arguments(self, p):
         p.add_argument("domain")
-        p.add_argument("--mode", choices=["naked", "compiled", "optimized", "both", "abc"], default="both",
-                       help="both = naked+compiled; abc = naked (A) + compiled (B) + optimized (C), same cases")
+        p.add_argument("--mode", choices=["huwise", "naked", "compiled", "optimized", "both", "abc"], default="both",
+                       help="both = naked+compiled; abc = naked (A) + compiled (B) + optimized (C), same cases; huwise = the real Huwise MCP (needs HUWISE_API_KEY)")
         p.add_argument("--cases", default="", help="comma-separated slugs")
         p.add_argument("--suite", default="education", help="golden file name")
         p.add_argument("--split", default="", help="dev | val | holdout (default: all cases)")
