@@ -110,6 +110,21 @@ def metrics(rows, cases):
 
 
 def _run(domain, question, mode, chat):
+    """One case; a provider outage (5xx/429 after llm.chat's own retries) waits a minute and retries the whole
+    case twice, so a free model's bad minute does not kill a 2-hour run. Other errors propagate."""
+    import time
+
+    import httpx
+    for attempt in range(3):
+        try:
+            return _run_once(domain, question, mode, chat)
+        except httpx.HTTPStatusError as e:
+            if attempt == 2 or e.response.status_code not in llm_mod.RETRY_STATUS:
+                raise
+            time.sleep(60)
+
+
+def _run_once(domain, question, mode, chat):
     if mode == "optimized":
         from optimizer.pipeline import answer
         return answer(domain, question, chat=chat)
