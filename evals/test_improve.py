@@ -32,6 +32,7 @@ def agent(answer_for):
 
 
 @override_settings(ES_INDEX="test-cards")
+@override_settings(CTXC_ENV="preprod")
 class ImproveTest(TestCase):
     def setUp(self):
         es.drop_index()
