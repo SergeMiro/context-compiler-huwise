@@ -33,7 +33,7 @@ services:
       - "traefik.http.services.ctxc-pre-mcp.loadbalancer.server.port=8796"
   site:
     image: nginx:1.27-alpine
-    volumes: [./site-preprod:/usr/share/nginx/html:ro, ./docker/site-preprod-nginx.conf:/etc/nginx/conf.d/default.conf:ro]
+    volumes: [./site-preprod:/usr/share/nginx/html:ro, ./docker/site-nginx.conf:/etc/nginx/conf.d/default.conf:ro]
     mem_limit: 64m
     restart: unless-stopped
     networks: [web]
