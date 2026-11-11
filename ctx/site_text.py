@@ -97,6 +97,11 @@ TEXT = {
     "cmp_caveat": {"fr": "Le serveur Huwise MCP réel transmet des facettes que notre A n'a pas : A sous-estime probablement Huwise. Un vrai test A demande une clé API du portail.",
                    "en": "The real Huwise MCP server sends facets our A lacks: A probably underestimates Huwise. A real A test needs a portal API key."},
 
+    "chk_title": {"fr": "Contrôles déterministes de l'Optimizer (sans modèle)", "en": "Deterministic Optimizer checks (no model)"},
+    "chk_recipes": {"fr": "Recettes : questions prises en FAST / correctes", "en": "Recipes: questions taken FAST / correct"},
+    "chk_meta": {"fr": "Relations métamorphiques (publics ≤ total, publics + privés ≤ total)", "en": "Metamorphic relations (public ≤ all, public + private ≤ all)"},
+    "chk_comp": {"fr": "Compression par question : champs nécessaires conservés · jetons économisés (médiane) — trop risqué, non activée", "en": "Per-question compression: needed fields kept · tokens saved (median) — too risky, not enabled"},
+    "chk_lat": {"fr": "Route FAST, latence (10 essais) : à froid p50 / p95 · à chaud p50 / p95", "en": "FAST route latency (10 runs): cold p50 / p95 · warm p50 / p95"},
     "safety_eyebrow": {"fr": "Écran 7 · Sécurité et promotion", "en": "Screen 7 · Safety and promotion"},
     "safety_title": {"fr": "La prod ne change que par une décision humaine", "en": "Prod only changes by a human decision"},
     "safety_prod": {"fr": "PRODUCTION · context.smiro.dev", "en": "PRODUCTION · context.smiro.dev"},

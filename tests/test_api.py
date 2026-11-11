@@ -58,3 +58,11 @@ class CondenseTest(TestCase):
              {"role": "assistant", "content": "fin"}]
         self.assertEqual(condense(t), [{"tool": "query", "args": {"where": "x=1"}, "ok": False,
                                         "result": '{"error": "bad"}'}])
+
+
+class DemoRunTest(TestCase):
+    def test_only_fast_scenarios_run_live(self):
+        from mcpserver import demo_run
+        self.assertEqual(demo_run({"scenario": "nope"})[0], 404)
+        self.assertEqual(demo_run({"scenario": "drift"})[0], 404)  # simulated: never live
+        self.assertEqual(demo_run({"scenario": "trap-dataset"})[0], 409)  # needs the model: recording only

@@ -92,3 +92,35 @@ class ImproveTest(TestCase):
         self.assertEqual(ContextEdit.objects.get().status, "rejected")
         s = improve(self.portal, mode="propose", run=base, proposer=FakeLLM(["{}"]))
         self.assertEqual(ContextEdit.objects.count(), 1)  # budget of 1 LLM call/day already spent
+
+
+    def test_lab_cycle_keeps_reverts_logs_and_respects_budget(self):
+        import tempfile
+        from pathlib import Path
+
+        from lab import log
+        from lab.cycle import run_cycle
+        with tempfile.TemporaryDirectory() as d, override_settings(CTXC_LAB_LOG=str(Path(d) / "lab.jsonl")):
+            base = run_eval(self.portal, "compiled", chat=agent(self._answers(False)), model="fake")
+            proposer = FakeLLM([json.dumps({"kind": "note", "after": NOTE, "rationale": "agent used '21'"})])
+            rows = run_cycle(self.portal, base, chat=proposer, agent=agent(self._answers(False)))
+            steps = [r["entry"]["step"] for r in rows]
+            self.assertEqual(steps, ["collect+diagnose", "experiment", "done"])
+            self.assertEqual(rows[0]["entry"]["failures"], {CASE: "hallucinated_value"})  # said 0, the API returned 1
+            self.assertEqual(rows[1]["entry"]["decision"], "kept")
+            self.assertEqual(log.verify(), (True, None))
+            # a candidate that breaks a control case is reverted and the card goes back
+            ContextEdit.objects.all().delete()
+            from ctx.compile import compile_dataset
+            compile_dataset(self.annuaire)
+            proposer = FakeLLM([json.dumps({"kind": "note", "after": NOTE, "rationale": "x"})])
+            rows = run_cycle(self.portal, base, chat=proposer, agent=agent(self._answers(True)))
+            self.assertEqual(rows[1]["entry"]["decision"], "reverted")
+            self.assertFalse(self._has_note())
+            # budget: one model call allowed, the proposer uses it, the eval cannot start
+            ContextEdit.objects.all().delete()
+            compile_dataset(self.annuaire)
+            proposer = FakeLLM([json.dumps({"kind": "note", "after": NOTE, "rationale": "x"})])
+            rows = run_cycle(self.portal, base, chat=proposer, agent=agent(self._answers(False)), max_calls=1)
+            self.assertEqual(rows[1]["entry"]["decision"], "stopped")
+            self.assertEqual(log.verify(), (True, None))

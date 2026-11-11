@@ -1,3 +1,4 @@
+import json
 import hashlib
 import tempfile
 from pathlib import Path
@@ -30,7 +31,7 @@ class ExportTest(TestCase):
 
 
 class SiteTest(TestCase):
-    def test_site_has_index_llms_and_pages(self):
+    def test_site_has_both_languages_data_and_pages(self):
         from ctx.site import build_site
         portal = Portal.objects.create(domain="data.education.gouv.fr")
         load(portal, CATALOG[:3])
@@ -38,17 +39,25 @@ class SiteTest(TestCase):
         with tempfile.TemporaryDirectory() as d:
             self.assertEqual(build_site(portal, d), 3)
             index = (Path(d) / "index.html").read_text()
-            self.assertIn("data.education.gouv.fr", index)
-            self.assertIn("Pas encore d'éval complète", index)  # no runs in the test DB
-            self.assertFalse((Path(d) / "eval.json").exists())
+            self.assertIn("Nous ne remplaçons pas Huwise", index)
+            self.assertIn("Pas encore de run A/B/C complet", index)  # no runs in the test DB
+            self.assertIn("We do not replace Huwise", (Path(d) / "en" / "index.html").read_text())
+            arch = json.loads((Path(d) / "data" / "architecture.json").read_text())
+            statuses = {n["status"] for n in arch["nodes"]}
+            self.assertLessEqual(statuses, {"VERIFIED", "INFERRED", "PROPOSED"})
+            # every Huwise block marked VERIFIED carries at least one source; ours are all PROPOSED
+            for n in arch["nodes"]:
+                self.assertTrue(n["layer"] == "ours" and n["status"] == "PROPOSED" or n["layer"] == "huwise")
+                if n["status"] == "VERIFIED":
+                    self.assertTrue(n["sources"], n["id"])
             self.assertTrue((Path(d) / "llms.txt").exists())
 
 
-
-class StoriesTest(TestCase):
-    def test_story_texts_only_for_their_runs(self):
-        from ctx.site import STORIES, STORIES_RUNS, stories_for
-        slug = STORIES[0]["slug"]
-        self.assertIn("naked", stories_for(STORIES_RUNS, {slug})[0])
-        self.assertEqual(stories_for((-1, -2), {slug}), [{"slug": slug, "label": STORIES[0]["label"]}])
-        self.assertEqual(stories_for(STORIES_RUNS, set()), [])
+class StatsTest(TestCase):
+    def test_mcnemar_and_bootstrap(self):
+        from ctx.site import boot_ci, mcnemar
+        x, y = [0] * 10 + [1] * 10, [1] * 10 + [1] * 10
+        self.assertLess(mcnemar(x, y), 0.01)  # 10 discordant pairs, all one way
+        self.assertEqual(mcnemar(x, x), 1.0)
+        lo, hi = boot_ci(x, y)
+        self.assertTrue(0 < lo <= 50 <= hi)

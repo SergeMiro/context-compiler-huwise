@@ -141,8 +141,12 @@ def build_site(portal, out_dir):
     arch = json.loads((HERE / "architecture.json").read_text())
     traces_file = HERE / "traces" / "scenarios.json"
     scenarios = json.loads(traces_file.read_text()) if traces_file.exists() else {}
+    checks_file = HERE / "traces" / "checks.json"
+    checks = json.loads(checks_file.read_text()) if checks_file.exists() else None
+    if checks:
+        checks["meta_ok"] = sum(m["holds"] is True for m in checks["metamorphic"])
     data = {"architecture": arch, "scenarios": scenarios, "comparison": comparison(portal),
-            "legacy": legacy_pairs(portal), "lab": lab_data()}
+            "legacy": legacy_pairs(portal), "lab": lab_data(), "checks": checks}
     (out / "data").mkdir(parents=True, exist_ok=True)
     for name, value in data.items():  # the read-only "API" of the page: /data/<name>.json
         (out / "data" / f"{name}.json").write_text(json.dumps(value, ensure_ascii=False, default=str), encoding="utf-8")
@@ -150,7 +154,8 @@ def build_site(portal, out_dir):
             "datasets": nb(Dataset.objects.filter(portal=portal).count()),
             "fields": nb(Field.objects.filter(dataset__portal=portal).count()),
             "data_json": json.dumps(data, ensure_ascii=False, default=str).replace("</", "<\\/"),
-            "env": settings.CTXC_ENV, "cmp": data["comparison"], "legacy": data["legacy"], "lab": data["lab"]}
+            "env": settings.CTXC_ENV, "cmp": data["comparison"], "legacy": data["legacy"], "lab": data["lab"],
+            "checks": checks}
     for lang, path in (("fr", out / "index.html"), ("en", out / "en" / "index.html")):
         path.parent.mkdir(parents=True, exist_ok=True)
         t = {k: v[lang] if isinstance(v, dict) else v for k, v in TEXT.items()}

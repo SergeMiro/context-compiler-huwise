@@ -1,0 +1,280 @@
+{
+ "recorded_at": "2026-11-11T15:41:06+00:00",
+ "recipes": {
+  "education": {
+   "n": 30,
+   "fast": 4,
+   "fast_correct": 4
+  },
+  "education_v2": {
+   "n": 95,
+   "fast": 57,
+   "fast_correct": 57
+  }
+ },
+ "metamorphic": [
+  {
+   "q": "collèges à Dijon",
+   "all": 23,
+   "publics": 15,
+   "privés": 8,
+   "holds": true
+  },
+  {
+   "q": "lycées à Dijon",
+   "all": 14,
+   "publics": 8,
+   "privés": 6,
+   "holds": true
+  },
+  {
+   "q": "écoles à Dijon",
+   "all": 88,
+   "publics": 75,
+   "privés": 13,
+   "holds": true
+  },
+  {
+   "q": "collèges à Lyon",
+   "all": 45,
+   "publics": 26,
+   "privés": 19,
+   "holds": true
+  },
+  {
+   "q": "lycées à Lyon",
+   "all": 61,
+   "publics": 25,
+   "privés": 36,
+   "holds": true
+  },
+  {
+   "q": "écoles à Lyon",
+   "all": 0,
+   "publics": 0,
+   "privés": 0,
+   "holds": true
+  },
+  {
+   "q": "collèges en Côte-d'Or",
+   "all": 74,
+   "publics": 58,
+   "privés": 16,
+   "holds": true
+  },
+  {
+   "q": "lycées en Côte-d'Or",
+   "all": 38,
+   "publics": 22,
+   "privés": 16,
+   "holds": true
+  },
+  {
+   "q": "écoles en Côte-d'Or",
+   "all": 507,
+   "publics": 475,
+   "privés": 32,
+   "holds": true
+  },
+  {
+   "q": "collèges dans l'académie de Rennes",
+   "all": 464,
+   "publics": 259,
+   "privés": 205,
+   "holds": true
+  },
+  {
+   "q": "lycées dans l'académie de Rennes",
+   "all": 278,
+   "publics": 135,
+   "privés": 142,
+   "holds": true
+  },
+  {
+   "q": "écoles dans l'académie de Rennes",
+   "all": 2271,
+   "publics": 1416,
+   "privés": 855,
+   "holds": true
+  },
+  {
+   "q": "collèges en Bretagne",
+   "all": 464,
+   "publics": 259,
+   "privés": 205,
+   "holds": true
+  },
+  {
+   "q": "lycées en Bretagne",
+   "all": 278,
+   "publics": 135,
+   "privés": 142,
+   "holds": true
+  },
+  {
+   "q": "écoles en Bretagne",
+   "all": 2271,
+   "publics": 1416,
+   "privés": 855,
+   "holds": true
+  },
+  {
+   "q": "collèges à Toulouse",
+   "all": 51,
+   "publics": 32,
+   "privés": 19,
+   "holds": true
+  },
+  {
+   "q": "lycées à Toulouse",
+   "all": 64,
+   "publics": 31,
+   "privés": 33,
+   "holds": true
+  },
+  {
+   "q": "écoles à Toulouse",
+   "all": 221,
+   "publics": 186,
+   "privés": 35,
+   "holds": true
+  }
+ ],
+ "compression": {
+  "cases": 117,
+  "all_needed_fields_kept": 76,
+  "tokens_saved_median_pct": 57.6,
+  "misses": [
+   {
+    "slug": "lycees-internat-bfc",
+    "missing": [
+     "hebergement"
+    ]
+   },
+   {
+    "slug": "ecoles-dijon",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "college-ips-max-academie-dijon",
+    "missing": [
+     "nom_de_l_etablissement"
+    ]
+   },
+   {
+    "slug": "bac-pro-filles-2024",
+    "missing": [
+     "genre",
+     "nombre_d_admis_a_l_examen"
+    ]
+   },
+   {
+    "slug": "cpge-filles-scientifique-2020",
+    "missing": [
+     "rentree_scolaire"
+    ]
+   },
+   {
+    "slug": "lycees-metiers-bfc",
+    "missing": [
+     "libelle_region"
+    ]
+   },
+   {
+    "slug": "v2-col-dijon",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-lyc-lyon",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-col-toulouse",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-lyc-nantes",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-eco-lille",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-col-rennes",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-lyc-strasbourg",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-eco-bordeaux",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-col-nice",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-lyc-montpellier",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-eco-saint-etienne",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-col-besançon",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-lyc-grenoble",
+    "missing": [
+     "nom_commune"
+    ]
+   },
+   {
+    "slug": "v2-eco-reims",
+    "missing": [
+     "nom_commune"
+    ]
+   }
+  ]
+ },
+ "latency": {
+  "question": "Combien y a-t-il de collèges à Dijon ?",
+  "runs": 10,
+  "cold_p50_ms": 54,
+  "cold_p95_ms": 73,
+  "warm_p50_ms": 9,
+  "warm_p95_ms": 13,
+  "note": "cold = query cache and value-lookup cache cleared before the call; warm = same question again"
+ }
+}

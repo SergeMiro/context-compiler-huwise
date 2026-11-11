@@ -117,17 +117,25 @@ class Budget:
         self.deadline = time.monotonic() + max_seconds
 
     def __call__(self, *a, **kw):
-        if self.calls >= self.max_calls or time.monotonic() > self.deadline:
-            raise BudgetExceeded(f"budget used: {self.calls} model calls")
-        self.calls += 1
-        return self.chat(*a, **kw)
+        return self.wrap(self.chat)(*a, **kw)
+
+    def wrap(self, fn):
+        """Same counter for every model the cycle uses (proposer and agent)."""
+        def call(*a, **kw):
+            if self.calls >= self.max_calls or time.monotonic() > self.deadline:
+                raise BudgetExceeded(f"budget used: {self.calls} model calls")
+            self.calls += 1
+            return fn(*a, **kw)
+        return call
 
 
-def run_cycle(portal, base_run=None, chat=None, max_proposals=None):
-    """-> list of log rows. Proposer sees only dev failures; holdout cases are never loaded here."""
+def run_cycle(portal, base_run=None, chat=None, agent=None, max_proposals=None, max_calls=None):
+    """-> list of log rows. Proposer sees only dev failures; holdout cases are never loaded here.
+    chat = proposer model, agent = model of the eval agent (default: the same); one budget for both."""
     fork = guard()
     b = POLICY["budget"]
-    budget = Budget(chat or llm_mod.chat, b["max_llm_calls"], b["max_seconds"])
+    budget = Budget(chat or llm_mod.chat, max_calls or b["max_llm_calls"], b["max_seconds"])
+    agent_chat = budget.wrap(agent or chat or llm_mod.chat)
     base_run = base_run or EvalRun.objects.filter(portal=portal, mode__in=("compiled", "optimized"),
                                                   finished_at__isnull=False).latest("id")
     results = [r for r in base_run.results.select_related("case") if r.case.split in ("", "dev")]
@@ -151,7 +159,7 @@ def run_cycle(portal, base_run=None, chat=None, max_proposals=None):
             rows.append(log.append(entry | {"decision": "rejected"}))
             continue
         try:
-            improve.apply_edit(edit, chat=budget)
+            improve.apply_edit(edit, chat=agent_chat)
         except BudgetExceeded as e:
             edit.status = "proposed"
             edit.save(update_fields=["status"])

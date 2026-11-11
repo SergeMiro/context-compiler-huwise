@@ -65,7 +65,7 @@ select{min-height:40px;max-width:100%;padding:0 10px;border:1px solid var(--line
 .brand{display:flex;align-items:center;gap:10px;min-height:40px;text-decoration:none;color:var(--fg);font-weight:600}
 .nav nav{display:flex;flex-wrap:wrap;gap:0 16px;font-size:14px;font-weight:500} .nav nav a{color:var(--fg);text-decoration:none;padding:8px 0} .nav nav a:hover{color:var(--accent)}
 .nav-r{display:flex;gap:8px;align-items:center}
-@media (max-width:900px){.nav nav{display:none}}
+@media (max-width:900px){.nav nav{display:none}} @media (max-width:640px){.nav{position:static}}
 /* hero */
 .hero{padding-block:56px 48px;display:flex;flex-direction:column;gap:28px}
 .steps{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
@@ -127,7 +127,7 @@ select{min-height:40px;max-width:100%;padding:0 10px;border:1px solid var(--line
 .answer{padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:15px}
 /* tables */
 .tbl{width:100%;border-collapse:collapse;font-size:14px} .tbl th,.tbl td{padding:8px 10px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top}
-.tbl th{font:600 12px var(--mono);color:var(--muted)} .tbl td.num,.tbl th.num{text-align:right;font-family:var(--mono);white-space:nowrap}
+.tbl th{font:600 12px var(--mono);color:var(--muted)} .tbl td.num,.tbl th.num{text-align:right;font-family:var(--mono);white-space:nowrap} @media (max-width:520px){.card .tbl td.num{white-space:normal}}
 .tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
 .ok{color:var(--good-ink)} .ko{color:var(--bad-ink)}
 .cycle{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font:13px var(--mono)} .cycle span{padding:4px 10px;border-radius:999px;border:1px solid var(--purple-line);background:var(--purple-soft);color:var(--purple-ink)} .cycle i{color:var(--faint);font-style:normal}
@@ -262,6 +262,11 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
   <p class="answer" style="border-color:var(--warn-line);background:var(--warn-soft);margin:0">{{ t.cmp_caveat }}</p>
   <div class="tracebar"><label>{{ t.cmp_set }}<select id="cmpset"></select></label><label>{{ t.cmp_tag }}<select id="cmptag"></select></label><span class="st st-RECORDED">RECORDED</span></div>
   <div id="cmp"><p class="muted">{{ t.cmp_none }}</p></div>
+  {% if checks %}<div class="card" style="overflow-x:auto"><h3>{{ t.chk_title }} <span class="st st-RECORDED">RECORDED</span> <span class="mono muted" style="font-size:12px;font-weight:400">{{ checks.recorded_at }}</span></h3>
+    <table class="tbl"><tr><td>{{ t.chk_recipes }}</td><td class="num">{% for k, v in checks.recipes.items %}{{ k }} : {{ v.fast }}/{{ v.n }} · {{ v.fast_correct }}/{{ v.fast }}<br>{% endfor %}</td></tr>
+    <tr><td>{{ t.chk_meta }}</td><td class="num">{{ checks.meta_ok }}/{{ checks.metamorphic|length }}</td></tr>
+    <tr><td>{{ t.chk_comp }}</td><td class="num">{{ checks.compression.all_needed_fields_kept }}/{{ checks.compression.cases }} · −{{ checks.compression.tokens_saved_median_pct }} %</td></tr>
+    <tr><td>{{ t.chk_lat }}</td><td class="num">{{ checks.latency.cold_p50_ms }} / {{ checks.latency.cold_p95_ms }} ms · {{ checks.latency.warm_p50_ms }} / {{ checks.latency.warm_p95_ms }} ms</td></tr></table></div>{% endif %}
   {% if legacy %}<details class="only-tech"><summary class="muted">{{ t.cmp_legacy }}</summary>
     <div class="tscroll" style="margin-top:10px"><table class="tbl"><tr><th>model</th><th class="num">A</th><th class="num">B</th><th>runs</th><th>date</th></tr>
     {% for r in legacy %}<tr><td class="mono">{{ r.model }}</td><td class="num">{{ r.naked }} %</td><td class="num">{{ r.compiled }} %</td><td class="mono">#{{ r.runs.0 }}/#{{ r.runs.1 }}</td><td class="mono">{{ r.date }}</td></tr>{% endfor %}</table></div></details>{% endif %}
