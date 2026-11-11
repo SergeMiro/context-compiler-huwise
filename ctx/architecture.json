@@ -1,0 +1,911 @@
+{
+ "version": "arch-2026-11-11.1",
+ "checked": "2026-11-11",
+ "sources_doc": "docs/HUWISE_SOURCES.md",
+ "viewbox": [
+  0,
+  0,
+  1240,
+  550
+ ],
+ "nodes": [
+  {
+   "id": "src",
+   "layer": "huwise",
+   "status": "VERIFIED",
+   "x": 20,
+   "y": 30,
+   "w": 170,
+   "h": 78,
+   "icon": "i-db",
+   "title": {
+    "fr": "Sources externes",
+    "en": "External sources"
+   },
+   "sub": {
+    "fr": "fichiers, API, SI · ~80 connecteurs",
+    "en": "files, APIs, systems · ~80 connectors"
+   },
+   "purpose": {
+    "fr": "Les données naissent ailleurs (SI du ministère, fichiers, API). Huwise les importe ou les moissonne ; un agent n'interroge pas ces bases directement, il interroge le jeu publié.",
+    "en": "Data is born elsewhere (ministry systems, files, APIs). Huwise imports or harvests it; an agent does not query these databases directly, it queries the published dataset."
+   },
+   "io": {
+    "fr": "Entrée : systèmes sources · Sortie : flux d'import",
+    "en": "In: source systems · Out: import flows"
+   },
+   "sources": [
+    {
+     "url": "https://www.huwise.com/en/integration-connectivity/",
+     "quote": "Thanks to our 80 connectors, you can quickly bring together all your data"
+    },
+    {
+     "url": "https://userguide.huwise.com/en/articles/2022658",
+     "quote": "Harvest another Huwise workspace to create federated datasets automatically."
+    }
+   ],
+   "note": {
+    "fr": "Quelles sources alimentent data.education.gouv.fr : non publié.",
+    "en": "Which sources feed data.education.gouv.fr: not public."
+   }
+  },
+  {
+   "id": "ingest",
+   "layer": "huwise",
+   "status": "VERIFIED",
+   "x": 230,
+   "y": 30,
+   "w": 180,
+   "h": 78,
+   "icon": "i-sync",
+   "title": {
+    "fr": "Ingestion & publication",
+    "en": "Ingestion & publication"
+   },
+   "sub": {
+    "fr": "import, processeurs, API auto",
+    "en": "import, processors, auto API"
+   },
+   "purpose": {
+    "fr": "Import avec aperçu, processeurs de transformation, publication du jeu de données ; chaque jeu publié reçoit son API.",
+    "en": "Import with preview, transformation processors, dataset publication; each published dataset gets its API."
+   },
+   "io": {
+    "fr": "Entrée : données sources · Sortie : jeu publié + métadonnées",
+    "en": "In: source data · Out: published dataset + metadata"
+   },
+   "sources": [
+    {
+     "url": "https://www.huwise.com/en/integration-connectivity/",
+     "quote": "our platform simultaneously imports and previews your source data"
+    },
+    {
+     "url": "https://userguide.huwise.com/en/articles/2033090",
+     "quote": "The Expand JSON array processor transposes rows containing a JSON array into several rows"
+    }
+   ],
+   "note": {
+    "fr": "Les services internes du pipeline ne sont pas documentés.",
+    "en": "Internal pipeline services are not documented."
+   }
+  },
+  {
+   "id": "store",
+   "layer": "huwise",
+   "status": "INFERRED",
+   "x": 230,
+   "y": 160,
+   "w": 180,
+   "h": 78,
+   "icon": "i-layers",
+   "title": {
+    "fr": "Stockage publié / index",
+    "en": "Published storage / index"
+   },
+   "sub": {
+    "fr": "implémentation non publique",
+    "en": "implementation not public"
+   },
+   "purpose": {
+    "fr": "Les enregistrements publiés sont stockés et indexés quelque part pour que l'Explore API filtre et agrège vite. Moteur, schéma et index : non publiés. Ce bloc existe parce que l'API répond, pas parce qu'on connaît son intérieur.",
+    "en": "Published records are stored and indexed somewhere so the Explore API can filter and aggregate fast. Engine, schema and index: not public. This block exists because the API answers, not because its internals are known."
+   },
+   "io": {
+    "fr": "Entrée : jeu publié · Sortie : enregistrements pour l'API",
+    "en": "In: published dataset · Out: records for the API"
+   },
+   "sources": [],
+   "note": {
+    "fr": "INFERRED : reconstruction fonctionnelle, aucun détail interne affirmé.",
+    "en": "INFERRED: functional reconstruction, no internal detail claimed."
+   }
+  },
+  {
+   "id": "catalog",
+   "layer": "huwise",
+   "status": "VERIFIED",
+   "x": 450,
+   "y": 30,
+   "w": 200,
+   "h": 78,
+   "icon": "i-search",
+   "title": {
+    "fr": "Catalogue d'assets",
+    "en": "Asset catalog"
+   },
+   "sub": {
+    "fr": "métadonnées, schémas, recherche IA",
+    "en": "metadata, schemas, AI search"
+   },
+   "purpose": {
+    "fr": "Le registre des assets (jeux, visualisations, pages…) : titres, descriptions, champs et types, thèmes, droits. « Catalogue » = registre de métadonnées ; le JSON n'est que le format de réponse de l'API.",
+    "en": "The registry of assets (datasets, visualizations, pages…): titles, descriptions, fields and types, themes, rights. 'Catalog' = metadata registry; JSON is only the API response format."
+   },
+   "io": {
+    "fr": "Entrée : métadonnées publiées · Sortie : recherche d'assets, schéma",
+    "en": "In: published metadata · Out: asset search, schema"
+   },
+   "example": "GET /api/explore/v2.1/catalog/datasets?where=search(\"collège\")&limit=5",
+   "sources": [
+    {
+     "url": "https://www.huwise.com/en/living-context-layer/",
+     "quote": "the data marketplace is where business teams and AI agents come to find and consume data."
+    },
+    {
+     "url": "https://userguide.huwise.com/en/articles/2257730",
+     "quote": "find results by calculating the semantic similarity between the query and the data assets on your domain."
+    }
+   ]
+  },
+  {
+   "id": "lcl",
+   "layer": "huwise",
+   "status": "VERIFIED",
+   "x": 450,
+   "y": 160,
+   "w": 200,
+   "h": 78,
+   "icon": "i-graph",
+   "title": {
+    "fr": "Living Context Layer",
+    "en": "Living Context Layer"
+   },
+   "sub": {
+    "fr": "recherches, vues, exports, accès…",
+    "en": "searches, views, exports, access…"
+   },
+   "purpose": {
+    "fr": "Côté offre : assets, schémas, définitions, lignage. Côté demande : recherches (y compris sans résultat), vues, exports, demandes d'accès, abandons, parcours, questions et actions d'agents via MCP. Pondération et stockage : non publiés.",
+    "en": "Supply side: assets, schemas, definitions, lineage. Demand side: searches (including unsuccessful ones), views, exports, access requests, drop-offs, journeys, agent questions and actions via MCP. Weighting and storage: not public."
+   },
+   "io": {
+    "fr": "Entrée : signaux d'usage · Sortie : contexte partagé avec les agents",
+    "en": "In: usage signals · Out: context shared with agents"
+   },
+   "sources": [
+    {
+     "url": "https://www.huwise.com/en/living-context-layer/",
+     "quote": "it captures usage signals: searches, views, exports, access requests, drop-off points, and user journeys specific to each user profile."
+    },
+    {
+     "url": "https://www.huwise.com/en/living-context-layer/",
+     "quote": "Every search, export, access request, or correction enriches the context, including unsuccessful searches."
+    },
+    {
+     "url": "https://www.huwise.com/en/blog/huwise-mcp-agentic-ai/",
+     "quote": "Every action an agent performs on Huwise passes through the MCP server, which allows it to be measured."
+    }
+   ],
+   "note": {
+    "fr": "Aucune source ne dit qu'une boucle d'expériences vérifiée tourne sur ces signaux : c'est ce que nous proposons, à part.",
+    "en": "No source says a verified experiment loop runs on these signals: that is what we propose, separately."
+   }
+  },
+  {
+   "id": "gov",
+   "layer": "huwise",
+   "status": "VERIFIED",
+   "x": 20,
+   "y": 282,
+   "w": 630,
+   "h": 58,
+   "icon": "i-shield",
+   "title": {
+    "fr": "Gouvernance & sécurité",
+    "en": "Governance & security"
+   },
+   "sub": {
+    "fr": "droits appliqués à chaque requête, agents compris · clés API · filtres champs/lignes · isolation par client",
+    "en": "rights enforced on every request, agents included · API keys · field/row filters · per-customer isolation"
+   },
+   "purpose": {
+    "fr": "Les règles d'accès s'appliquent à chaque requête, y compris celles des agents ; un agent agit avec les droits de l'utilisateur identifié ; le contexte de chaque client est isolé.",
+    "en": "Access rules apply to every request, agents included; an agent acts with the identified user's rights; each customer's context is isolated."
+   },
+   "io": {
+    "fr": "S'applique à : catalogue, API, MCP, Huwy",
+    "en": "Applies to: catalog, API, MCP, Huwy"
+   },
+   "sources": [
+    {
+     "url": "https://www.huwise.com/en/living-context-layer/",
+     "quote": "corporate access rules are enforced on every request, including those made by AI agents."
+    },
+    {
+     "url": "https://www.huwise.com/en/blog/huwise-mcp-agentic-ai/",
+     "quote": "As AI agents act on behalf of an identified human user, they are subject to that user’s permissions"
+    },
+    {
+     "url": "https://userguide.huwise.com/en/articles/2043458",
+     "quote": "You can also use the same query language used to search within a dataset to limit which records (or rows) are visible."
+    }
+   ]
+  },
+  {
+   "id": "api",
+   "layer": "huwise",
+   "status": "VERIFIED",
+   "x": 690,
+   "y": 30,
+   "w": 200,
+   "h": 78,
+   "icon": "i-server",
+   "title": {
+    "fr": "Explore API v2.1 · ODSQL",
+    "en": "Explore API v2.1 · ODSQL"
+   },
+   "sub": {
+    "fr": "select · where · group_by · total_count",
+    "en": "select · where · group_by · total_count"
+   },
+   "purpose": {
+    "fr": "API REST en lecture (GET) : catalogue, schéma, enregistrements, agrégations ODSQL, exports. limit ≤ 100 sans group_by, ≤ 20 000 avec ; total_count dans chaque réponse.",
+    "en": "Read-only REST API (GET): catalog, schema, records, ODSQL aggregations, exports. limit ≤ 100 without group_by, ≤ 20,000 with it; total_count in every response."
+   },
+   "io": {
+    "fr": "Entrée : requête ODSQL · Sortie : total_count + results",
+    "en": "In: ODSQL query · Out: total_count + results"
+   },
+   "example": "GET /api/explore/v2.1/catalog/datasets/fr-en-annuaire-education/records\n  ?where=nom_commune='Dijon' and type_etablissement='Collège'&limit=0\n→ {\"total_count\": 23, \"results\": []}",
+   "sources": [
+    {
+     "url": "https://help.opendatasoft.com/apis/ods-explore-v2/explore_v2.1.html",
+     "quote": "The ODSQL is split into five different kinds of clauses"
+    },
+    {
+     "url": "https://data.education.gouv.fr/api/explore/v2.1/swagger.json",
+     "quote": "For a query without a group_by: the maximum value for limit is 100"
+    }
+   ]
+  },
+  {
+   "id": "mcp",
+   "layer": "huwise",
+   "status": "VERIFIED",
+   "x": 690,
+   "y": 160,
+   "w": 200,
+   "h": 78,
+   "icon": "i-term",
+   "title": {
+    "fr": "Huwise MCP Server",
+    "en": "Huwise MCP Server"
+   },
+   "sub": {
+    "fr": "4 outils · X-Domain + X-Apikey",
+    "en": "4 tools · X-Domain + X-Apikey"
+   },
+   "purpose": {
+    "fr": "Serveur MCP (StreamableHTTP, sans état) au-dessus des API publiques. Outils (jeu « latest ») : analyze_catalog, search_assets, get_asset, search_asset_records. Clé API du portail requise : un appel anonyme renvoie 401 (testé le 11.11.2026).",
+    "en": "MCP server (StreamableHTTP, stateless) over the public APIs. Tools ('latest' set): analyze_catalog, search_assets, get_asset, search_asset_records. A portal API key is required: an anonymous call returns 401 (tested 11.11.2026)."
+   },
+   "io": {
+    "fr": "Entrée : appel d'outil d'un client IA · Sortie : assets, schéma, enregistrements",
+    "en": "In: tool call from an AI client · Out: assets, schema, records"
+   },
+   "tools": [
+    "analyze_catalog",
+    "search_assets",
+    "get_asset",
+    "search_asset_records"
+   ],
+   "example": "search_asset_records(slug=\"fr-en-annuaire-education\",\n  where=\"nom_commune='Dijon' and type_etablissement='Collège'\", limit=0)",
+   "sources": [
+    {
+     "url": "https://userguide.huwise.com/en/articles/5071874",
+     "quote": "The Huwise MCP server provides four tools for searching and analyzing your portal's assets, using the Explore API and ODSQL"
+    },
+    {
+     "url": "https://mcp.huwise.com/openapi.json",
+     "quote": "Point any MCP-compatible client to the /mcp endpoint (StreamableHTTP, stateless)."
+    },
+    {
+     "url": "https://www.huwise.com/en/blog/huwise-mcp-agentic-ai/",
+     "quote": "It now transmits aggregated information, such as filters and facets, which show the main values of a dataset and their distribution."
+    }
+   ]
+  },
+  {
+   "id": "huwy",
+   "layer": "huwise",
+   "status": "VERIFIED",
+   "x": 930,
+   "y": 160,
+   "w": 150,
+   "h": 78,
+   "icon": "i-chat",
+   "title": {
+    "fr": "Huwy (client MCP)",
+    "en": "Huwy (MCP client)"
+   },
+   "sub": {
+    "fr": "« Discutez avec l'IA »",
+    "en": "'Discutez avec l'IA'"
+   },
+   "purpose": {
+    "fr": "Assistant optionnel intégré au portail, client du Huwise MCP Server ; mêmes droits que l'utilisateur ; FR/EN ; réponses en Markdown. Sur data.education.gouv.fr : carte « Poser une question » → « Discutez avec l'IA » ; le mot « Huwy » n'y apparaît pas ; le modèle utilisé n'est pas documenté.",
+    "en": "Optional assistant built into the portal, a client of the Huwise MCP Server; same rights as the user; FR/EN; Markdown answers. On data.education.gouv.fr: card 'Poser une question' → 'Discutez avec l'IA'; the word 'Huwy' does not appear; the model used is not documented."
+   },
+   "io": {
+    "fr": "Entrée : question · Sortie : réponse texte",
+    "en": "In: question · Out: text answer"
+   },
+   "sources": [
+    {
+     "url": "https://userguide.huwise.com/en/articles/6504002",
+     "quote": "Huwy connects to the platform through the Huwise MCP Server, which provides controlled, structured access to marketplace assets and tools."
+    },
+    {
+     "url": "https://data.education.gouv.fr/pages/accueil/",
+     "quote": "Poser une question … Discutez avec l'IA"
+    }
+   ],
+   "note": {
+    "fr": "Que cette carte ouvre Huwy : INFERRED (configuration de la page, pas la documentation).",
+    "en": "That this card opens Huwy: INFERRED (page configuration, not documentation)."
+   }
+  },
+  {
+   "id": "resp",
+   "layer": "huwise",
+   "status": "INFERRED",
+   "x": 930,
+   "y": 30,
+   "w": 150,
+   "h": 78,
+   "icon": "i-file",
+   "title": {
+    "fr": "Réponse",
+    "en": "Answer"
+   },
+   "sub": {
+    "fr": "Markdown · citation non documentée",
+    "en": "Markdown · citation not documented"
+   },
+   "purpose": {
+    "fr": "Huwy répond en texte Markdown ; la documentation invite à demander « comment as-tu obtenu ce résultat ? ». Aucune page officielle ne dit qu'il cite le jeu, le filtre ou la date.",
+    "en": "Huwy answers in Markdown text; the docs suggest asking 'how did you arrive at this result?'. No official page says it cites the dataset, filter or date."
+   },
+   "io": {
+    "fr": "Entrée : résultats d'outils · Sortie : phrase",
+    "en": "In: tool results · Out: sentence"
+   },
+   "sources": [
+    {
+     "url": "https://userguide.huwise.com/en/articles/6504002",
+     "quote": "When a result is unclear or surprising, ask: “How did you arrive at this result?”"
+    }
+   ]
+  },
+  {
+   "id": "user",
+   "layer": "huwise",
+   "status": "VERIFIED",
+   "x": 1110,
+   "y": 95,
+   "w": 115,
+   "h": 78,
+   "icon": "i-bot",
+   "title": {
+    "fr": "Utilisateur",
+    "en": "User"
+   },
+   "sub": {
+    "fr": "ou agent externe",
+    "en": "or external agent"
+   },
+   "purpose": {
+    "fr": "Une personne sur le portail, ou un agent externe (Claude, Copilot…) branché sur le serveur MCP avec sa clé.",
+    "en": "A person on the portal, or an external agent (Claude, Copilot…) connected to the MCP server with its key."
+   },
+   "io": {
+    "fr": "Pose la question, lit la réponse",
+    "en": "Asks, reads the answer"
+   },
+   "sources": [
+    {
+     "url": "https://www.huwise.com/en/mcp-ai-agents/",
+     "quote": "proven compatibility with major AI environments — Claude Desktop, OpenAI, Mistral AI, Microsoft Copilot"
+    }
+   ]
+  },
+  {
+   "id": "opt",
+   "layer": "ours",
+   "status": "PROPOSED",
+   "x": 690,
+   "y": 380,
+   "w": 535,
+   "h": 150,
+   "icon": "i-bolt",
+   "title": {
+    "fr": "Context Optimizer",
+    "en": "Context Optimizer"
+   },
+   "sub": {
+    "fr": "rend le contexte de chaque requête plus juste, plus court, prouvé",
+    "en": "makes each request's context more correct, shorter, proven"
+   },
+   "purpose": {
+    "fr": "Couche au-dessus des outils existants, sans modèle sur le chemin chaud. Elle lit le catalogue et les enregistrements par l'Explore API publique et sert l'agent par MCP. Rien n'est écrit sur le portail.",
+    "en": "A layer over the existing tools, no model on the hot path. It reads the catalog and records through the public Explore API and serves the agent over MCP. Nothing is written to the portal."
+   },
+   "io": {
+    "fr": "Entrée : question + catalogue · Sortie : réponse + contrat de preuve",
+    "en": "In: question + catalog · Out: answer + evidence contract"
+   },
+   "chips": [
+    {
+     "id": "cards",
+     "fr": "Cartes compilées",
+     "en": "Compiled cards",
+     "code": "ctx/compile.py",
+     "d": {
+      "fr": "Une fiche courte (≤ 400 jetons) et une complète (≤ 1 500) par jeu : formats réels des valeurs, clés, pièges, versionnées.",
+      "en": "One short (≤ 400 tokens) and one full (≤ 1,500) card per dataset: real value formats, keys, traps, versioned."
+     }
+    },
+    {
+     "id": "recipes",
+     "fr": "Recettes vérifiées",
+     "en": "Verified recipes",
+     "code": "optimizer/recipes.py",
+     "d": {
+      "fr": "ODSQL paramétré pour « combien de <type> [public|privé] à <lieu> » ; utilisé seulement si chaque mot est compris et le schéma inchangé.",
+      "en": "Parameterised ODSQL for 'how many <type> [public|private] in <place>'; used only if every word is understood and the schema unchanged."
+     }
+    },
+    {
+     "id": "values",
+     "fr": "Valeurs ancrées",
+     "en": "Grounded values",
+     "code": "optimizer/values.py",
+     "d": {
+      "fr": "« dijon » → 'Dijon', '21' → '021' : la valeur exacte est demandée au portail, jamais devinée.",
+      "en": "'dijon' → 'Dijon', '21' → '021': the exact value is asked from the portal, never guessed."
+     }
+    },
+    {
+     "id": "router",
+     "fr": "Routeur FAST · STANDARD · DEEP",
+     "en": "Router FAST · STANDARD · DEEP",
+     "code": "optimizer/router.py",
+     "d": {
+      "fr": "Règles déterministes : recette sûre → FAST (0 appel modèle) ; sinon agent ; comparaison → DEEP (plus d'étapes).",
+      "en": "Deterministic rules: safe recipe → FAST (0 model calls); else agent; comparison → DEEP (more steps)."
+     }
+    },
+    {
+     "id": "cache",
+     "fr": "Cache",
+     "en": "Cache",
+     "code": "optimizer/cache.py",
+     "d": {
+      "fr": "Clé = portail + périmètre de droits (HMAC de la clé) + jeu + version de schéma + version de données + requête + recette.",
+      "en": "Key = portal + permission scope (HMAC of the key) + dataset + schema version + data version + query + recipe."
+     }
+    },
+    {
+     "id": "evidence",
+     "fr": "Contrat de preuve",
+     "en": "Evidence contract",
+     "code": "optimizer/evidence.py",
+     "d": {
+      "fr": "Chaque nombre de la réponse doit venir d'un résultat d'API ; sinon la réponse n'est pas affirmée.",
+      "en": "Every number in the answer must come from an API result; otherwise the answer is not stated."
+     }
+    },
+    {
+     "id": "drift",
+     "fr": "Dérive & fraîcheur",
+     "en": "Drift & freshness",
+     "code": "optimizer/recipes.py · cache.py",
+     "d": {
+      "fr": "Hash du schéma par recette ; version de données dans la clé de cache ; changement → recette désactivée, cache contourné.",
+      "en": "Schema hash per recipe; data version in the cache key; change → recipe disabled, cache bypassed."
+     }
+    },
+    {
+     "id": "compress",
+     "fr": "Compression",
+     "en": "Compression",
+     "code": "ctx/compile.py (budgets)",
+     "d": {
+      "fr": "Budgets de jetons par fiche ; compression par question : mesurée hors ligne, pas encore activée (voir limites).",
+      "en": "Token budgets per card; per-question compression: measured offline, not enabled yet (see limits)."
+     }
+    }
+   ]
+  },
+  {
+   "id": "lab",
+   "layer": "ours",
+   "status": "PROPOSED",
+   "x": 20,
+   "y": 380,
+   "w": 630,
+   "h": 150,
+   "icon": "i-flask",
+   "zone": "preprod",
+   "title": {
+    "fr": "AutoContext Lab · PREPROD",
+    "en": "AutoContext Lab · PREPROD"
+   },
+   "sub": {
+    "fr": "expérimente une petite modification à la fois et prouve l'effet, sans toucher la prod",
+    "en": "tests one small change at a time and proves the effect, without touching prod"
+   },
+   "purpose": {
+    "fr": "Boucle à la manière d'autoresearch, appliquée au contexte : une seule modification bornée par essai, évaluation reproductible, garder ou annuler, journal. Base et index séparés ; la mise en production est une étape humaine.",
+    "en": "An autoresearch-style loop applied to context: one bounded change per trial, reproducible eval, keep or revert, log. Separate database and index; promotion to production is a human step."
+   },
+   "io": {
+    "fr": "Entrée : traces d'éval en échec (dev) · Sortie : candidat gardé ou annulé + journal",
+    "en": "In: failing eval traces (dev) · Out: kept or reverted candidate + log"
+   },
+   "chips": [
+    {
+     "id": "collect",
+     "fr": "1 Collecte",
+     "en": "1 Collect",
+     "code": "lab/cycle.py",
+     "d": {
+      "fr": "Échecs du jeu dev seulement ; le holdout n'est jamais chargé.",
+      "en": "Dev-split failures only; the holdout is never loaded."
+     }
+    },
+    {
+     "id": "diagnose",
+     "fr": "2 Diagnostic",
+     "en": "2 Diagnose",
+     "code": "lab/cycle.py",
+     "d": {
+      "fr": "wrong_asset, wrong_filter, schema_mismatch, hallucinated_value, latency, permission_error.",
+      "en": "wrong_asset, wrong_filter, schema_mismatch, hallucinated_value, latency, permission_error."
+     }
+    },
+    {
+     "id": "hypo",
+     "fr": "3 Hypothèse",
+     "en": "3 Hypothesis",
+     "code": "evals/improve.py",
+     "d": {
+      "fr": "Une seule modification de fiche (description, synonymes, modèle de requête, note).",
+      "en": "One card edit (description, synonyms, query template, note)."
+     }
+    },
+    {
+     "id": "fork",
+     "fr": "4 Fork",
+     "en": "4 Fork",
+     "code": "lab/cycle.py guard()",
+     "d": {
+      "fr": "Refuse de tourner hors CTXC_ENV=preprod (base ctxc_preprod, index cards_preprod).",
+      "en": "Refuses to run outside CTXC_ENV=preprod (ctxc_preprod database, cards_preprod index)."
+     }
+    },
+    {
+     "id": "static",
+     "fr": "5 Contrôle statique",
+     "en": "5 Static check",
+     "code": "lab/cycle.py",
+     "d": {
+      "fr": "Requête validée sur le schéma, pas de lien ni d'instruction, pas de réponse attendue recopiée.",
+      "en": "Query validated against the schema, no link or instruction, no expected answer copied."
+     }
+    },
+    {
+     "id": "eval",
+     "fr": "6 Éval",
+     "en": "6 Eval",
+     "code": "evals/runner.py",
+     "d": {
+      "fr": "Questions en échec + échantillon témoin, même modèle, même configuration.",
+      "en": "Failing questions + control sample, same model, same configuration."
+     }
+    },
+    {
+     "id": "gate",
+     "fr": "7 Quality gate",
+     "en": "7 Quality gate",
+     "code": "lab/policy.json",
+     "d": {
+      "fr": "Fixé avant le run : ≥ 1 corrigée, 0 témoin cassé, 0 nouvelle erreur affirmée, jetons ≤ +25 %.",
+      "en": "Fixed before the run: ≥ 1 fixed, 0 control broken, 0 new confident error, tokens ≤ +25 %."
+     }
+    },
+    {
+     "id": "keep",
+     "fr": "8 Garder / annuler",
+     "en": "8 Keep / revert",
+     "code": "evals/improve.py",
+     "d": {
+      "fr": "Annuler = recompiler la fiche sans la modification et réindexer.",
+      "en": "Revert = recompile the card without the edit and re-index."
+     }
+    },
+    {
+     "id": "log",
+     "fr": "9 Journal chaîné",
+     "en": "9 Chained log",
+     "code": "lab/log.py",
+     "d": {
+      "fr": "Append-only, chaque ligne porte le sha256 de la précédente : une ligne modifiée casse la chaîne.",
+      "en": "Append-only, each line carries the previous line's sha256: an edited line breaks the chain."
+     }
+    },
+    {
+     "id": "promo",
+     "fr": "10 Promotion humaine",
+     "en": "10 Human promotion",
+     "code": "docs/ROLLBACK.md",
+     "d": {
+      "fr": "Pas d'endpoint public ; un humain applique le diff en prod, puis canari et rollback.",
+      "en": "No public endpoint; a human applies the diff in prod, then canary and rollback."
+     }
+    }
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "from": "src",
+   "to": "ingest",
+   "kind": "data",
+   "layer": "huwise",
+   "label": {
+    "fr": "import",
+    "en": "import"
+   }
+  },
+  {
+   "from": "ingest",
+   "to": "store",
+   "kind": "data",
+   "layer": "huwise"
+  },
+  {
+   "from": "ingest",
+   "to": "catalog",
+   "kind": "metadata",
+   "layer": "huwise",
+   "label": {
+    "fr": "métadonnées",
+    "en": "metadata"
+   }
+  },
+  {
+   "from": "store",
+   "to": "api",
+   "kind": "data",
+   "layer": "huwise",
+   "label": {
+    "fr": "enregistrements",
+    "en": "records"
+   }
+  },
+  {
+   "from": "catalog",
+   "to": "api",
+   "kind": "schema",
+   "layer": "huwise",
+   "label": {
+    "fr": "schéma",
+    "en": "schema"
+   }
+  },
+  {
+   "from": "lcl",
+   "to": "catalog",
+   "kind": "usage",
+   "layer": "huwise",
+   "label": {
+    "fr": "enrichit",
+    "en": "enriches"
+   }
+  },
+  {
+   "from": "mcp",
+   "to": "lcl",
+   "kind": "usage",
+   "layer": "huwise",
+   "label": {
+    "fr": "actions d'agents mesurées",
+    "en": "agent actions measured"
+   }
+  },
+  {
+   "from": "api",
+   "to": "mcp",
+   "kind": "data",
+   "layer": "huwise"
+  },
+  {
+   "from": "mcp",
+   "to": "huwy",
+   "kind": "metadata",
+   "layer": "huwise",
+   "label": {
+    "fr": "outils",
+    "en": "tools"
+   }
+  },
+  {
+   "from": "huwy",
+   "to": "resp",
+   "kind": "data",
+   "layer": "huwise"
+  },
+  {
+   "from": "resp",
+   "to": "user",
+   "kind": "data",
+   "layer": "huwise"
+  },
+  {
+   "from": "user",
+   "to": "huwy",
+   "kind": "metadata",
+   "layer": "huwise",
+   "label": {
+    "fr": "question",
+    "en": "question"
+   }
+  },
+  {
+   "from": "gov",
+   "to": "api",
+   "kind": "governance",
+   "layer": "huwise"
+  },
+  {
+   "from": "gov",
+   "to": "mcp",
+   "kind": "governance",
+   "layer": "huwise"
+  },
+  {
+   "from": "api",
+   "to": "opt",
+   "kind": "data",
+   "layer": "ours",
+   "label": {
+    "fr": "catalogue + enregistrements (API publique)",
+    "en": "catalog + records (public API)"
+   }
+  },
+  {
+   "from": "lcl",
+   "to": "opt",
+   "kind": "usage",
+   "layer": "ours",
+   "label": {
+    "fr": "signal d'usage (jeu publié)",
+    "en": "usage signal (published dataset)"
+   }
+  },
+  {
+   "from": "opt",
+   "to": "user",
+   "kind": "data",
+   "layer": "ours",
+   "label": {
+    "fr": "MCP : find · explain · query + preuve",
+    "en": "MCP: find · explain · query + evidence"
+   }
+  },
+  {
+   "from": "gov",
+   "to": "opt",
+   "kind": "governance",
+   "layer": "ours",
+   "label": {
+    "fr": "clé client transmise, jamais stockée",
+    "en": "client key passed through, never stored"
+   }
+  },
+  {
+   "from": "opt",
+   "to": "lab",
+   "kind": "lab",
+   "layer": "ours",
+   "label": {
+    "fr": "traces d'éval",
+    "en": "eval traces"
+   }
+  },
+  {
+   "from": "lab",
+   "to": "opt",
+   "kind": "lab",
+   "layer": "ours",
+   "label": {
+    "fr": "candidat → promotion humaine",
+    "en": "candidate → human promotion"
+   }
+  }
+ ],
+ "edge_kinds": {
+  "metadata": {
+   "fr": "métadonnées",
+   "en": "metadata"
+  },
+  "schema": {
+   "fr": "schéma",
+   "en": "schema"
+  },
+  "data": {
+   "fr": "requête de données",
+   "en": "data query"
+  },
+  "usage": {
+   "fr": "retour d'usage",
+   "en": "usage feedback"
+  },
+  "governance": {
+   "fr": "gouvernance",
+   "en": "governance"
+  },
+  "lab": {
+   "fr": "expérience (preprod)",
+   "en": "experiment (preprod)"
+  }
+ },
+ "tool_nodes": {
+  "search_assets": [
+   "mcp",
+   "catalog"
+  ],
+  "get_asset": [
+   "mcp",
+   "catalog"
+  ],
+  "search_asset_records": [
+   "mcp",
+   "api"
+  ],
+  "find_dataset": [
+   "opt"
+  ],
+  "explain_dataset": [
+   "opt"
+  ],
+  "query": [
+   "opt",
+   "api"
+  ],
+  "route": [
+   "opt"
+  ],
+  "verify": [
+   "opt"
+  ],
+  "llm": [
+   "huwy"
+  ],
+  "resolve_value": [
+   "opt",
+   "api"
+  ]
+ }
+}

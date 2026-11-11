@@ -5,3 +5,6 @@ out
 site
 __pycache__
 *.pyc
+.env.preprod
+site-preprod
+var

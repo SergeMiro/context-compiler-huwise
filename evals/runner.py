@@ -116,6 +116,14 @@ def _run(domain, question, mode, chat):
     return run_agent(domain, question, mode, chat=chat)
 
 
+def _commit():
+    import subprocess
+    try:
+        return subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=5).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return ""
+
+
 def run_eval(portal, mode, chat=None, slugs=None, model=None, suite="education", split=None):
     cases = EvalCase.objects.filter(portal=portal, suite=suite).order_by("id")
     cases = list(cases.filter(split=split) if split else cases)
@@ -136,7 +144,7 @@ def run_eval(portal, mode, chat=None, slugs=None, model=None, suite="education",
                                         "evidence": r["evidence"], "abstained": r["abstained"], "ms": r["ms"],
                                         "tokens": r["tokens"], "llm_calls": r["llm_calls"]}
                                for c, r in zip(cases, rows)}
-    run.metrics.update(suite=suite, split=split or "all")
+    run.metrics.update(suite=suite, split=split or "all", commit=_commit())
     run.finished_at = timezone.now()
     run.save()
     return run

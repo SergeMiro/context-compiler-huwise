@@ -1,345 +1,153 @@
 <!doctype html>
-<html lang="fr">
+<html lang="{{ t.html_lang }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Context Compiler</title>
+<title>{{ t.title }}</title>
+<meta name="description" content="{{ t.desc }}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='8' fill='%231F2328'/%3E%3Cpath d='M9 11h8M9 16h14M9 21h6' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='22' cy='11' r='2.2' fill='%2354AEFF'/%3E%3C/svg%3E">
-<meta name="description" content="Même modèle, même question : avec des fiches de contexte compilées, l'agent IA répond juste sur un portail Huwise.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --fg:#1F2328;--muted:#59636E;--faint:#8C959F;--line:#D1D9E0;--line-2:#E1E6EB;--bg:#FFFFFF;--subtle:#F6F8FA;--chip:#EFF2F5;
-  --accent:#0969DA;--accent-ink:#0550AE;--accent-soft:#DDF4FF;--accent-line:#9CD1FF;--accent-wash:#F1F8FF;--accent-frame:#B6D7FF;
-  --good:#1A7F37;--good-ink:#116329;--good-soft:#DAFBE1;--good-line:#ACE6BC;--good-wash:#EFFBF2;
-  --bad-ink:#A40E26;--bad-soft:#FFEBE9;
-  --purple:#8250DF;--purple-ink:#6639BA;--purple-soft:#FBEFFF;--purple-line:#D8B9FF;--purple-dash:#C297FF;
+  --accent:#0969DA;--accent-ink:#0550AE;--accent-soft:#DDF4FF;--accent-line:#9CD1FF;
+  --good:#1A7F37;--good-ink:#116329;--good-soft:#DAFBE1;--good-line:#ACE6BC;
+  --bad:#CF222E;--bad-ink:#A40E26;--bad-soft:#FFEBE9;--bad-line:#FFCECB;
+  --purple:#8250DF;--purple-ink:#6639BA;--purple-soft:#FBEFFF;--purple-line:#D8B9FF;
   --warn:#9A6700;--warn-ink:#7D4E00;--warn-soft:#FFF8C5;--warn-line:#F0D98A;
-  --d-bg:#0D1117;--d-bg-2:#161B22;--d-bg-3:#010409;--d-line:#30363D;--d-line-2:#21262D;--d-fg:#E6EDF3;--d-muted:#9198A1;
-  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  --card-shadow:0 1px 2px rgba(31,35,40,.06);--scroll:rgba(89,99,110,.4);color-scheme:light;
+  --d-bg:#0D1117;--d-bg-2:#161B22;--d-line:#30363D;--d-fg:#E6EDF3;--d-muted:#9198A1;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;--scroll:rgba(89,99,110,.4);color-scheme:light;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
-/* scrollbars: thin, invisible until the pointer is over the scrolling block */
-*{scrollbar-width:thin;scrollbar-color:transparent transparent}
-*:hover{scrollbar-color:var(--scroll) transparent}
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:transparent;border-radius:6px}
-:hover::-webkit-scrollbar-thumb{background:var(--scroll)}
+*{scrollbar-width:thin;scrollbar-color:transparent transparent} *:hover{scrollbar-color:var(--scroll) transparent}
+::-webkit-scrollbar{width:6px;height:6px} ::-webkit-scrollbar-thumb{background:transparent;border-radius:6px} :hover::-webkit-scrollbar-thumb{background:var(--scroll)}
 a{color:var(--accent)} a:hover{color:var(--accent-ink)}
-a:focus-visible,button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 code,.mono{font-family:var(--mono)}
-.icode{font-size:.88em;padding:1px 6px;border-radius:6px;background:var(--chip);color:var(--fg)}
+.icode{font:.86em var(--mono);padding:1px 6px;border-radius:6px;background:var(--chip);word-break:break-word}
 .muted{color:var(--muted)}
-svg.i{flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
-@media (max-width:520px){.wrap{padding:0 16px}}
-section{border-bottom:1px solid var(--line)}
-section.alt{background:var(--subtle)}
-.sec{padding-block:88px;display:flex;flex-direction:column;gap:40px}
-@media (max-width:640px){.sec{padding-block:56px;gap:28px}}
-.sh{display:flex;flex-direction:column;gap:10px;max-width:720px}
-.sh-row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;justify-content:space-between}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;font:500 13px var(--mono);color:var(--accent)}
-.eyebrow.warn{color:var(--warn)} .eyebrow.good{color:var(--good)} .eyebrow.purple{color:var(--purple)}
-h2{margin:0;font-size:clamp(28px,3.4vw,36px);font-weight:700;line-height:1.15;letter-spacing:-.02em}
-.sh p{margin:0;color:var(--muted);font-size:17px}
-.card{border:1px solid var(--line);border-radius:12px;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--card-shadow)}
-.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
-.ico{flex:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
-.ico.warn{border-color:var(--warn-line);background:var(--warn-soft);color:var(--warn)}
-.ico.good{border-color:var(--good-line);background:var(--good-soft);color:var(--good)}
-.ico.purple{border-color:var(--purple-line);background:var(--purple-soft);color:var(--purple)}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:13px;font-weight:500;white-space:nowrap}
-.badge.accent{border-color:var(--accent-line);background:var(--accent-soft);color:var(--accent-ink)}
-.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px;border-radius:8px;border:1px solid var(--line);background:var(--subtle);color:var(--fg);font:500 15px "IBM Plex Sans",sans-serif;text-decoration:none;cursor:pointer}
-.btn:hover{color:var(--fg);border-color:var(--faint)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600} .btn.primary:hover{background:var(--accent-ink);color:#fff}
-.btn.white{background:var(--bg)}
-.btn:disabled{opacity:.55;cursor:default}
-.diff{font:12px/20px var(--mono);border-top:1px solid var(--line-2)}
-.diff div{padding:6px 14px}
-.diff .m{background:var(--bad-soft);color:var(--bad-ink)} .diff .p{background:var(--good-soft);color:var(--good-ink)} .diff .n{background:var(--subtle);color:var(--fg)}
-.dots{display:flex;gap:6px} .dots i{width:10px;height:10px;border-radius:50%;background:#FF5F57} .dots i+i{background:#FEBC2E} .dots i+i+i{background:#28C840}
-.flow{stroke-dasharray:4 4;animation:cc-flow .7s linear infinite}
-@keyframes cc-flow{to{stroke-dashoffset:-8}}
-@media (prefers-reduced-motion:reduce){.flow,.cc-body{animation:none!important}*{scroll-behavior:auto!important}}
-
+svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px} @media (max-width:520px){.wrap{padding:0 16px}}
+section{border-bottom:1px solid var(--line);scroll-margin-top:8px} section.alt{background:var(--subtle)}
+.sec{padding-block:72px;display:flex;flex-direction:column;gap:32px} @media (max-width:640px){.sec{padding-block:48px;gap:24px}}
+.sh{display:flex;flex-direction:column;gap:10px;max-width:820px}
+.eyebrow{font:500 13px var(--mono);color:var(--accent)} .eyebrow.purple{color:var(--purple)} .eyebrow.warn{color:var(--warn)} .eyebrow.good{color:var(--good)}
+h1{margin:0;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:-.02em;max-width:980px}
+h2{margin:0;font-size:clamp(24px,3vw,34px);line-height:1.15;letter-spacing:-.02em}
+h3{margin:0;font-size:17px}
+.sh p,.lead{margin:0;color:var(--muted);font-size:17px}
+.card{border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:500 14px "IBM Plex Sans",sans-serif;cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--faint);color:var(--fg)} .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff} .btn.primary:hover{background:var(--accent-ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;background:var(--subtle);padding:3px;gap:3px}
+.seg button{min-height:38px;padding:0 14px;border:0;border-radius:7px;background:transparent;color:var(--muted);font:500 14px "IBM Plex Sans",sans-serif;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--bg);color:var(--fg);box-shadow:0 1px 2px rgba(31,35,40,.12)}
+select{min-height:40px;max-width:100%;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font:14px "IBM Plex Sans",sans-serif;color:var(--fg)}
+/* status chips */
+.st{display:inline-flex;align-items:center;gap:6px;padding:1px 9px;border-radius:999px;font:600 11px/20px var(--mono);letter-spacing:.04em;border:1px solid;white-space:nowrap}
+.st-VERIFIED{color:var(--good-ink);background:var(--good-soft);border-color:var(--good-line)}
+.st-INFERRED{color:var(--warn-ink);background:var(--warn-soft);border-color:var(--warn-line)}
+.st-PROPOSED{color:var(--purple-ink);background:var(--purple-soft);border-color:var(--purple-line)}
+.st-LIVE{color:#fff;background:var(--good);border-color:var(--good)}
+.st-RECORDED{color:var(--accent-ink);background:var(--accent-soft);border-color:var(--accent-line)}
+.st-SIMULATED{color:var(--bad-ink);background:var(--bad-soft);border-color:var(--bad-line);font-size:13px}
+.st-ok{color:var(--good-ink);background:var(--good-soft);border-color:var(--good-line)} .st-ko{color:var(--bad-ink);background:var(--bad-soft);border-color:var(--bad-line)}
+.st-neutral{color:var(--muted);background:var(--subtle);border-color:var(--line)}
 /* nav */
-.nav{border-bottom:1px solid var(--line);background:var(--subtle)}
-.nav .wrap{padding-top:12px;padding-bottom:12px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:10px;min-height:44px;text-decoration:none;color:var(--fg);font-weight:600;font-size:17px;letter-spacing:-.01em} .brand:hover{color:var(--fg)}
-.brand small{font:12px var(--mono);padding:1px 8px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--bg)}
-.nav nav{display:flex;flex-wrap:wrap;gap:4px 20px;font-size:14px;font-weight:500}
-.nav nav a{color:var(--fg);text-decoration:none;padding:10px 0} .nav nav a:hover{color:var(--accent)}
-.nav-r{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.seg{display:flex;padding:3px;border:1px solid var(--line);border-radius:8px;background:var(--chip)}
-.seg button{min-height:34px;padding:0 14px;border:1px solid transparent;border-radius:6px;background:transparent;color:var(--muted);font:500 13px "IBM Plex Sans",sans-serif;cursor:pointer}
-.seg button[aria-pressed="true"]{border-color:var(--line);background:var(--bg);color:var(--fg);font-weight:600;box-shadow:0 1px 0 rgba(31,35,40,.04)}
-.gh{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);text-decoration:none;font-size:14px;font-weight:500} .gh:hover{color:var(--fg);border-color:var(--faint)}
-@media (max-width:760px){.nav nav{display:none}}
-body.simple .only-detail{display:none}
-
+.nav{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(246,248,250,.94);backdrop-filter:blur(6px)}
+.nav .wrap{padding-top:8px;padding-bottom:8px;display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;min-height:40px;text-decoration:none;color:var(--fg);font-weight:600}
+.nav nav{display:flex;flex-wrap:wrap;gap:0 16px;font-size:14px;font-weight:500} .nav nav a{color:var(--fg);text-decoration:none;padding:8px 0} .nav nav a:hover{color:var(--accent)}
+.nav-r{display:flex;gap:8px;align-items:center}
+@media (max-width:900px){.nav nav{display:none}}
 /* hero */
-.hero{padding-top:88px;padding-bottom:72px;display:flex;flex-wrap:wrap;gap:56px;align-items:center}
-@media (max-width:640px){.hero{padding-top:48px;padding-bottom:40px;gap:36px}}
-.hero-l{flex:1 1 500px;min-width:0;display:flex;flex-direction:column;gap:24px}
-.badges{display:flex;flex-wrap:wrap;gap:8px}
-h1{margin:0;font-weight:700;font-size:clamp(36px,5vw,60px);line-height:1.08;letter-spacing:-.03em}
-h1 span{color:var(--accent)}
-.lead{margin:0;max-width:560px;font-size:18px;color:var(--muted)} .lead b{color:var(--fg);font-weight:600}
-.ctas{display:flex;flex-wrap:wrap;gap:12px}
-.editor{flex:1 1 420px;min-width:0;border:1px solid var(--d-line);border-radius:12px;background:var(--d-bg);overflow:hidden;box-shadow:0 24px 56px rgba(1,4,9,.28)}
-.editor-h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1px solid var(--d-line);background:var(--d-bg-2)}
-.editor-h>span{display:flex;align-items:center;gap:12px;min-width:0}
-.editor-h a{display:flex;align-items:center;gap:8px;font:500 13px var(--mono);color:var(--d-fg);text-decoration:none;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .editor-h a:hover{color:#fff;text-decoration:underline}
-.okpill{flex:none;font:12px var(--mono);padding:1px 8px;border:1px solid #238636;border-radius:999px;background:#12261E;color:#56D364}
-.code{display:grid;grid-template-columns:44px minmax(0,1fr);font:13px/26px var(--mono)}
-.code .ln{padding:12px 12px 12px 0;border-right:1px solid var(--d-line-2);color:#7D8590;text-align:right;white-space:pre-line}
-.code .src{padding:12px 16px;overflow-x:auto;white-space:nowrap;color:var(--d-fg)}
-.k{color:#D2A8FF} .f{color:#79C0FF} .c{color:var(--d-muted)} .w{color:#E3B341}
-.add{background:rgba(46,160,67,.16);margin:0 -16px;padding:0 16px;color:#56D364}
-.del{background:rgba(248,81,73,.16);margin:0 -16px;padding:0 16px;color:#FF7B72}
-.editor-f{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--d-line);background:var(--d-bg-2)}
-.editor-f div{padding:12px 16px} .editor-f div+div{border-left:1px solid var(--d-line)}
-.editor-f span{display:block;font:12px var(--mono);color:var(--d-muted);overflow:hidden;text-overflow:ellipsis}
-.editor-f b{font-weight:600;font-size:15px;color:var(--d-fg)} .editor-f b.g{color:#56D364}
-.kpis{margin-bottom:80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.kpis>div{padding:24px 28px;display:flex;flex-direction:column;gap:4px;box-shadow:1px 1px 0 var(--line)}
-.kpis>div>span:first-child{font-size:14px;color:var(--muted)}
-.kpis .v{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.kpis s{font-size:22px;color:var(--faint)} .kpis b{font-size:44px;font-weight:700;letter-spacing:-.02em;color:var(--good);line-height:1.2}
-.kpis b.blue{color:var(--accent)} .kpis small{font-size:14px;color:var(--muted)}
-@media (max-width:640px){.kpis{margin-bottom:56px}}
-
-/* traps */
-.trap-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;background:var(--subtle);border-bottom:1px solid var(--line);font:12px var(--mono);color:var(--muted)}
-.trap-h>span{display:inline-flex;align-items:center;gap:6px;min-width:0}
-.trap-h b{padding:1px 8px;border:1px solid var(--warn-line);border-radius:6px;background:var(--warn-soft);color:var(--warn-ink);font-weight:600;white-space:nowrap}
-.cbody{padding:20px;display:flex;flex-direction:column;gap:12px;flex:1}
-.cbody h3{margin:0;font-size:18px;font-weight:600}
-.cbody p{margin:0;font-size:15px;color:var(--muted)}
-
-/* operations */
-ol.plain{margin:0;padding:0;list-style:none}
-.op .bar{height:4px;background:var(--accent)} .op.good .bar{background:var(--good)} .op.purple .bar{background:var(--purple)}
-.op .cbody{padding:24px;gap:14px}
-.op .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.op .ico{width:48px;height:48px}
-.op .tag{font:500 12px var(--mono);padding:2px 10px;border-radius:999px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent-ink)}
-.op.good .tag{border-color:var(--good-line);background:var(--good-soft);color:var(--good-ink)}
-.op.purple .tag{border-color:var(--purple-line);background:var(--purple-soft);color:var(--purple-ink)}
-.op h3{font-size:20px}
-.op .sql{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 24px;border-top:1px solid var(--line-2);background:var(--subtle);font:13px var(--mono)}
-.op .sql b{color:var(--accent-ink);font-weight:600} .op.good .sql b{color:var(--good-ink)} .op.purple .sql b{color:var(--purple-ink)}
-.op .sql span:last-child{color:var(--muted)}
-
-/* architecture */
-.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--muted)}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.legend i{width:10px;height:10px;border-radius:3px;background:var(--accent)} .legend i.g{background:var(--good)} .legend i.p{background:var(--purple)} .legend i.grey{background:#AFB8C1}
-.lane{border:1px solid var(--accent-frame);border-radius:14px;background:var(--bg);overflow:hidden}
-.lane.hot{border-color:var(--good-line)}
-.lane-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding:12px 20px;background:var(--accent-wash);border-bottom:1px solid var(--accent-frame);font-size:13px;color:var(--muted)}
-.lane.hot .lane-h{background:var(--good-wash);border-color:var(--good-line)}
-.lane-h b{font:600 13px var(--mono);color:var(--accent-ink)} .lane.hot .lane-h b{color:var(--good-ink)}
-.lane-b{padding:24px 20px;display:flex;flex-direction:column;gap:20px}
-.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
-.node{flex:1 1 170px;min-width:0;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--bg);display:flex;align-items:center;gap:12px;color:var(--fg);text-decoration:none}
-a.node:hover{color:var(--fg);border-color:var(--accent)}
-.node.on{border-color:var(--accent);background:var(--accent-wash)}
-.node.on-g{border-color:var(--good);background:var(--good-wash)}
-.nic{flex:none;width:36px;height:36px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
-.nic.g{background:var(--good-soft);color:var(--good)}
-.node.on .nic{background:var(--accent);color:#fff} .node.on-g .nic{background:var(--good);color:#fff} .nic.p{background:var(--purple);color:#fff}
-.node>span:last-child{display:flex;flex-direction:column;line-height:1.35;min-width:0}
-.node b{font-weight:600;font-size:15px}
-.node small{font:12px var(--mono);color:var(--muted)} .node.on small{color:var(--accent-ink)} .node.on-g small{color:var(--good-ink)}
-.arrow{flex:none}
-.loopbox{flex:1 1 320px;min-width:0;padding:16px;border:1px dashed var(--purple-dash);border-radius:10px;background:var(--purple-soft);display:flex;align-items:center;gap:12px;color:var(--fg);text-decoration:none}
-a.loopbox:hover{color:var(--fg);border-style:solid}
-.loopbox>span:last-child{display:flex;flex-direction:column;line-height:1.4} .loopbox b{font-weight:600;font-size:15px} .loopbox small{font-size:14px;color:var(--muted)}
-.proj{flex:1 1 420px;min-width:0;padding:16px;border:1px solid var(--line);border-radius:10px;background:var(--subtle);display:flex;flex-direction:column;gap:10px}
-.proj>span{font:500 12px var(--mono);color:var(--muted)}
-.proj div{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
-.proj a,.proj div>span{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-size:14px;font-weight:500;color:var(--fg);text-decoration:none}
-.proj svg{color:var(--accent)}
-.bridge{display:flex;justify-content:center;align-items:center;gap:8px;font:13px var(--mono);color:var(--muted);text-align:center}
-.tools{flex:3 1 460px;min-width:0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.tools div{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:12px 16px}
-.tools div+div{border-top:1px solid var(--line-2)}
-.tools code{flex:1 1 140px;font-size:14px;font-weight:600}
-.tools span{flex:2 1 160px;font-size:14px;color:var(--muted)}
-.tools em{font:normal 12px var(--mono);padding:1px 8px;border-radius:999px;background:var(--good-soft);color:var(--good-ink);white-space:nowrap}
-.tools em.b{background:var(--accent-soft);color:var(--accent-ink)}
-@media (max-width:640px){.row{flex-direction:column;align-items:stretch}.row>.arrow{align-self:center;transform:rotate(90deg)}.row>*{flex:none!important}}
-
-/* steps */
-.step{display:flex;flex-direction:column;gap:14px}
-.step-n{display:flex;align-items:center;gap:8px}
-.step-n b{flex:none;width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font:600 13px var(--mono)}
-.step.good .step-n b{background:var(--good)} .step.purple .step-n b{background:var(--purple)}
-.step-n span{flex:1;overflow:hidden;display:flex;color:var(--accent)} .step.good .step-n span{color:var(--good)} .step.purple .step-n span{color:var(--purple-dash)}
-.step .card{flex:1;padding:20px;gap:12px}
-.step .card>b{font-size:18px;font-weight:600}
-.chips{display:flex;flex-wrap:wrap;gap:6px;font:12px var(--mono)} .chips span{padding:2px 8px;border-radius:6px;background:var(--chip)}
-.step .card code{margin-top:auto;padding-top:12px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted)} .step .card code i{font-style:normal;color:var(--good)}
-
-/* duel */
-.tabs{display:flex;flex-wrap:wrap;gap:8px}
-.tab{min-height:40px;padding:0 16px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--fg);font:500 14px "IBM Plex Sans",sans-serif;cursor:pointer}
-.tab:hover{border-color:var(--faint)} .tab.on{background:var(--fg);border-color:var(--fg);color:#fff}
-.qbox{border:1px solid var(--line);border-radius:12px;background:var(--bg);overflow:hidden}
-.qbox-h{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px;padding:10px 16px;background:var(--subtle);border-bottom:1px solid var(--line);font:12px var(--mono);color:var(--muted)}
-.qbox p{margin:0;padding:16px 20px;font-size:20px;font-weight:600;line-height:1.35}
-.duel{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
-.side-h{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:12px 16px;background:var(--subtle);border-bottom:1px solid var(--line);font-weight:600;font-size:15px}
-.side-h .dot{width:10px;height:10px;border-radius:3px;background:#AFB8C1} .side-h .dot.comp{background:var(--accent)}
-.side-h .tag{margin-left:auto;font:500 12px var(--mono);padding:1px 8px;border-radius:999px;background:var(--chip);color:var(--muted)}
-.side-h .tag.live{background:var(--warn-soft);color:var(--warn-ink)}
-.side-b{padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
-.verdict{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:8px;font-size:17px;line-height:1.4}
-.verdict.ok{background:var(--good-soft);color:var(--good-ink)} .verdict.ko{background:var(--bad-soft);color:var(--bad-ink)}
-.verdict i{font:normal 600 15px/1.6 var(--mono)} .verdict b{font-weight:600;color:var(--fg)} .verdict b strong{font-weight:700}
-.story{margin:0;font-size:15px;color:var(--muted)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
-.stats div{padding:8px 12px} .stats div+div{border-left:1px solid var(--line-2)}
-.stats span{display:block;font:12px var(--mono);color:var(--muted)} .stats b{font-size:18px;font-weight:600} .stats b.better{color:var(--good)}
-details.steps summary{cursor:pointer;font-size:14px;font-weight:500;color:var(--accent);list-style:none}
-details.steps summary::-webkit-details-marker{display:none}
-details.steps summary::before{content:"▸ "} details.steps[open] summary::before{content:"▾ "}
-ol.log{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px;font-size:13.5px;line-height:1.45}
-ol.log li{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start}
-ol.log li i{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font:normal 600 12px var(--mono)}
-ol.log li.ok i{background:var(--good-soft);color:var(--good-ink)} ol.log li.ko i{background:var(--bad-soft);color:var(--bad-ink)} ol.log li.info i{background:var(--chip);color:var(--muted)}
-ol.log code{font-size:12px;word-break:break-word}
-.liverow{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
-select{min-height:40px;font:500 14px "IBM Plex Sans",sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:8px;padding:0 10px;max-width:min(100%,460px)}
-.spin{width:16px;height:16px;border-radius:99px;border:2px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite;flex:none}
-@keyframes spin{to{transform:rotate(360deg)}}
-.wait{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:15px;padding:24px 0}
-.why .cbody{padding:20px 20px 16px;gap:4px} .why .cbody p{font-size:14px}
-.why .diff{font-size:13px;line-height:22px;border-color:var(--line)} .why .diff div{padding:8px 20px}
-
-/* results */
-.res{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
-.box{min-width:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.box-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding:12px 20px;background:var(--subtle);border-bottom:1px solid var(--line);font-size:14px;font-weight:600}
-.box-h code{font-size:13px}
-.brow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px;padding:18px 0}
-.brow+.brow{border-top:1px solid var(--line-2)}
-.brow>div:first-child{flex:1 1 180px;font-weight:500} .brow>div:first-child small{font-size:13px;font-weight:400;color:var(--muted)}
-.brow>div:last-child{flex:3 1 300px;display:flex;flex-direction:column;gap:6px}
-.bt{display:flex;align-items:center;gap:12px}
-.bt .bg{flex:1;height:8px;border-radius:4px;background:var(--chip)}
-.bt .bg i{display:block;height:8px;border-radius:4px;width:0;background:#AFB8C1;transition:width 1s cubic-bezier(.2,.8,.2,1)} .bt .bg i.comp{background:var(--accent)}
-.bt span{width:48px;text-align:right;font:13px var(--mono);color:var(--muted)} .bt span.comp{color:var(--fg);font-weight:600}
-.big-steps{flex-direction:row!important;align-items:baseline;gap:12px!important} .big-steps s{font-size:20px;color:var(--faint)} .big-steps b{font-size:28px;font-weight:700}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th{text-align:left;padding:10px 12px;font-weight:500;color:var(--muted);border-bottom:1px solid var(--line)}
-td{padding:12px;border-bottom:1px solid var(--line-2)} tr:last-child td{border-bottom:0}
-th:first-child,td:first-child{padding-left:16px} th:last-child,td:last-child{padding-right:16px}
-td.ok{font-weight:700;color:var(--good)}
-
-/* commands (dark) */
-.term{border:1px solid var(--d-line);border-radius:12px;background:var(--d-bg-3);overflow:hidden;box-shadow:0 16px 40px rgba(31,35,40,.16)}
-.term-h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:var(--d-bg-2);border-bottom:1px solid var(--d-line);font:12px var(--mono);color:var(--d-muted)}
-.term-h>span{display:flex;align-items:center;gap:12px}
-.term table{min-width:560px;font-size:15px}
-.term th{padding:12px 20px;font-size:13px;color:var(--d-muted);border-color:var(--d-line-2)}
-.term td{padding:12px 20px;color:var(--d-muted);border-color:var(--d-line-2)}
-.term td:first-child{font:14px var(--mono);color:var(--d-fg);white-space:nowrap} .term td:first-child i{font-style:normal;color:#3FB950}
-.pathtag{font-size:12px;padding:1px 8px;border-radius:999px;background:#0F1C2E;color:#79C0FF;white-space:nowrap}
-.pathtag.m{background:#1A1430;color:#D2A8FF} .pathtag.h{background:#12261E;color:#56D364}
-.scroll-x{overflow-x:auto}
-
-/* security */
-.split{display:flex;flex-direction:row;flex-wrap:wrap;gap:24px;align-items:stretch}
-.split>.box{flex:1 1 440px;background:var(--bg)}
-.split h3{margin:0;font-size:17px;font-weight:600}
-.box-h.l{justify-content:flex-start;gap:10px}
-ul.ticks{margin:0;padding:8px 20px;list-style:none}
-ul.ticks li{display:flex;gap:12px;padding:10px 0;font-size:15px} ul.ticks li+li{border-top:1px solid var(--line-2)}
-ul.ticks svg{margin-top:3px;color:var(--good)} ul.ticks .dash{flex:0 0 16px;color:var(--faint);font-weight:600}
-
-/* scale */
-.metric-h{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--subtle);border-bottom:1px solid var(--line);font:12px var(--mono);color:var(--muted)}
-.metric-h b{color:var(--accent-ink);font-weight:600} .metric-h b.g{color:var(--good-ink)}
-.metric{padding:20px;display:flex;gap:14px;align-items:flex-start}
-.metric>span:last-child{display:flex;flex-direction:column;gap:4px} .metric b{font-size:24px;font-weight:700;letter-spacing:-.01em;line-height:1.25} .metric small{font-size:14px;color:var(--muted)}
-
-/* karpathy */
-.author{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--bg);box-shadow:var(--card-shadow)}
-.author .av{flex:none;width:52px;height:52px;border-radius:50%;background:var(--fg);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:17px;box-shadow:0 0 0 3px #fff,0 0 0 4px var(--line)}
-.author>span{display:flex;flex-direction:column;gap:2px;line-height:1.35} .author small{font:12px var(--mono);color:var(--muted)}
-.ideas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:16px;align-items:start}
-.idea{border:1px solid var(--line);border-radius:12px;background:var(--bg);overflow:hidden;box-shadow:var(--card-shadow)}
-.idea summary{list-style:none;cursor:pointer;padding:20px;display:flex;gap:16px;align-items:flex-start}
-.idea summary::-webkit-details-marker{display:none}
-.idea summary:focus-visible{outline-offset:-2px}
-.idea summary>span:nth-child(2){flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
-.idea .src{display:flex;align-items:center;gap:8px;font:12px var(--mono);color:var(--purple-ink)} .idea .src b{font-weight:600} .idea .src span{padding:1px 8px;border-radius:999px;background:var(--purple-soft)}
-.idea .tt{font-size:18px;font-weight:600} .idea summary:hover .tt{color:var(--accent)}
-.idea .chev{margin-top:10px;color:var(--muted);transition:transform .2s ease} .idea[open] .chev{transform:rotate(180deg)}
-.cc-body{padding:0 20px 20px;display:flex;flex-direction:column;gap:14px}
-.idea[open] .cc-body{animation:cc-open .28s ease-out}
-@keyframes cc-open{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-.quote{padding:14px 16px;border-left:3px solid var(--purple);border-radius:0 8px 8px 0;background:var(--subtle);font-size:15px}
-.here{display:flex;gap:10px;font-size:15px} .here svg{margin-top:3px;color:var(--good)} .here b{font-weight:600}
-.links{display:flex;flex-wrap:wrap;gap:8px}
-.links a{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:13px;font-weight:500;text-decoration:none}
-.links a:hover{border-color:var(--accent)}
-
-/* stack */
-.stack{padding-block:64px;display:flex;flex-wrap:wrap;gap:24px 40px;align-items:flex-start}
-.stack>div:first-child{flex:1 1 220px;display:flex;flex-direction:column;gap:6px}
-.stack>div:first-child span{font:500 13px var(--mono);color:var(--muted)}
-.stack h2{font-size:26px;letter-spacing:-.01em}
-.groups{flex:3 1 560px;min-width:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
-.groups>div{display:flex;flex-direction:column;gap:10px}
-.groups>div>span{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--muted)}
-.groups>div>span i{width:8px;height:8px;border-radius:2px;background:var(--purple)} .groups>div>span i.b{background:var(--accent)} .groups>div>span i.s{background:var(--muted)}
-.chiprow{display:flex;flex-wrap:wrap;gap:8px;font:13px var(--mono)}
-.tech{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:0 12px 0 5px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--fg);box-shadow:0 1px 0 rgba(31,35,40,.04);white-space:nowrap}
+.hero{padding-block:56px 48px;display:flex;flex-direction:column;gap:28px}
+.steps{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.steps div{border-left:3px solid var(--accent);padding:4px 0 4px 14px} .steps div:nth-child(2){border-color:var(--purple)} .steps div:nth-child(3){border-color:var(--good)}
+.steps b{display:block;font-size:15px} .steps span{color:var(--muted);font-size:15px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 28px;font-size:13px;color:var(--muted)} .legend>div{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.legend b{color:var(--fg);font-weight:600;margin-right:4px}
+/* map */
+.maphead{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+.mapbox{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+#architecture .wrap{max-width:1600px}
+@media (max-width:1100px){.mapbox{grid-template-columns:minmax(0,1fr)}}
+.map{position:relative;border:1px solid var(--line);border-radius:12px;background:var(--bg) radial-gradient(circle,#E1E6EB 1px,transparent 1px) 0 0/22px 22px;overflow:auto;touch-action:pan-x pan-y}
+#svg{display:block;width:100%;min-width:900px;height:auto;cursor:grab;user-select:none} #svg.drag{cursor:grabbing}
+.zoom{position:sticky;left:8px;top:8px;float:left;display:flex;gap:4px;z-index:2;margin:8px}
+.zoom button{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font:600 16px var(--mono);cursor:pointer}
+.node{cursor:pointer;outline:none} .node rect.box{fill:#fff;stroke:#AAB4BE;stroke-width:1.2;transition:stroke .2s,opacity .3s}
+.node.st-v rect.box{stroke:#7FC79A} .node.st-i rect.box{stroke:#D4B44A;stroke-dasharray:5 4} .node.ours rect.box{fill:#FCF8FF;stroke:var(--purple);stroke-width:1.6;stroke-dasharray:7 4}
+.node.zone rect.box{fill:#FFF9F2}
+.node:hover rect.box,.node:focus-visible rect.box{stroke:var(--accent);stroke-width:2.2}
+.node.sel rect.box{stroke:var(--accent);stroke-width:3}
+.node.hl rect.box{stroke:#1A7F37;stroke-width:3.4;filter:drop-shadow(0 0 6px rgba(26,127,55,.45))}
+.node.dim{opacity:.32} .edge.dim{opacity:.15}
+.node.hidden,.edge.hidden{display:none}
+.nfo{font:13px/1.35 "IBM Plex Sans",sans-serif;color:var(--fg);padding:8px 10px;height:100%;display:flex;flex-direction:column;gap:3px;overflow:hidden}
+.nfo .nt{display:flex;gap:6px;align-items:center;font-weight:600;font-size:15px;line-height:1.2} .nfo .ns{color:var(--muted);font-size:12.5px}
+.nfo .tag{font:600 9px/14px var(--mono);letter-spacing:.03em;padding:0 5px;border-radius:999px;border:1px solid;display:inline-block;vertical-align:1px}
+.nfo .chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px} .nfo .chips span{font:500 12px var(--mono);padding:2px 7px;border-radius:6px;background:#fff;border:1px solid var(--purple-line);color:var(--purple-ink)}
+.edge path{fill:none;stroke-width:1.6} body.simple .edge text{display:none} .edge text{font:10.5px var(--mono);fill:var(--muted);paint-order:stroke;stroke:#fff;stroke-width:4px}
+.k-data path{stroke:#0969DA} .k-metadata path{stroke:#6E7781} .k-schema path{stroke:#6E7781;stroke-dasharray:6 4} .k-usage path{stroke:#1A7F37;stroke-dasharray:2 4}
+.k-governance path{stroke:#BF8700;stroke-dasharray:8 5} .k-lab path{stroke:#8250DF;stroke-dasharray:5 4}
+.edge.hl path{stroke-width:3.5;stroke-dasharray:6 6;animation:flow .6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-12}}
+@media (prefers-reduced-motion:reduce){.edge.hl path{animation:none}*{scroll-behavior:auto!important;transition:none!important}}
+.ekeys{display:flex;flex-wrap:wrap;gap:6px 16px;font:12px var(--mono);color:var(--muted)} .ekeys span{display:inline-flex;gap:6px;align-items:center}
+.ekeys svg{width:28px;height:8px}
+.panel{border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:18px;display:flex;flex-direction:column;gap:12px;max-height:680px;overflow:auto}
+.panel h3{font-size:18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.panel dl{margin:0;display:flex;flex-direction:column;gap:10px} .panel dt{font:600 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)} .panel dd{margin:2px 0 0;font-size:14px}
+.panel pre,.pre{margin:0;padding:10px 12px;background:var(--d-bg);color:var(--d-fg);border-radius:8px;font:12px/1.55 var(--mono);white-space:pre-wrap;word-break:break-word}
+.panel blockquote{margin:0;padding:6px 10px;border-left:3px solid var(--good-line);background:var(--subtle);font-size:13px}
+.panel blockquote a{font:11px var(--mono);word-break:break-all}
+.nodelist{display:flex;flex-wrap:wrap;gap:6px} .nodelist button{min-height:34px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--bg);font:13px "IBM Plex Sans",sans-serif;cursor:pointer}
+.nodelist button.ours{border-color:var(--purple-line);color:var(--purple-ink)}
+/* trace */
+.tracebar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--subtle)}
+.tracebar label{display:flex;flex-direction:column;gap:4px;font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tsum{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:14px}
+.tsteps{display:flex;flex-direction:column;gap:8px;counter-reset:s}
+.tstep{border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden}
+.tstep>button{width:100%;display:flex;gap:10px;align-items:center;padding:10px 12px;border:0;background:transparent;font:500 14px "IBM Plex Sans",sans-serif;text-align:left;cursor:pointer;color:var(--fg)}
+.tstep>button::before{counter-increment:s;content:counter(s);flex:none;width:24px;height:24px;border-radius:50%;background:var(--chip);font:600 12px/24px var(--mono);text-align:center}
+.tstep.on{border-color:var(--good);box-shadow:0 0 0 2px var(--good-soft)} .tstep.on>button::before{background:var(--good);color:#fff}
+.tstep .ms{margin-left:auto;font:12px var(--mono);color:var(--muted);white-space:nowrap}
+.tbody{display:none;padding:0 12px 12px;gap:8px;grid-template-columns:110px minmax(0,1fr);font-size:13px} .tstep.on .tbody{display:grid}
+.tbody dt{font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;padding-top:3px} .tbody dd{margin:0;min-width:0}
+.tbody pre{margin:0;padding:6px 8px;background:var(--subtle);border-radius:6px;font:12px/1.5 var(--mono);white-space:pre-wrap;word-break:break-word;max-height:180px;overflow:auto}
+@media (max-width:520px){.tbody{grid-template-columns:1fr}}
+.answer{padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:15px}
+/* tables */
+.tbl{width:100%;border-collapse:collapse;font-size:14px} .tbl th,.tbl td{padding:8px 10px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top}
+.tbl th{font:600 12px var(--mono);color:var(--muted)} .tbl td.num,.tbl th.num{text-align:right;font-family:var(--mono);white-space:nowrap}
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.ok{color:var(--good-ink)} .ko{color:var(--bad-ink)}
+.cycle{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font:13px var(--mono)} .cycle span{padding:4px 10px;border-radius:999px;border:1px solid var(--purple-line);background:var(--purple-soft);color:var(--purple-ink)} .cycle i{color:var(--faint);font-style:normal}
+.zones{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.zone-box{border:2px solid var(--good-line);border-radius:12px;padding:18px;background:#F6FEF8} .zone-box.pre{border-color:var(--purple-line);border-style:dashed;background:#FCF8FF}
+.zone-box b{font:600 13px var(--mono)}
+.tech{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:0 12px 0 5px;border-radius:999px;background:var(--bg);border:1px solid var(--line);font:13px var(--mono);white-space:nowrap}
 .tech .lg{width:24px;height:24px;border-radius:50%;background:color-mix(in srgb,var(--c) 12%,#fff);display:inline-flex;align-items:center;justify-content:center}
-.tech svg{width:14px;height:14px;fill:var(--c)}
-.tech small{font-size:11px;color:var(--muted)}
-
-/* cta */
-.cta{max-width:880px;margin:0 auto;padding:104px 24px;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
-@media (max-width:640px){.cta{padding:64px 16px}}
-.cta h2{font-size:clamp(32px,4vw,44px);line-height:1.1}
-.cta>p{margin:0;color:var(--muted);font-size:17px}
-.cta .term{width:100%;max-width:760px;text-align:left;box-shadow:0 16px 40px rgba(31,35,40,.18)}
-.cta .term-h{padding:8px 8px 8px 16px}
-.copy{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border:1px solid var(--d-line);border-radius:6px;background:var(--d-line-2);color:var(--d-fg);font:500 13px "IBM Plex Sans",sans-serif;cursor:pointer}
-.shell{padding:20px 18px;overflow-x:auto;font:14px/26px var(--mono)}
-.shell div{white-space:nowrap;color:var(--d-fg)} .shell .p{color:#3FB950;user-select:none} .shell .ok{color:var(--d-muted)}
-.cursor{display:inline-block;width:8px;height:16px;vertical-align:-3px;background:var(--d-fg)}
-.example{display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--bg);font-size:15px}
-footer .wrap{padding-top:28px;padding-bottom:28px;display:flex;flex-direction:column;gap:16px;font:500 11px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.foot-row{display:flex;flex-wrap:wrap;gap:8px 32px;justify-content:space-between;align-items:center}
-.foot-row+.foot-row{padding-top:16px;border-top:1px solid var(--line-2)}
-.foot-brand{display:inline-flex;align-items:center;gap:8px;font:600 15px "IBM Plex Sans",sans-serif;letter-spacing:-.01em;text-transform:none;color:var(--fg)}
-footer nav{display:flex;flex-wrap:wrap;gap:4px 24px} footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
-footer nav a{display:inline-block;padding:8px 0}
-/* signature, as on smiro.dev: the mark stands between given name and family name */
-.made{display:inline-flex;align-items:center;gap:6px}
-.made .sig{display:inline-flex;align-items:center;gap:.3em;white-space:nowrap;color:var(--fg)}
-.craft{width:2em;height:2em;color:var(--accent);stroke-width:1.5;translate:.038em -.153em;padding-bottom:2px;transition:transform .4s cubic-bezier(.2,.75,.2,1),filter .4s}
-.made:hover .craft{transform:rotate(-8deg) scale(1.08);filter:drop-shadow(0 0 7px rgba(9,105,218,.4))}
-.made:hover{color:var(--muted)}
-@media (prefers-reduced-motion:reduce){.craft{transition:none}.made:hover .craft{transform:none}}
+.tech svg{width:14px;height:14px;fill:var(--c)} .tech small{font-size:11px;color:var(--muted)}
+.chiprow{display:flex;flex-wrap:wrap;gap:8px}
+body.simple .only-tech{display:none!important}
+ul.clean{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+footer .wrap{padding-top:28px;padding-bottom:28px;display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between;font:500 11px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)} footer nav{display:flex;flex-wrap:wrap;gap:4px 20px}
+.made{display:inline-flex;align-items:center;gap:6px} .made .sig{display:inline-flex;align-items:center;gap:.3em;color:var(--fg)}
+.craft{width:2em;height:2em;color:var(--accent);stroke-width:1.5;translate:.038em -.153em;transition:transform .4s} .made:hover .craft{transform:rotate(-8deg) scale(1.08)}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
   <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
   <symbol id="i-sync" viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5M3 21v-5h5"/></symbol>
@@ -349,546 +157,369 @@ footer nav a{display:inline-block;padding:8px 0}
   <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 14h.01M15 14h.01"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
   <symbol id="i-graph" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7.5 6h9M6.3 8.2l4.4 7.6M17.7 8.2l-4.4 7.6"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></symbol>
-  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
   <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
   <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
-  <symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></symbol>
-  <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></symbol>
   <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
-  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
-  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+  <symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></symbol>
   <symbol id="i-craft" viewBox="0 0 24 24"><path d="M11.5 6C7.022 6 4.782 6 3.391 7.172S2 10.229 2 14s0 5.657 1.391 6.828S7.021 22 11.5 22c4.478 0 6.718 0 8.109-1.172S21 17.771 21 14c0-1.17 0-2.158-.041-3"/><path d="m18.5 2l.258.697c.338.914.507 1.371.84 1.704c.334.334.791.503 1.705.841L22 5.5l-.697.258c-.914.338-1.371.507-1.704.84c-.334.334-.503.791-.841 1.705L18.5 9l-.258-.697c-.338-.914-.507-1.371-.84-1.704c-.334-.334-.791-.503-1.705-.841L15 5.5l.697-.258c.914-.338 1.371-.507 1.704-.84c.334-.334.503-.791.841-1.705z"/><path d="m15.5 12l1.227 1.057c.515.445.773.667.773.943s-.258.498-.773.943L15.5 16m-8-4l-1.227 1.057c-.515.445-.773.667-.773.943s.258.498.773.943L7.5 16m5-5l-2 6"/></symbol>
-  <symbol id="i-reload" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol>
 </svg>
 
-<header class="nav">
-  <div class="wrap">
-    <a class="brand" href="#top"><svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#1F2328"/><path d="M9 11h8M9 16h14M9 21h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="11" r="2.2" fill="#54AEFF"/></svg>Context Compiler<small>Huwise</small></a>
-    <nav aria-label="Sections"><a href="#fonctionnement">Fonctionnement</a><a href="#architecture">Architecture</a><a href="#resultats">Résultats</a><a href="#essayer">Essayer</a></nav>
-    <div class="nav-r">
-      <div class="seg" role="group" aria-label="Niveau de détail">
-        <button type="button" data-view="simple" aria-pressed="false">Simple</button>
-        <button type="button" data-view="detail" aria-pressed="true">Détaillée</button>
-      </div>
-      <a class="gh" href="https://github.com/SergeMiro/context-compiler-huwise"><svg class="i" width="16" height="16"><use href="#i-gh"/></svg>GitHub</a>
-    </div>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="#top"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#1F2328"/><path d="M9 11h8M9 16h14M9 21h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="11" r="2.2" fill="#54AEFF"/></svg>Context Compiler{% if env == "preprod" %} <span class="st st-PROPOSED">PREPROD</span>{% endif %}</a>
+  <nav aria-label="Sections">
+    <a href="#architecture">{{ t.nav_arch }}</a><a href="#trace">{{ t.nav_trace }}</a><a href="#erreur">{{ t.nav_error }}</a>
+    <a href="#lab">{{ t.nav_lab }}</a><a href="#comparer">{{ t.nav_cmp }}</a><a href="#securite">{{ t.nav_safety }}</a>
+    <a href="#methode">{{ t.nav_method }}</a><a href="#technique">{{ t.nav_tech }}</a>
+  </nav>
+  <div class="nav-r">
+    <div class="seg" role="group" aria-label="Detail"><button data-view="simple" aria-pressed="false">{{ t.view_simple }}</button><button data-view="tech" aria-pressed="true">{{ t.view_tech }}</button></div>
+    <a class="btn" href="{{ t.other_href }}" hreflang="{% if lang == 'fr' %}en{% else %}fr{% endif %}">{{ t.other_lang }}</a>
+    <a class="btn" href="https://github.com/SergeMiro/context-compiler-huwise" aria-label="GitHub"><svg class="i"><use href="#i-gh"/></svg></a>
   </div>
-</header>
+</div></header>
 
 <main>
-<section id="top">
-  <div class="wrap hero">
-    <div class="hero-l">
-      <div class="badges"><span class="badge accent">Serveur MCP</span><span class="badge">Huwise · Opendatasoft</span><span class="badge">Licence MIT</span></div>
-      <h1>Même modèle, même question. Avec le bon <span>contexte</span>, l'agent répond juste.</h1>
-      <p class="lead">Context Compiler transforme le portail <b>{{ domain }}</b> en <b>fiches de contexte pour agents IA</b> — une par jeu de données — et mesure si cela aide vraiment.</p>
-      <div class="ctas">
-        <a class="btn primary" href="#essayer">Essayer avec votre agent<svg class="i" width="16" height="16"><use href="#i-arrow"/></svg></a>
-        <a class="btn" href="#difference">Voir la différence</a>
-      </div>
-    </div>
-    <div class="editor">
-      <div class="editor-h">
-        <span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><a href="datasets/fr-en-college-effectifs-niveau-sexe-lv.md"><svg class="i" width="16" height="16" style="color:var(--d-muted)"><use href="#i-file"/></svg>datasets/fr-en-college-effectifs….md</a></span>
-        <span class="okpill">fiche réelle</span>
-      </div>
-      <div class="code">
-        <div class="ln" aria-hidden="true">1
-2
-3
-4
-5
-6
-7
-8
-9</div>
-        <div class="src">
-          <div><span class="k">## fr-en-college-effectifs-niveau-sexe-lv</span></div>
-          <div>Effectifs d'élèves en collège</div>
-          <div><span class="c">58 556 rows · updated 27.07.2026 · Licence Ouverte</span></div>
-          <div><span class="k">### Fields</span></div>
-          <div><span class="f">rentree_scolaire</span> · date <span class="c">e.g. '2025'</span></div>
-          <div><span class="f">departement</span> · text <span class="c">e.g. 'PARIS'</span> <span class="w">// majuscules</span></div>
-          <div><span class="k">### filter by year</span></div>
-          <div class="add">+ year(rentree_scolaire)=2025</div>
-          <div class="del">− rentree_scolaire='2025' <span class="c">// erreur de type</span></div>
-        </div>
-      </div>
-      <div class="editor-f">
-        <div><span>find_dataset</span><b>p95 13 ms</b></div>
-        <div><span>explain_dataset</span><b>p95 23 ms</b></div>
-        <div><span>query</span><b class="g">ODSQL validé</b></div>
-      </div>
-    </div>
+<section id="top"><div class="wrap hero">
+  <span class="eyebrow">{{ t.hero_eyebrow }}</span>
+  <h1>{{ t.hero_title }}</h1>
+  <div class="steps">
+    <div><b>{{ t.hero_s1t }}</b><span>{{ t.hero_s1 }}</span></div>
+    <div><b>{{ t.hero_s2t }}</b><span>{{ t.hero_s2 }}</span></div>
+    <div><b>{{ t.hero_s3t }}</b><span>{{ t.hero_s3 }}</span></div>
   </div>
-  {% if pair %}
-  <div class="wrap">
-    <div class="kpis">
-      <div><span>Réponses correctes</span><span class="v"><s>{{ pair.0.metrics.answer_ok|floatformat:0 }} %</s><b>{{ pair.1.metrics.answer_ok|floatformat:0 }} %</b></span></div>
-      <div><span>Bon jeu de données</span><span class="v"><s>{{ pair.0.metrics.dataset_ok|floatformat:0 }} %</s><b>{{ pair.1.metrics.dataset_ok|floatformat:0 }} %</b></span></div>
-      {% if tokens %}<div><span>Jetons consommés</span><span class="v"><b class="blue">{{ tokens }}</b><small>même modèle</small></span></div>{% endif %}
-    </div>
+  <div class="legend">
+    <div><b>{{ t.legend_origin }}</b><span class="st st-VERIFIED">VERIFIED</span>{{ t.st_VERIFIED }} <span class="st st-INFERRED">INFERRED</span>{{ t.st_INFERRED }} <span class="st st-PROPOSED">PROPOSED</span>{{ t.st_PROPOSED }}</div>
+    <div><b>{{ t.legend_exec }}</b><span class="st st-LIVE">LIVE</span>{{ t.ex_LIVE }} <span class="st st-RECORDED">RECORDED</span>{{ t.ex_RECORDED }} <span class="st st-SIMULATED">SIMULATED</span>{{ t.ex_SIMULATED }}</div>
   </div>
-  {% endif %}
-</section>
+</div></section>
 
-<section class="alt">
-  <div class="wrap sec">
-    <div class="sh">
-      <span class="eyebrow warn"><svg class="i" width="16" height="16" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>Pourquoi</span>
-      <h2>Quatre pièges où un agent générique tombe</h2>
-      <p>Le schéma du portail est riche, mais ses types sont piégeux. Chaque fiche les nomme avant que l'agent n'écrive sa requête.</p>
+<section id="architecture" class="alt"><div class="wrap sec">
+  <div class="sh"><span class="eyebrow">{{ t.map_eyebrow }}</span><h2>{{ t.map_title }}</h2><p>{{ t.map_lead }}</p></div>
+  <div class="maphead">
+    <div class="seg" role="group" aria-label="Mode" id="modes">
+      <button data-mode="today" aria-pressed="true">{{ t.mode_today }}</button><button data-mode="ours" aria-pressed="false">{{ t.mode_ours }}</button>
+      <button data-mode="trace" aria-pressed="false">{{ t.mode_trace }}</button><button data-mode="lab" aria-pressed="false">{{ t.mode_lab }}</button>
     </div>
-    <div class="grid">
-      <article class="card"><div class="trap-h"><span>clé de jointure</span><b>TEXT ×3</b></div>
-        <div class="cbody"><span class="ico warn"><svg class="i" width="22" height="22" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
-          <h3>Un département, trois formats</h3><p>La Côte-d'Or s'écrit <code class="icode">'021'</code>, <code class="icode">'21'</code> ou <code class="icode">"COTE D'OR"</code> selon le jeu.</p></div>
-        <div class="diff"><div class="m">− un seul format testé → 0 ligne</div><div class="p">+ la fiche montre le vrai format</div></div></article>
-      <article class="card"><div class="trap-h"><span>rentree_scolaire</span><b>DATE</b></div>
-        <div class="cbody"><span class="ico warn"><svg class="i" width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
-          <h3>Années stockées en dates</h3><p>Filtrer sur une année brute provoque une erreur de type de l'API.</p></div>
-        <div class="diff"><div class="m">− rentree_scolaire = '2025'</div><div class="p">+ year(rentree_scolaire) = 2025</div></div></article>
-      <article class="card"><div class="trap-h"><span>ips · ips_etab</span><b>TEXT ≠ INT</b></div>
-        <div class="cbody"><span class="ico warn"><svg class="i" width="22" height="22" viewBox="0 0 24 24"><path d="M5 9h14M5 15h14M10 3L8 21M16 3l-2 18"/></svg></span>
-          <h3>Nombres stockés en texte</h3><p>Les moyennes échouent, le tri suit l'ordre des chaînes.</p></div>
-        <div class="diff"><div class="m">− avg(ips) échoue · tri alphabétique</div><div class="p">+ la fiche signale le type réel</div></div></article>
-      <article class="card"><div class="trap-h"><span>nom d'académie</span><b>Aa ≠ AA</b></div>
-        <div class="cbody"><span class="ico warn"><svg class="i" width="22" height="22" viewBox="0 0 24 24"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg></span>
-          <h3>Casse différente</h3><p><code class="icode">academie='DIJON'</code> ici, <code class="icode">libelle_academie='Dijon'</code> là.</p></div>
-        <div class="diff"><div class="m">− filtre exact → aucun résultat</div><div class="p">+ la fiche donne la casse attendue</div></div></article>
-    </div>
+    <div class="ekeys" id="ekeys"></div>
   </div>
-</section>
-
-<section id="fonctionnement">
-  <div class="wrap sec">
-    <div class="sh">
-      <span class="eyebrow"><svg class="i" width="16" height="16"><use href="#i-sync"/></svg>Comment ça marche</span>
-      <h2>Avant, pendant, après la question</h2>
-      <p>Trois opérations sur une même table de fiches. Un LLM n'intervient qu'à la troisième, hors ligne.</p>
-    </div>
-    <ol class="plain grid">
-      <li class="card op"><div class="bar"></div>
-        <div class="cbody"><div class="top"><span class="ico"><svg class="i" width="24" height="24"><use href="#i-db"/></svg></span><span class="tag">01 · avant · hors ligne</span></div>
-          <h3>Compiler les fiches</h3><p>Context Compiler lit le portail et écrit une fiche par jeu de données.</p></div>
-        <div class="sql"><span><b>INSERT</b> INTO fiches</span><span>1 par jeu</span></div></li>
-      <li class="card op good"><div class="bar"></div>
-        <div class="cbody"><div class="top"><span class="ico good"><svg class="i" width="24" height="24"><use href="#i-server"/></svg></span><span class="tag">02 · pendant · MCP</span></div>
-          <h3>Servir l'agent</h3><p>Votre agent interroge le serveur MCP : il reçoit les fiches déjà écrites et sa requête est vérifiée — sans LLM, rien n'est inventé.</p></div>
-        <div class="sql"><span><b>SELECT</b> FROM fiches</span><span>lecture seule</span></div></li>
-      <li class="card op purple"><div class="bar"></div>
-        <div class="cbody"><div class="top"><span class="ico purple"><svg class="i" width="24" height="24"><use href="#i-flask"/></svg></span><span class="tag">03 · après · évaluation</span></div>
-          <h3>Mesurer, améliorer</h3><p>Un LLM teste les fiches sur 30 questions de référence et propose des corrections ; une correction n'est gardée que si elle corrige sans rien casser.</p></div>
-        <div class="sql"><span><b>UPDATE</b> fiches <b>WHERE</b> ✓</span><span>sinon ROLLBACK</span></div></li>
-    </ol>
-  </div>
-</section>
-
-<section id="architecture" class="alt">
-  <div class="wrap sec" style="gap:32px">
-    <div class="sh-row">
-      <div class="sh">
-        <span class="eyebrow"><svg class="i" width="16" height="16"><use href="#i-layers"/></svg>Architecture</span>
-        <h2>Un chemin froid qui compile, un chemin chaud qui sert</h2>
+  <div class="mapbox">
+    <div>
+      <div class="map" id="map">
+        <div class="zoom"><button id="zin" aria-label="{{ t.zoom_in }}">+</button><button id="zout" aria-label="{{ t.zoom_out }}">−</button><button id="zreset" aria-label="{{ t.zoom_reset }}">⟲</button></div>
+        <svg id="svg" role="group" aria-label="{{ t.map_title }}"></svg>
       </div>
-      <div class="legend"><span><i></i>hors ligne</span><span><i class="g"></i>temps réel, sans LLM</span><span><i class="p"></i>LLM (hors ligne seulement)</span></div>
+      <div style="margin-top:10px" class="nodelist" id="nodelist" aria-label="{{ t.list_blocks }}"></div>
     </div>
-
-    <div class="lane">
-      <div class="lane-h"><b>CHEMIN FROID · hors ligne</b><span>Celery + MariaDB · le seul endroit où un LLM est appelé</span></div>
-      <div class="lane-b">
-        <div class="row">
-          <div class="node"><span class="nic"><svg class="i" width="18" height="18"><use href="#i-globe"/></svg></span><span><b>Explore API</b><small>v2.1 · catalogue</small></span></div>
-          <svg class="arrow" width="36" height="20" viewBox="0 0 36 20" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="flow" d="M2 10h28"/><path d="M26 5l6 5-6 5"/></svg>
-          <div class="node"><span class="nic"><svg class="i" width="18" height="18"><use href="#i-sync"/></svg></span><span><b>scan</b><small>Celery · incrémental</small></span></div>
-          <svg class="arrow" width="36" height="20" viewBox="0 0 36 20" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="flow" d="M2 10h28"/><path d="M26 5l6 5-6 5"/></svg>
-          <div class="node on" style="flex-basis:190px"><span class="nic"><svg class="i" width="18" height="18"><use href="#i-db"/></svg></span><span><b>MariaDB</b><small>source de vérité</small></span></div>
-          <svg class="arrow" width="36" height="20" viewBox="0 0 36 20" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="flow" d="M2 10h28"/><path d="M26 5l6 5-6 5"/></svg>
-          <div class="node" style="flex-basis:190px"><span class="nic"><svg class="i" width="18" height="18"><use href="#i-file"/></svg></span><span><b>compile</b><small>fiches versionnées</small></span></div>
-        </div>
-        <div class="row" style="align-items:stretch;gap:16px">
-          <a class="loopbox" href="#resultats"><span class="nic p"><svg class="i" width="18" height="18"><use href="#i-flask"/></svg></span><span><b>Boucle eval → improve</b><small>30 questions de référence · une modification par fiche en échec, gardée seulement si rien ne casse</small></span></a>
-          <div class="proj"><span>PROJECTIONS DES FICHES</span>
-            <div><span><svg class="i" width="16" height="16"><use href="#i-search"/></svg>Elasticsearch</span><span><svg class="i" width="16" height="16"><use href="#i-graph"/></svg>Neo4j</span><a href="llms.txt"><svg class="i" width="16" height="16"><use href="#i-file"/></svg>llms.txt · {{ pages }} p.</a></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bridge"><svg width="20" height="36" viewBox="0 0 20 36" fill="none" stroke="var(--good)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="flow" d="M10 2v28"/><path d="M5 26l5 6 5-6"/></svg>les projections sont lues en lecture seule</div>
-
-    <div class="lane hot">
-      <div class="lane-h"><b>CHEMIN CHAUD · serveur MCP</b><span>pas de LLM · aucune écriture sauf le journal des appels</span></div>
-      <div class="lane-b">
-        <div class="row">
-          <a class="node" href="#difference"><span class="nic g"><svg class="i" width="18" height="18"><use href="#i-bot"/></svg></span><span><b>Agent IA</b><small>votre client MCP</small></span></a>
-          <svg class="arrow" width="36" height="20" viewBox="0 0 36 20" fill="none" stroke="var(--good)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="flow" d="M2 10h28"/><path d="M26 5l6 5-6 5"/></svg>
-          <a class="node on-g" href="#essayer"><span class="nic"><svg class="i" width="18" height="18"><use href="#i-term"/></svg></span><span><b>Serveur MCP</b><small>sans état · 3 outils</small></span></a>
-          <svg class="arrow" width="36" height="20" viewBox="0 0 36 20" fill="none" stroke="var(--good)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="flow" d="M2 10h28"/><path d="M26 5l6 5-6 5"/></svg>
-          <div class="tools">
-            <div><code>find_dataset</code><span>→ Elasticsearch + signal d'usage</span><em>p95 13 ms</em></div>
-            <div><code>explain_dataset</code><span>→ fiche + graphe Neo4j</span><em>p95 23 ms</em></div>
-            <div><code>query</code><span>→ validateur ODSQL → Explore API</span><em class="b">validé avant quota</em></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <aside class="panel" id="panel" aria-live="polite"><p class="muted">{{ t.panel_hint }}</p></aside>
   </div>
-</section>
+  <div id="labmode" hidden></div>
+</div></section>
 
-<section>
-  <div class="wrap sec">
-    <div class="sh">
-      <span class="eyebrow"><svg class="i" width="16" height="16"><use href="#i-bolt"/></svg>En quatre étapes</span>
-      <h2>Du portail brut à l'agent fiable</h2>
-    </div>
-    <ol class="plain grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))">
-      <li class="step"><div class="step-n" aria-hidden="true"><b>1</b><span><svg width="600" height="4" viewBox="0 0 600 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path class="flow" d="M2 2H598"/></svg></span></div>
-        <div class="card"><span class="ico"><svg class="i" width="22" height="22"><use href="#i-globe"/></svg></span><b>Lire le portail</b><span class="chips"><span>{{ datasets }} jeux</span><span>{{ fields }} champs</span></span><code><i>$</i> scan</code></div></li>
-      <li class="step"><div class="step-n" aria-hidden="true"><b>2</b><span><svg width="600" height="4" viewBox="0 0 600 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path class="flow" d="M2 2H598"/></svg></span></div>
-        <div class="card"><span class="ico"><svg class="i" width="22" height="22"><use href="#i-file"/></svg></span><b>Écrire une fiche par jeu</b><span class="chips"><span>≤ 400 jetons</span><span>versionnée</span></span><code><i>$</i> compile</code></div></li>
-      <li class="step good"><div class="step-n" aria-hidden="true"><b>3</b><span><svg width="600" height="4" viewBox="0 0 600 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path class="flow" d="M2 2H598"/></svg></span></div>
-        <div class="card"><span class="ico good"><svg class="i" width="22" height="22"><use href="#i-server"/></svg></span><b>Servir l'agent</b><span class="chips"><span>3 outils MCP</span><span>p95 ≤ 23 ms</span></span><code><i>$</i> mcp</code></div></li>
-      <li class="step purple"><div class="step-n" aria-hidden="true"><b>4</b><span><svg width="600" height="4" viewBox="0 0 600 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path class="flow" d="M2 2H598"/></svg></span></div>
-        <div class="card"><span class="ico purple"><svg class="i" width="22" height="22"><use href="#i-flask"/></svg></span><b>Mesurer, améliorer</b><span class="chips"><span>30 questions</span><span>sans LLM juge</span></span><code><i>$</i> eval · improve</code></div></li>
-    </ol>
+<section id="trace"><div class="wrap sec">
+  <div class="sh"><span class="eyebrow good">{{ t.trace_eyebrow }}</span><h2>{{ t.trace_title }}</h2><p>{{ t.trace_lead }}</p></div>
+  <div class="tracebar">
+    <label>{{ t.scenario }}<select id="scen"></select></label>
+    <label>{{ t.config }}<span class="seg" id="cfg" role="group"><button data-cfg="naked" aria-pressed="false">{{ t.cfg_naked }}</button><button data-cfg="compiled" aria-pressed="false">{{ t.cfg_compiled }}</button><button data-cfg="optimized" aria-pressed="true">{{ t.cfg_optimized }}</button></span></label>
+    <button class="btn primary" id="replay"><svg class="i"><use href="#i-play"/></svg>{{ t.replay }}</button>
+    <button class="btn" id="live" title="{{ t.live_note }}">{{ t.live_btn }}</button>
   </div>
-</section>
+  <div class="tsum" id="tsum"></div>
+  <div class="tsteps" id="tsteps"></div>
+  <div class="answer" id="tanswer"></div>
+</div></section>
 
-<section id="difference" class="alt">
-  <div class="wrap sec">
-    <div class="sh-row">
-      <div class="sh" style="max-width:640px">
-        <span class="eyebrow good"><svg class="i" width="16" height="16"><use href="#i-check"/></svg>Voyez la différence</span>
-        <h2>Pourquoi c'est mieux</h2>
-        <p>Le même modèle répond deux fois à la même question : avec des outils génériques de catalogue (chercher, lire le schéma, interroger), puis avec Context Compiler.</p>
-      </div>
-      <button class="btn white" id="live" type="button"><svg class="i" width="16" height="16"><use href="#i-reload"/></svg>Relancer les deux agents en direct</button>
-    </div>
-
-    <div id="exemple" style="display:flex;flex-direction:column;gap:16px">
-      <div class="tabs" id="tabs" role="tablist" aria-label="Exemples"></div>
-      <div class="qbox"><div class="qbox-h"><span>question</span><span id="expected"></span></div><p id="question">…</p></div>
-      <div class="duel">
-        <div class="card" id="side-naked"></div>
-        <div class="card" id="side-compiled"></div>
-      </div>
-      <div class="liverow">
-        <select id="more" aria-label="Autres questions"></select>
-        <span>{% if live_model %}en direct : <code class="icode">{{ live_model }}</code> · {% endif %}quelques secondes</span>
-      </div>
-    </div>
-
-    <div class="grid why" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))">
-      <article class="card"><div class="cbody"><h3>Il trouve le bon jeu</h3><p>La recherche tient compte de ce que les agents utilisent vraiment : le journal MCP du portail (39 675 appels).</p></div>
-        <div class="diff"><div class="m">− générique · ne trouve pas l'annuaire, 0 ligne</div><div class="p">+ compilé · l'annuaire en 1<sup>re</sup> place</div></div></article>
-      <article class="card"><div class="cbody"><h3>Il connaît le format</h3><p>Les années se filtrent avec la bonne fonction.</p></div>
-        <div class="diff"><div class="n">› year(rentree_scolaire) = 2025</div><div class="p">+ résultat · 80 217 élèves</div></div></article>
-      <article class="card"><div class="cbody"><h3>Il ne devine pas</h3><p>Un champ inconnu est bloqué avant le portail, avec une piste.</p></div>
-        <div class="diff"><div class="m">− générique · departement = '21' part au portail</div><div class="p">+ indice · proches : code_departement</div></div></article>
-    </div>
+<section id="erreur" class="alt"><div class="wrap sec">
+  <div class="sh"><span class="eyebrow warn">{{ t.err_eyebrow }}</span><h2>{{ t.err_title }}</h2><p>{{ t.err_lead }}</p></div>
+  <div class="grid">
+    <div class="card"><h3>{{ t.err_case }}</h3>
+      <pre class="pre">where = nom_commune='DIJON' and type_etablissement='Collège'</pre>
+      <button class="btn" data-q="nom_commune='DIJON' and type_etablissement='Collège'|nom_commune='Dijon' and type_etablissement='Collège'">{{ t.err_try }}</button><div class="mono muted" aria-live="polite"></div></div>
+    <div class="card"><h3>{{ t.err_code }}</h3>
+      <pre class="pre">where = code_departement='21' and type_etablissement='Collège'</pre>
+      <button class="btn" data-q="code_departement='21' and type_etablissement='Collège'|code_departement='021' and type_etablissement='Collège'">{{ t.err_try }}</button><div class="mono muted" aria-live="polite"></div></div>
+    <div class="card" style="border-color:var(--purple-line)"><h3>Context Optimizer</h3><p class="muted" style="margin:0">{{ t.err_fix }}</p>
+      <pre class="pre">{"total_count": 0, "hint": ["nom_commune: 'DIJON' is stored as 'Dijon'"]}
+{"total_count": 0, "hint": ["code_departement: codes are written with leading zeros, try '021'"]}</pre></div>
   </div>
-</section>
+  <div id="errtrace"></div>
+</div></section>
 
-<section id="resultats">
-  <div class="wrap sec" style="gap:32px">
-    <div class="sh">
-      <span class="eyebrow"><svg class="i" width="16" height="16" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Résultats</span>
-      <h2>Même modèle, deux jeux d'outils</h2>
-      {% if pair %}<p>{{ pair.1.metrics.n }} questions de référence, au plus 6 étapes, notées sans LLM juge : la réponse est comparée à la valeur calculée depuis l'API.</p>{% endif %}
-    </div>
-    {% if pair %}
-    <div class="res">
-      <div class="box" id="bars" style="flex:3 1 560px">
-        <div class="box-h"><code>{{ pair.1.model }}</code><span class="legend" style="font-weight:400"><span><i class="grey"></i>outils génériques</span><span><i></i>Context Compiler</span></span></div>
-        <div style="padding:4px 20px">
-          {% for b in bars %}
-          <div class="brow"><div>{{ b.label }}</div><div>
-            <div class="bt"><div class="bg"><i data-w="{{ b.naked }}"></i></div><span>{{ b.naked|floatformat:0 }} %</span></div>
-            <div class="bt"><div class="bg"><i class="comp" data-w="{{ b.compiled }}"></i></div><span class="comp">{{ b.compiled|floatformat:0 }} %</span></div>
-          </div></div>
-          {% endfor %}
-          <div class="brow"><div>Étapes par question <small>(moins = mieux)</small></div><div class="big-steps"><s>{{ steps.0 }}</s><b>{{ steps.1 }}</b></div></div>
-        </div>
-      </div>
-      <div class="box" style="flex:2 1 340px">
-        <div class="box-h">Par modèle</div>
-        <div class="scroll-x"><table>
-          <thead><tr><th scope="col">Modèle</th><th scope="col">Générique</th><th scope="col">Compilé</th><th scope="col">Jetons</th></tr></thead>
-          <tbody>{% for m in models %}<tr><td class="mono" style="font-size:13px">{{ m.model }}{% if m.free %} <span class="muted" style="font-family:'IBM Plex Sans',sans-serif">(gratuit)</span>{% endif %}</td><td class="muted">{{ m.naked|floatformat:0 }} %</td><td class="ok">{{ m.compiled|floatformat:0 }} %</td><td>{{ m.tokens|default:"—" }}</td></tr>{% endfor %}</tbody>
-        </table></div>
-        <p class="muted" style="margin:0;padding:12px 16px;border-top:1px solid var(--line-2);font-size:13.5px">Ce qui échoue encore et pourquoi : <a href="https://github.com/SergeMiro/context-compiler-huwise/blob/prod/NOTES.md">NOTES.md</a>.</p>
-      </div>
-    </div>
-    {% else %}<p class="muted">Pas encore d'éval complète : <code class="icode">manage.py eval {{ domain }} --mode both</code>.</p>{% endif %}
+<section id="lab"><div class="wrap sec">
+  <div class="sh"><span class="eyebrow purple">{{ t.lab_eyebrow }}</span><h2>{{ t.lab_title }}</h2><p>{{ t.lab_lead }}</p></div>
+  <div class="cycle" id="cycle"></div>
+  <div class="grid">
+    <div class="card"><h3>{{ t.lab_budget }}</h3><ul class="clean mono" style="font-size:13px">{% for k, v in lab.policy.budget.items %}<li>{{ k }} = {{ v }}</li>{% endfor %}</ul></div>
+    <div class="card"><h3>{{ t.lab_gate }} <span class="st st-neutral">{{ lab.policy.version }}</span></h3><ul class="clean mono" style="font-size:13px">{% for k, v in lab.policy.gate.items %}<li>{{ k }} = {{ v }}</li>{% endfor %}</ul></div>
   </div>
-</section>
+  <div class="card"><h3>{{ t.lab_log }} {% if lab.entries %}<span class="st {% if lab.chain_ok %}st-ok{% else %}st-ko{% endif %}">{% if lab.chain_ok %}{{ t.lab_chain_ok }}{% else %}{{ t.lab_chain_bad }} {{ lab.bad_line }}{% endif %}</span> <span class="st st-RECORDED">RECORDED</span>{% endif %}</h3>
+    <div id="lablog">{% if not lab.entries %}<p class="muted">{{ t.lab_empty }}</p>{% endif %}</div></div>
+</div></section>
 
-<section class="alt only-detail">
-  <div class="wrap sec" style="gap:32px">
-    <div class="sh">
-      <span class="eyebrow"><svg class="i" width="16" height="16"><use href="#i-term"/></svg>Commandes</span>
-      <h2>Le pipeline, commande par commande</h2>
-    </div>
-    <div class="term">
-      <div class="term-h"><span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>python manage.py &lt;commande&gt;</span></div>
-      <div class="scroll-x"><table>
-        <thead><tr><th scope="col" style="width:200px">Commande</th><th scope="col">Rôle</th><th scope="col" style="width:140px">Chemin</th></tr></thead>
-        <tbody>
-          <tr><td><i>$</i> scan</td><td>Importe le catalogue et les champs, en incrémental ; échantillons de valeurs sauf champs personnels.</td><td><span class="pathtag">froid</span></td></tr>
-          <tr><td><i>$</i> signals</td><td>Récupère l'usage par jeu depuis le journal MCP du portail.</td><td><span class="pathtag">froid</span></td></tr>
-          <tr><td><i>$</i> compile</td><td>Construit les fiches ; nouvelle version seulement si le texte change.</td><td><span class="pathtag">froid</span></td></tr>
-          <tr><td><i>$</i> project</td><td>Charge Elasticsearch et Neo4j pour un portail.</td><td><span class="pathtag">froid</span></td></tr>
-          <tr><td><i>$</i> eval</td><td>Joue les questions de référence en mode générique, compilé ou les deux.</td><td><span class="pathtag m">mesure</span></td></tr>
-          <tr><td><i>$</i> improve</td><td>Propose, teste puis garde ou annule une modification de fiche.</td><td><span class="pathtag m">mesure</span></td></tr>
-          <tr><td><i>$</i> mcp · bench</td><td>Lance le serveur MCP et mesure la latence.</td><td><span class="pathtag h">chaud</span></td></tr>
-        </tbody>
-      </table></div>
-    </div>
-  </div>
-</section>
+<section id="comparer" class="alt"><div class="wrap sec">
+  <div class="sh"><span class="eyebrow">{{ t.cmp_eyebrow }}</span><h2>{{ t.cmp_title }}</h2><p>{{ t.cmp_lead }}</p></div>
+  <p class="answer" style="border-color:var(--warn-line);background:var(--warn-soft);margin:0">{{ t.cmp_caveat }}</p>
+  <div class="tracebar"><label>{{ t.cmp_set }}<select id="cmpset"></select></label><label>{{ t.cmp_tag }}<select id="cmptag"></select></label><span class="st st-RECORDED">RECORDED</span></div>
+  <div id="cmp"><p class="muted">{{ t.cmp_none }}</p></div>
+  {% if legacy %}<details class="only-tech"><summary class="muted">{{ t.cmp_legacy }}</summary>
+    <div class="tscroll" style="margin-top:10px"><table class="tbl"><tr><th>model</th><th class="num">A</th><th class="num">B</th><th>runs</th><th>date</th></tr>
+    {% for r in legacy %}<tr><td class="mono">{{ r.model }}</td><td class="num">{{ r.naked }} %</td><td class="num">{{ r.compiled }} %</td><td class="mono">#{{ r.runs.0 }}/#{{ r.runs.1 }}</td><td class="mono">{{ r.date }}</td></tr>{% endfor %}</table></div></details>{% endif %}
+</div></section>
 
-<section class="only-detail">
-  <div class="wrap sec split">
-    <div class="box">
-      <div class="box-h l"><svg class="i" width="18" height="18" style="color:var(--good)"><use href="#i-shield"/></svg><h3>Sécurité</h3></div>
-      <ul class="ticks">
-        <li><svg class="i" width="16" height="16"><use href="#i-check"/></svg>Chaque requête est isolée par portail, dans MariaDB, Elasticsearch et Neo4j — et c'est testé.</li>
-        <li><svg class="i" width="16" height="16"><use href="#i-check"/></svg>La clé API du client est transmise à l'Explore API, jamais stockée ni journalisée.</li>
-        <li><svg class="i" width="16" height="16"><use href="#i-check"/></svg>ODSQL en liste blanche : vrais champs seulement, limite ≤ 100, pas de commentaires.</li>
-        <li><svg class="i" width="16" height="16"><use href="#i-check"/></svg>Les champs personnels n'atteignent jamais les fiches ni le LLM.</li>
-        <li><svg class="i" width="16" height="16"><use href="#i-check"/></svg>Le journal garde l'outil, la latence et le code d'erreur — jamais la question ni la requête.</li>
-      </ul>
-    </div>
-    <div class="box" style="flex-basis:380px">
-      <div class="box-h l"><svg class="i" width="18" height="18" viewBox="0 0 24 24" style="color:var(--muted)"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg><h3>Pas fait — exprès</h3></div>
-      <ul class="ticks">
-        <li><span class="dash" aria-hidden="true">—</span>Pas de LLM sur le chemin chaud.</li>
-        <li><span class="dash" aria-hidden="true">—</span>Pas de recherche vectorielle tant que les évals ne le demandent pas.</li>
-        <li><span class="dash" aria-hidden="true">—</span>Pas de LLM juge.</li>
-        <li><span class="dash" aria-hidden="true">—</span>Pas de LangChain ni LangGraph : la boucle agent tient en ~100 lignes.</li>
-      </ul>
-    </div>
+<section id="securite"><div class="wrap sec">
+  <div class="sh"><span class="eyebrow good">{{ t.safety_eyebrow }}</span><h2>{{ t.safety_title }}</h2></div>
+  <div class="zones">
+    <div class="zone-box"><b>{{ t.safety_prod }}</b><p class="muted" style="margin:8px 0 0">{{ t.safety_prod_l }}</p></div>
+    <div class="zone-box pre"><b>{{ t.safety_preprod }}</b><p class="muted" style="margin:8px 0 0">{{ t.safety_pre_l }}</p></div>
   </div>
-</section>
+  <p class="lead">{{ t.safety_gate }}</p>
+</div></section>
 
-<section class="alt only-detail">
-  <div class="wrap sec" style="gap:32px">
-    <div class="sh">
-      <span class="eyebrow"><svg class="i" width="16" height="16"><use href="#i-layers"/></svg>Échelle</span>
-      <h2>Pensé pour 3 000 à 5 000 portails</h2>
-    </div>
-    <div class="grid">
-      <div class="card"><div class="metric-h"><b>SELECT</b> count(*) FROM jeux</div><div class="metric"><span class="ico"><svg class="i" width="22" height="22"><use href="#i-db"/></svg></span><span><b>~750 000</b><small>jeux · 15 M de champs, indexés dans MariaDB</small></span></div></div>
-      <div class="card"><div class="metric-h"><b>scan</b> --incremental</div><div class="metric"><span class="ico"><svg class="i" width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg></span><span><b>≤ 5 % du quota</b><small>1 à 3 requêtes par heure, échelonnées par portail</small></span></div></div>
-      <div class="card"><div class="metric-h"><b>MATCH</b> (:Key {name: "uai"})</div><div class="metric"><span class="ico"><svg class="i" width="22" height="22"><use href="#i-graph"/></svg></span><span><b>79 arêtes</b><small>au lieu de 3 081 : un nœud de clé partagé</small></span></div></div>
-      <div class="card"><div class="metric-h"><b class="g">POST</b> /mcp · find_dataset</div><div class="metric"><span class="ico good"><svg class="i" width="22" height="22"><use href="#i-bolt"/></svg></span><span><b>1 index ES</b><small>routage par portail ; serveur MCP sans état, mise à l'échelle horizontale</small></span></div></div>
-    </div>
+<section id="methode" class="alt"><div class="wrap sec">
+  <div class="sh"><span class="eyebrow purple">{{ t.method_eyebrow }}</span><h2>{{ t.method_title }}</h2><p>{{ t.method_warn }}</p></div>
+  <div class="grid">{% for m in methods %}
+    <div class="card"><h3><a href="{{ m.url }}">{{ m.name }}</a></h3>
+      <div><span class="muted mono" style="font-size:12px">{{ t.m_proven }}</span><div>{{ m.proven }}</div></div>
+      <div><span class="muted mono" style="font-size:12px">{{ t.m_adapted }}</span><div>{{ m.adapted }}</div></div>
+      <div class="only-tech"><span class="muted mono" style="font-size:12px">{{ t.m_limit }}</span><div>{{ m.limit }}</div></div></div>{% endfor %}
   </div>
-</section>
+</div></section>
 
-<section id="karpathy">
-  <div class="wrap sec" style="gap:32px">
-    <div class="sh-row">
-      <div class="sh" style="max-width:680px">
-        <span class="eyebrow purple"><svg class="i" width="16" height="16" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>Les idées derrière</span>
-        <h2>Quatre idées de Karpathy, quatre briques du projet</h2>
-        <p>Cliquez sur une idée pour voir d'où elle vient et comment Context Compiler l'applique.</p>
-      </div>
-      <div class="author"><span class="av" aria-hidden="true">AK</span><span><b>Andrej Karpathy</b><small>@karpathy</small></span><a class="gh" href="https://github.com/karpathy" style="margin-left:8px;background:var(--subtle)"><svg class="i" width="16" height="16"><use href="#i-gh"/></svg>GitHub</a></div>
-    </div>
-    <div class="ideas">
-      <details class="idea" open>
-        <summary><span class="ico purple"><svg class="i" width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg></span><span><span class="src"><b>01</b><span>Context engineering</span></span><span class="tt">Les fiches compilées : le bon contexte, court, au bon moment.</span></span><svg class="i chev" width="20" height="20"><use href="#i-chev"/></svg></summary>
-        <div class="cc-body">
-          <div class="quote">En juin 2025, Karpathy préfère « context engineering » à « prompt engineering » : <i>“the delicate art and science of filling the context window with just the right information for the next step”</i>.</div>
-          <div class="here"><svg class="i" width="16" height="16"><use href="#i-arrow"/></svg><span><b>Dans Context Compiler :</b> d'abord une fiche courte (≤ 400 jetons) pour choisir le jeu ; la fiche complète seulement pour le jeu choisi — objet, fraîcheur, clés de jointure, formats et pièges.</span></div>
-          <div class="links"><a href="https://x.com/karpathy/status/1937902205765607626"><svg class="i" width="14" height="14"><use href="#i-chat"/></svg>Le post d'origine</a></div>
-        </div>
-      </details>
-      <details class="idea">
-        <summary><span class="ico purple"><svg class="i" width="22" height="22" viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span><span><span class="src"><b>02</b><span>Software 3.0</span></span><span class="tt">Construire pour les agents : des fiches et un llms.txt lisibles par un LLM.</span></span><svg class="i chev" width="20" height="20"><use href="#i-chev"/></svg></summary>
-        <div class="cc-body">
-          <div class="quote">Après le code écrit à la main (1.0) et les poids de réseaux de neurones (2.0), Karpathy décrit en 2025 un « Software 3.0 » programmé en langage naturel — et les agents comme un nouveau type d'utilisateur, pour qui la documentation doit être en markdown.</div>
-          <div class="here"><svg class="i" width="16" height="16"><use href="#i-arrow"/></svg><span><b>Dans Context Compiler :</b> les fiches sont ce programme, versionnées comme du code (nouvelle version seulement si le texte change) ; <a href="llms.txt">llms.txt</a> et {{ pages }} pages markdown sont générés pour le portail.</span></div>
-          <div class="links"><a href="https://www.youtube.com/watch?v=LCEmiRjPEtQ"><svg class="i" width="14" height="14"><use href="#i-video"/></svg>Conférence « Software Is Changing (Again) »</a><a href="https://karpathy.medium.com/software-2-0-a64152b37c35"><svg class="i" width="14" height="14"><use href="#i-file"/></svg>Article « Software 2.0 »</a></div>
-        </div>
-      </details>
-      <details class="idea">
-        <summary><span class="ico purple"><svg class="i" width="22" height="22"><use href="#i-sync"/></svg></span><span><span class="src"><b>03</b><span>autoresearch</span></span><span class="tt">La boucle improve : proposer, tester, garder ou annuler.</span></span><svg class="i chev" width="20" height="20"><use href="#i-chev"/></svg></summary>
-        <div class="cc-body">
-          <div class="quote">Dans son dépôt <code>autoresearch</code> (2026), un agent modifie le code d'entraînement, lance une courte expérience et ne garde le changement que si la métrique s'améliore — sinon il revient en arrière.</div>
-          <div class="here"><svg class="i" width="16" height="16"><use href="#i-arrow"/></svg><span><b>Dans Context Compiler :</b> <code>improve</code> propose une modification par fiche en échec, rejoue les 30 questions, et ne la garde que si elle corrige sans rien casser.</span></div>
-          <div class="links"><a href="https://github.com/karpathy/autoresearch"><svg class="i" width="14" height="14"><use href="#i-gh"/></svg>karpathy/autoresearch</a></div>
-        </div>
-      </details>
-      <details class="idea">
-        <summary><span class="ico purple"><svg class="i" width="22" height="22"><use href="#i-shield"/></svg></span><span><span class="src"><b>04</b><span>Génération ↔ vérification</span></span><span class="tt">L'agent génère, le validateur ODSQL vérifie avant le portail.</span></span><svg class="i chev" width="20" height="20"><use href="#i-chev"/></svg></summary>
-        <div class="cc-body">
-          <div class="quote">Dans la même conférence : l'IA génère, l'humain vérifie, et tout l'enjeu est d'accélérer cette boucle — avec un curseur d'autonomie et des sorties faciles à contrôler.</div>
-          <div class="here"><svg class="i" width="16" height="16"><use href="#i-arrow"/></svg><span><b>Dans Context Compiler :</b> la vérification est automatique et sans LLM — vrais champs seulement, limite ≤ 100, indice si un champ est inconnu. <code>improve</code> a deux modes, « proposer » ou « auto » ; l'humain relit le diff dans l'admin Django.</span></div>
-          <div class="links"><a href="https://www.youtube.com/watch?v=LCEmiRjPEtQ"><svg class="i" width="14" height="14"><use href="#i-video"/></svg>Conférence YC AI Startup School</a></div>
-        </div>
-      </details>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap stack">
-    <div><span>Stack</span><h2>Sous le capot</h2></div>
-    <div class="groups">
-      <div><span><i></i>Application</span><div class="chiprow">{% for t in stack|slice:":3" %}<span class="tech" style="--c:{{ t.light }}"><span class="lg">{{ t.svg|safe }}</span>{{ t.label }} <small>{{ t.detail }}</small></span>{% endfor %}</div></div>
-      <div><span><i class="b"></i>Données et files</span><div class="chiprow">{% for t in stack|slice:"3:8" %}<span class="tech" style="--c:{{ t.light }}"><span class="lg">{{ t.svg|safe }}</span>{{ t.label }} <small>{{ t.detail }}</small></span>{% endfor %}</div></div>
-      <div><span><i class="s"></i>Infra</span><div class="chiprow">{% for t in stack|slice:"8:" %}<span class="tech" style="--c:{{ t.light }}"><span class="lg">{{ t.svg|safe }}</span>{{ t.label }} <small>{{ t.detail }}</small></span>{% endfor %}</div></div>
-    </div>
-  </div>
-</section>
-
-<section id="essayer" class="alt">
-  <div class="cta">
-    <h2>Essayez avec votre agent</h2>
-    <p>Ajoutez le serveur MCP (lecture seule), puis posez une vraie question.</p>
-    <div class="term">
-      <div class="term-h"><span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>terminal</span><button type="button" class="copy" id="copy" aria-label="Copier la commande"><svg class="i" width="14" height="14"><use href="#i-copy"/></svg><span>Copier</span></button></div>
-      <div class="shell">
-        <div><span class="p">❯ </span><span id="cmd"><span class="k">claude</span> mcp add --transport http context <span class="f">https://context.smiro.dev/mcp</span> --header "X-Domain: {{ domain }}"</span></div>
-        <div class="ok"><span class="p">✓</span> serveur MCP « context » ajouté</div>
-        <div><span class="p">❯ </span><span class="cursor"></span></div>
-      </div>
-    </div>
-    <div class="example"><span class="muted">Exemple :</span>« Combien de collèges publics en Côte-d'Or ? »</div>
-  </div>
-</section>
+<section id="technique"><div class="wrap sec">
+  <div class="sh"><span class="eyebrow">{{ t.tech_eyebrow }}</span><h2>{{ t.tech_title }}</h2></div>
+  <div class="tscroll only-tech"><table class="tbl">
+    <tr><th>module</th><th>rôle / role</th></tr>
+    <tr><td class="mono"><a href="https://github.com/SergeMiro/context-compiler-huwise/tree/prod/sources">sources/explore.py</a></td><td>Explore API v2.1 scan: {{ datasets }} datasets, {{ fields }} fields → MariaDB</td></tr>
+    <tr><td class="mono">ctx/compile.py · ctx/export.py</td><td>cards (short ≤ 400, full ≤ 1 500 tokens), versioned · llms.txt + {{ pages }} pages</td></tr>
+    <tr><td class="mono">projections/es.py · graph.py</td><td>Elasticsearch BM25 + usage boost (routing per portal) · Neo4j shared keys / lineage</td></tr>
+    <tr><td class="mono">tools/ · mcpserver.py</td><td>MCP find_dataset · explain_dataset · query (ODSQL whitelist) · /api/demo/run</td></tr>
+    <tr><td class="mono">optimizer/</td><td>recipes · values · router · cache · evidence · pipeline · scenarios · record_traces</td></tr>
+    <tr><td class="mono">lab/</td><td>cycle (guard, diagnose, static check, gate, budget) · log (hash chain) · policy.json</td></tr>
+    <tr><td class="mono">evals/</td><td>golden sets (education 30, education_v2 95 with dev/val/holdout) · runner (A/B/C, no LLM judge) · improve</td></tr>
+  </table></div>
+  <div class="chiprow">{% for s in stack %}<span class="tech" style="--c:{{ s.color }}"><span class="lg">{{ s.svg|safe }}</span>{{ s.label }} <small>{{ s.detail }}</small></span>{% endfor %}</div>
+  <div class="card"><h3>{{ t.limits_title }}</h3><ul class="clean">{% for l in limits %}<li>{{ l }}</li>{% endfor %}</ul></div>
+  <p class="mono muted" style="font-size:13px;margin:0">/data/architecture.json · /data/scenarios.json · /data/comparison.json · /data/lab.json · /llms.txt · MCP: https://context.smiro.dev/mcp</p>
+</div></section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="foot-row">
-      <span class="foot-brand"><svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#1F2328"/><path d="M9 11h8M9 16h14M9 21h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="11" r="2.2" fill="#54AEFF"/></svg>Context Compiler</span>
-      <nav aria-label="Pied de page"><a href="https://github.com/SergeMiro/context-compiler-huwise">Code source</a><a href="llms.txt">llms.txt</a><a href="https://{{ domain }}">Portail {{ domain }}</a></nav>
-    </div>
-    <div class="foot-row">
-      <span>MIT · données {{ domain }} · Licence Ouverte v2.0</span>
-      <a class="made" href="https://smiro.dev">© 2026 Created by<span class="sig">Sergiy<svg class="i craft" aria-hidden="true"><use href="#i-craft"/></svg>Miro</span></a>
-    </div>
-  </div>
-</footer>
+<footer><div class="wrap">
+  <nav><a href="https://github.com/SergeMiro/context-compiler-huwise">{{ t.foot_code }}</a><a href="{{ root }}llms.txt">llms.txt</a><a href="https://{{ domain }}">{{ t.foot_portal }} {{ domain }}</a></nav>
+  <span>MIT · {{ t.foot_data }} {{ domain }} · Licence Ouverte v2.0</span>
+  <a class="made" href="https://smiro.dev">© 2026 Created by<span class="sig">Sergiy<svg class="i craft" aria-hidden="true"><use href="#i-craft"/></svg>Miro</span></a>
+</div></footer>
 
+<script id="data" type="application/json">{{ data_json|safe }}</script>
+<script id="tjson" type="application/json">{{ t_json|safe }}</script>
 <script>
 (() => {
-"use strict";
-const $ = s => document.querySelector(s);
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
-const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-const nf = new Intl.NumberFormat("fr-FR", {maximumFractionDigits: 1});
-const fmt = v => typeof v === "number" ? nf.format(v) : String(v ?? "—");
-const S = {data: null, slug: null, live: {}};
+const D = JSON.parse(document.getElementById('data').textContent), T = JSON.parse(document.getElementById('tjson').textContent);
+const L = document.documentElement.lang, A = D.architecture, $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const NS = 'http://www.w3.org/2000/svg', XH = 'http://www.w3.org/1999/xhtml';
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const tx = o => o && typeof o === 'object' ? (o[L] ?? o.fr ?? '') : (o ?? '');
+const el = (tag, attrs = {}, ns = NS) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+const store = (k, v) => { try { v === undefined ? null : localStorage.setItem(k, v); return localStorage.getItem(k); } catch (e) { return null; } };
 
-/* one agent step in plain words */
-function line(st) {
-  const r = st.result || "", a = st.args || {};
-  const err = (r.match(/"error": "((?:[^"\\]|\\.)*)/) || [])[1];
-  const top = (r.match(/"dataset_id": "([^"]+)"/) || [])[1];
-  const tc = (r.match(/"total_count": (\d+)/) || [])[1];
-  const val = (r.match(/"results": \[\{"[^"]+": "?([^",}]{1,40})/) || [])[1];
-  if (st.tool === "search_assets" || st.tool === "find_dataset")
-    return {k: "info", i: "?", t: `Cherche « ${esc(a.question || "")} » → <code>${esc(top || "rien")}</code>`};
-  if (st.tool === "get_asset") return {k: "info", i: "≡", t: `Lit le schéma brut de <code>${esc(a.dataset_id)}</code>`};
-  if (st.tool === "explain_dataset") return {k: "info", i: "≡", t: `Lit la fiche de <code>${esc(a.dataset_id)}</code>`};
-  const where = a.where ? `<code>${esc(String(a.where).slice(0, 90))}</code>` : "sans filtre";
-  if (err) {
-    const why = /Incompatible types.*date/.test(err) ? "refusée : l'année est une date, pas du texte"
-      : /''|unexpected 'OR'/i.test(err) ? "refusée : apostrophe mal écrite"
-      : /distinct/i.test(err) ? "refusée : DISTINCT n'existe pas en ODSQL"
-      : /unknown field/.test(err) ? "bloquée avant le portail : champ inconnu"
-      : "refusée : erreur de syntaxe";
-    return {k: "ko", i: "✗", t: `Interroge ${where} → ${why}`};
-  }
-  return {k: "ok", i: "✓", t: `Interroge ${where} → ${val && tc === "1" ? esc(val) : esc(tc ?? "?") + " ligne(s)"}`};
-}
+/* simple / technical */
+const setView = v => { document.body.classList.toggle('simple', v === 'simple'); $$('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === v)); store('ctxc-view', v); };
+$$('[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view)); setView(store('ctxc-view') || 'tech');
 
-function side(mode, row, other, story, source) {
-  const el = $("#side-" + mode);
-  const tag = source ? `<span class="tag ${source.live ? "live" : ""}">${esc(source.label)}</span>` : "";
-  const head = `<div class="side-h"><span class="dot ${mode === "naked" ? "" : "comp"}"></span>${mode === "naked" ? "Outils génériques" : "Context Compiler"}${tag}</div>`;
-  if (!row) { el.innerHTML = head + `<div class="side-b"><div class="wait"><span class="spin"></span>L'agent travaille… <span data-timer>0 s</span></div></div>`; return; }
-  if (row.error) { el.innerHTML = head + `<div class="side-b"><div class="verdict ko"><i>!</i><b>${esc(row.error)}</b></div></div>`; return; }
-  // a model sometimes writes a tool call as plain text on the last step (tools are off then): that is no answer
-  const raw = !row.answer || /^\s*\{|to=functions/.test(row.answer);
-  const ans = raw ? "Pas de réponse" : md(row.answer.length > 140 ? row.answer.slice(0, 140) + "…" : row.answer);
-  const better = k => other && !other.error && row[k] < other[k] * 0.9 ? "better" : "";
-  const log = (row.trace || []).map(st => { const l = line(st); return `<li class="${l.k}"><i>${l.i}</i><span>${l.t}</span></li>`; }).join("");
-  el.innerHTML = head + `<div class="side-b">` +
-    `<div class="verdict ${row.answer_ok ? "ok" : "ko"}"><i>${row.answer_ok ? "+" : "−"}</i><b>${ans}</b></div>` +
-    (story ? `<p class="story">${esc(story)}</p>` : "") +
-    `<div class="stats"><div><span>Temps</span><b class="${better("ms")}">${nf.format((row.ms || 0) / 1000)} s</b></div><div><span>Étapes</span><b class="${better("steps")}">${row.steps}</b></div><div><span>Jetons</span><b class="${better("tokens")}">${nf.format(row.tokens || 0)}</b></div></div>` +
-    `<details class="steps"><summary>Voir ce que l'agent a fait (${(row.trace || []).length} appels)</summary><ol class="log">${log || "<li class='info'><i>·</i><span>aucun appel d'outil</span></li>"}</ol></details></div>`;
-}
-
-function show(slug) {
-  const c = S.data.cases.find(x => x.slug === slug); if (!c) return;
-  S.slug = slug;
-  const st = S.data.stories.find(x => x.slug === slug);
-  document.querySelectorAll(".tab").forEach(b => { const on = b.dataset.slug === slug; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
-  $("#more").value = st ? "" : slug;
-  $("#question").textContent = "« " + c.question + " »";
-  $("#expected").textContent = "bonne réponse (API) : " + fmt(c.expected);
-  const L = S.live[slug] || {}, n = L.naked || c.naked, k = L.compiled || c.compiled;
-  const rec = {label: "enregistré", live: false};
-  side("naked", n, k, L.naked ? null : st && st.naked, L.naked ? L.naked._src : rec);
-  side("compiled", k, n, L.compiled ? null : st && st.compiled, L.compiled ? L.compiled._src : rec);
-}
-
-async function live() {
-  const slug = S.slug, btn = $("#live"); if (!slug) return;
-  btn.disabled = true;
-  $("#exemple").scrollIntoView({behavior: "smooth", block: "start"});
-  const t0 = performance.now();
-  side("naked", null); side("compiled", null);
-  const timer = setInterval(() => document.querySelectorAll("[data-timer]").forEach(t => t.textContent = Math.round((performance.now() - t0) / 1000) + " s"), 500);
-  const c = S.data.cases.find(x => x.slug === slug);
-  const run = async mode => {
-    let body, status;
-    try { const r = await fetch("/api/agent?" + new URLSearchParams({slug, mode})); status = r.status; body = await r.json(); }
-    catch { status = 0; body = {}; }
-    S.live[slug] = S.live[slug] || {};
-    S.live[slug][mode] = status === 200
-      ? Object.assign(body, {_src: {label: body.cached_s !== undefined ? "en direct · il y a " + Math.max(1, Math.round(body.cached_s / 60)) + " min" : "en direct", live: true}})
-      : Object.assign({}, c[mode], {_src: {label: status === 429 ? "quota du jour atteint · enregistré" : "indisponible · enregistré", live: false}});
-    if (S.slug === slug) { const o = mode === "naked" ? "compiled" : "naked"; side(mode, S.live[slug][mode], S.live[slug][o] || c[o], null, S.live[slug][mode]._src); }
-  };
-  await Promise.all([run("naked"), run("compiled")]);
-  clearInterval(timer); btn.disabled = false;
-}
-
-fetch("eval.json").then(r => r.ok ? r.json() : Promise.reject()).then(d => {
-  S.data = d;
-  $("#tabs").innerHTML = d.stories.map(s => `<button type="button" role="tab" class="tab" data-slug="${esc(s.slug)}">${esc(s.label)}</button>`).join("");
-  $("#more").innerHTML = `<option value="">Autres questions (${d.cases.length})…</option>` + d.cases.map(c => `<option value="${esc(c.slug)}">${esc(c.question)}</option>`).join("");
-  $("#tabs").addEventListener("click", e => { const b = e.target.closest(".tab"); if (b) show(b.dataset.slug); });
-  $("#more").addEventListener("change", e => e.target.value && show(e.target.value));
-  $("#live").addEventListener("click", live);
-  show(d.stories[0] ? d.stories[0].slug : d.cases[0].slug);
-}).catch(() => { $("#side-naked").innerHTML = '<div class="side-b muted">Pas encore de résultats enregistrés.</div>'; $("#live").disabled = true; });
-
-const bars = $("#bars");
-if (bars) new IntersectionObserver((es, o) => es.forEach(e => {
-  if (e.isIntersecting) { bars.querySelectorAll("i[data-w]").forEach(i => i.style.width = i.dataset.w + "%"); o.disconnect(); }
-}), {threshold: .3}).observe(bars);
-
-/* simple / detailed view: remembered per browser, works without storage */
-const setView = v => { document.body.classList.toggle("simple", v === "simple"); document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", b.dataset.view === v)); };
-try { setView(localStorage.getItem("ctxc-view") === "simple" ? "simple" : "detail"); } catch { setView("detail"); }
-document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => { setView(b.dataset.view); try { localStorage.setItem("ctxc-view", b.dataset.view); } catch {} }));
-
-$("#copy").addEventListener("click", async e => {
-  const lbl = e.currentTarget.querySelector("span");
-  try { await navigator.clipboard.writeText($("#cmd").textContent); lbl.textContent = "Copié"; } catch { lbl.textContent = "Sélectionnez"; }
-  setTimeout(() => lbl.textContent = "Copier", 1800);
+/* ---------- map ---------- */
+const svg = $('#svg'), byId = Object.fromEntries(A.nodes.map(n => [n.id, n]));
+const [vx, vy, vw, vh] = A.viewbox; let view = {x: vx, y: vy, w: vw, h: vh};
+const setVB = () => svg.setAttribute('viewBox', `${view.x} ${view.y} ${view.w} ${view.h}`);
+setVB();
+const defs = el('defs'); svg.appendChild(defs);
+const kindColor = {data:'#0969DA', metadata:'#6E7781', schema:'#6E7781', usage:'#1A7F37', governance:'#BF8700', lab:'#8250DF'};
+for (const k in kindColor) { const m = el('marker', {id: 'm-' + k, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse'}); const p = el('path', {d: 'M0 0L10 5L0 10z', fill: kindColor[k]}); m.appendChild(p); defs.appendChild(m); }
+const anchor = (a, b) => {
+  const ac = {x: a.x + a.w / 2, y: a.y + a.h / 2}, bc = {x: b.x + b.w / 2, y: b.y + b.h / 2};
+  if (b.x >= a.x + a.w - 4) return [{x: a.x + a.w, y: ac.y}, {x: b.x, y: Math.max(b.y + 12, Math.min(b.y + b.h - 12, ac.y))}, 'h'];
+  if (b.x + b.w <= a.x + 4) return [{x: a.x, y: ac.y}, {x: b.x + b.w, y: Math.max(b.y + 12, Math.min(b.y + b.h - 12, ac.y))}, 'h'];
+  if (b.y >= a.y + a.h) return [{x: Math.max(a.x + 20, Math.min(a.x + a.w - 20, bc.x)), y: a.y + a.h}, {x: Math.max(b.x + 20, Math.min(b.x + b.w - 20, ac.x)), y: b.y}, 'v'];
+  return [{x: Math.max(a.x + 20, Math.min(a.x + a.w - 20, bc.x)), y: a.y}, {x: Math.max(b.x + 20, Math.min(b.x + b.w - 20, ac.x)), y: b.y + b.h}, 'v'];
+};
+const gE = el('g'), gN = el('g'); svg.append(gE, gN);
+const edgeEls = A.edges.map((e, i) => {
+  const [p, q, dir] = anchor(byId[e.from], byId[e.to]);
+  const c = dir === 'h' ? `C${(p.x + q.x) / 2} ${p.y} ${(p.x + q.x) / 2} ${q.y}` : `C${p.x} ${(p.y + q.y) / 2} ${q.x} ${(p.y + q.y) / 2}`;
+  const g = el('g', {class: `edge k-${e.kind}`, 'data-layer': e.layer, 'data-from': e.from, 'data-to': e.to});
+  const path = el('path', {d: `M${p.x} ${p.y} ${c} ${q.x} ${q.y}`, 'marker-end': `url(#m-${e.kind})`});
+  const title = el('title'); title.textContent = `${tx(A.edge_kinds[e.kind])}${e.label ? ' · ' + tx(e.label) : ''}`; g.append(title, path);
+  if (e.label) { const t = el('text', {x: (p.x + q.x) / 2, y: (p.y + q.y) / 2 - 5, 'text-anchor': 'middle'}); t.textContent = tx(e.label); g.appendChild(t); }
+  gE.appendChild(g); return g;
 });
+const nodeEls = A.nodes.map(n => {
+  const cls = ['node', n.layer === 'ours' ? 'ours' : '', n.zone ? 'zone' : '', n.status === 'VERIFIED' ? 'st-v' : n.status === 'INFERRED' ? 'st-i' : ''].join(' ');
+  const g = el('g', {class: cls, tabindex: 0, role: 'button', 'data-id': n.id, 'data-layer': n.layer, 'aria-label': `${tx(n.title)} — ${n.status}`});
+  g.appendChild(el('rect', {class: 'box', x: n.x, y: n.y, width: n.w, height: n.h, rx: 10}));
+  const fo = el('foreignObject', {x: n.x, y: n.y, width: n.w, height: n.h});
+  const div = el('div', {class: 'nfo'}, XH);
+  const tagCls = {VERIFIED: 'st-VERIFIED', INFERRED: 'st-INFERRED', PROPOSED: 'st-PROPOSED'}[n.status];
+  div.innerHTML = `<div class="nt"><svg class="i" style="width:15px;height:15px"><use href="#${n.icon}"/></svg>${esc(tx(n.title))}</div><div class="ns"><span class="tag ${tagCls}">${n.status}</span> ${esc(tx(n.sub))}</div>` +
+    (n.chips ? `<div class="chips">${n.chips.map(c => `<span>${esc(c[L] || c.fr)}</span>`).join('')}</div>` : '');
+  fo.appendChild(div); g.appendChild(fo);
+  g.onclick = () => select(n.id); g.onkeydown = ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); select(n.id); } };
+  gN.appendChild(g); return g;
+});
+$('#nodelist').innerHTML = A.nodes.map(n => `<button class="${n.layer === 'ours' ? 'ours' : ''}" data-node="${n.id}">${esc(tx(n.title))}</button>`).join('');
+$$('[data-node]').forEach(b => b.onclick = () => select(b.dataset.node));
+$('#ekeys').innerHTML = Object.entries(A.edge_kinds).map(([k, v]) => `<span><svg viewBox="0 0 28 8"><line x1="0" y1="4" x2="28" y2="4" stroke="${kindColor[k]}" stroke-width="2" stroke-dasharray="${{schema:'6 4',usage:'2 4',governance:'8 5',lab:'5 4'}[k] || ''}"/></svg>${esc(tx(v))}</span>`).join('');
+
+function select(id) {
+  const n = byId[id]; nodeEls.forEach(g => g.classList.toggle('sel', g.dataset.id === id));
+  let h = `<h3>${esc(tx(n.title))} <span class="st st-${n.status}">${n.status}</span></h3><dl>`;
+  h += `<div><dt>${T.p_purpose}</dt><dd>${esc(tx(n.purpose))}</dd></div><div><dt>${T.p_io}</dt><dd>${esc(tx(n.io))}</dd></div>`;
+  if (n.tools) h += `<div><dt>${T.p_tools}</dt><dd>${n.tools.map(x => `<code class="icode">${x}</code>`).join(' ')}</dd></div>`;
+  if (n.example) h += `<div><dt>${T.p_example}</dt><dd><pre>${esc(n.example)}</pre></dd></div>`;
+  if (n.chips) h += `<div><dt>${T.p_parts}</dt><dd><ul class="clean" style="font-size:13px">${n.chips.map(c => `<li><b>${esc(c[L] || c.fr)}</b> — ${esc(tx(c.d))} <code class="icode">${esc(c.code)}</code></li>`).join('')}</ul></dd></div>`;
+  if (n.note) h += `<div><dt>Note</dt><dd>${esc(tx(n.note))}</dd></div>`;
+  if (n.layer !== 'ours') h += `<div><dt>${T.p_sources}</dt><dd style="display:flex;flex-direction:column;gap:6px">${n.sources.length ? n.sources.map(s => `<blockquote>“${esc(s.quote)}”<br><a href="${esc(s.url)}">${esc(s.url)}</a></blockquote>`).join('') : `<span class="muted">${T.p_nosource}</span>`}</dd></div>`;
+  $('#panel').innerHTML = h + '</dl>';
+}
+
+/* zoom + pan */
+const zoom = f => { const cx = view.x + view.w / 2, cy = view.y + view.h / 2; view.w = Math.min(vw * 1.5, Math.max(vw / 3, view.w * f)); view.h = view.w * vh / vw; view.x = cx - view.w / 2; view.y = cy - view.h / 2; setVB(); };
+$('#zin').onclick = () => zoom(.8); $('#zout').onclick = () => zoom(1.25); $('#zreset').onclick = () => { view = {x: vx, y: vy, w: vw, h: vh}; setVB(); };
+let drag = null;
+svg.addEventListener('pointerdown', e => { if (e.target.closest('.node')) return; drag = {x: e.clientX, y: e.clientY, vx: view.x, vy: view.y}; svg.classList.add('drag'); svg.setPointerCapture(e.pointerId); });
+svg.addEventListener('pointermove', e => { if (!drag) return; const k = view.w / svg.clientWidth; view.x = drag.vx - (e.clientX - drag.x) * k; view.y = drag.vy - (e.clientY - drag.y) * k; setVB(); });
+svg.addEventListener('pointerup', () => { drag = null; svg.classList.remove('drag'); });
+
+/* modes */
+let mode = 'today';
+function setMode(m) {
+  mode = m; $$('#modes button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === m));
+  const hideOurs = m === 'today';
+  nodeEls.forEach(g => g.classList.toggle('hidden', hideOurs && g.dataset.layer === 'ours'));
+  edgeEls.forEach(g => g.classList.toggle('hidden', hideOurs && g.dataset.layer === 'ours'));
+  $$('#nodelist button.ours').forEach(b => b.hidden = hideOurs);
+  if (m !== 'trace') highlight([]);
+  $('#labmode').hidden = m !== 'lab';
+  if (m === 'lab') renderLabMode();
+  if (m === 'trace') { renderTrace(); document.getElementById('trace').scrollIntoView({block: 'nearest'}); }
+}
+$$('#modes button').forEach(b => b.onclick = () => setMode(b.dataset.mode));
+
+function highlight(ids) {
+  const on = new Set(ids);
+  nodeEls.forEach(g => { g.classList.toggle('hl', on.has(g.dataset.id)); g.classList.toggle('dim', ids.length > 0 && !on.has(g.dataset.id)); });
+  edgeEls.forEach(g => { const h = on.has(g.dataset.from) && on.has(g.dataset.to); g.classList.toggle('hl', h); g.classList.toggle('dim', ids.length > 0 && !h); });
+}
+
+/* ---------- trace ---------- */
+const scen = D.scenarios, ids = Object.keys(scen);
+$('#scen').innerHTML = ids.map(i => `<option value="${i}">${esc(tx(scen[i].title))} — ${scen[i].kind === 'simulated' ? 'SIMULATED' : 'RECORDED'}</option>`).join('');
+let cfg = 'optimized', live = null, timer = null;
+$$('#cfg button').forEach(b => b.onclick = () => { cfg = b.dataset.cfg; live = null; $$('#cfg button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderTrace(); });
+$('#scen').onchange = () => { live = null; renderTrace(); };
+const short = (v, n = 900) => { const s = typeof v === 'string' ? v : JSON.stringify(v, null, 1); return s && s.length > n ? s.slice(0, n) + ' …' : (s || ''); };
+function stepsOf(run, kind) {
+  const trace = [...(run.trace || [])], q = [...(run.queries || [])], out = [];
+  const userNode = cfg === 'naked' ? ['user', 'mcp'] : ['user', 'opt'];
+  for (const s of run.spans || []) {
+    if (s.name === 'llm') { out.push({tool: 'LLM', nodes: userNode, ms: s.ms, tokens: s.tokens, input: '(prompt + tool results)', output: '→ next tool call or final answer'}); continue; }
+    if (s.name === 'route') { out.push({tool: 'route()', nodes: ['opt'], ms: s.ms, input: run.question || '', output: `${s.route}${s.note ? ' · ' + s.note : ''}\n${(run.reasons || []).join('\n')}`, source: s.policy}); continue; }
+    if (s.name === 'verify') { out.push({tool: 'evidence.check()', nodes: ['opt'], ms: s.ms, input: 'answer + query results', output: `${run.evidence.status}\n${(run.evidence.reasons || []).join('\n')}`}); continue; }
+    const tr = cfg === 'optimized' && s.name === 'query' && !trace.length ? null : trace.shift();
+    const qq = s.name === 'query' || s.name === 'search_asset_records' ? q.shift() : null;
+    out.push({tool: s.name, nodes: A.tool_nodes[s.name] || ['opt'], ms: s.ms, ok: s.ok, cache: s.cache, note: s.note,
+              input: tr ? tr.args : (qq ? qq.params : ''), output: tr ? tr.result : (qq ? qq.result : (s.ok === false ? 'error' : '')),
+              source: (tr && tr.args && (tr.args.dataset_id || tr.args.slug)) || (qq && qq.dataset_id) || ''});
+  }
+  return out;
+}
+function renderTrace() {
+  clearInterval(timer);
+  const s = scen[$('#scen').value]; if (!s) { $('#tsteps').innerHTML = `<p class="muted">${T.no_trace}</p>`; return; }
+  const run = live || s.runs[cfg];
+  $$('#cfg button').forEach(b => b.disabled = !s.runs[b.dataset.cfg]);
+  if (!run) { $('#tsteps').innerHTML = `<p class="muted">${T.no_trace}</p>`; $('#tanswer').innerHTML = ''; $('#tsum').innerHTML = ''; return; }
+  run.question = s.question;
+  const status = live ? 'LIVE' : s.kind === 'simulated' ? 'SIMULATED' : 'RECORDED';
+  const steps = stepsOf(run, status);
+  const okChip = run.answer_ok === true ? '<span class="st st-ok">✓</span>' : run.answer_ok === false ? '<span class="st st-ko">✗</span>' : '';
+  $('#tsum').innerHTML = `<span class="st st-${status}">${status}</span><span><b>${T.route}</b> ${esc(run.route)}</span><span><b>${T.evidence}</b> ${esc(run.evidence && run.evidence.status)}</span>` +
+    `<span class="mono">${run.ms} ms · ${run.tokens || 0} tok · ${run.llm_calls || 0} ${T.model_calls}</span>` +
+    (s.expected !== undefined && s.kind === 'recorded' ? `<span>${T.expected}: <b class="mono">${esc(typeof s.expected === 'number' ? Math.round(s.expected * 100) / 100 : s.expected)}</b></span>` : '') +
+    `<span class="mono muted">${esc(s.model || '')} · ${esc(s.recorded_at || '')} · ${esc(s.commit || '')}</span>` + (s.fixture ? `<span class="muted">fixture: ${esc(s.fixture)}</span>` : '');
+  $('#tsteps').innerHTML = steps.map((st, i) => `<div class="tstep" data-i="${i}"><button aria-expanded="false"><span class="mono">${esc(st.tool)}</span>${st.cache ? `<span class="st st-neutral">cache ${st.cache}</span>` : ''}${st.ok === false ? '<span class="st st-ko">error</span>' : ''}${st.note ? `<span class="muted">${esc(st.note)}</span>` : ''}<span class="ms">${st.ms} ms${st.tokens ? ' · ' + st.tokens + ' tok' : ''}</span></button>
+    <dl class="tbody"><dt>${T.f_input}</dt><dd><pre>${esc(short(st.input))}</pre></dd><dt>${T.f_tool}</dt><dd class="mono">${esc(st.tool)}</dd><dt>${T.f_output}</dt><dd><pre>${esc(short(st.output))}</pre></dd>
+    <dt>${T.f_time}</dt><dd class="mono">${st.ms} ms</dd><dt>${T.f_tokens}</dt><dd class="mono">${st.tokens ?? '—'}</dd><dt>${T.f_source}</dt><dd class="mono">${esc(st.source || '—')}</dd><dt>${T.f_status}</dt><dd><span class="st st-${status}">${status}</span></dd></dl></div>`).join('');
+  const open = i => { $$('.tstep').forEach((d, j) => { d.classList.toggle('on', j === i); d.querySelector('button').setAttribute('aria-expanded', j === i); }); if (steps[i]) highlight(steps[i].nodes); };
+  $$('.tstep>button').forEach((b, i) => b.onclick = () => { clearInterval(timer); if (mode !== 'trace') setMode('trace'); open(i); });
+  $('#tanswer').innerHTML = `<b>${T.answer}</b> ${okChip} ${esc(run.answer)}`;
+  $('#replay').onclick = () => { if (mode !== 'trace') setMode('trace'); let i = 0; open(0); clearInterval(timer); timer = setInterval(() => { i++; if (i >= steps.length) { clearInterval(timer); return; } open(i); }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 1600 : 1100); };
+}
+$('#live').onclick = async () => {
+  const b = $('#live'); b.disabled = true;
+  try { const r = await fetch(`/api/demo/run?scenario=${encodeURIComponent($('#scen').value)}`); const j = await r.json();
+    if (!r.ok) throw new Error(j.error || r.status); live = j; cfg = 'optimized'; $$('#cfg button').forEach(x => x.setAttribute('aria-pressed', x.dataset.cfg === 'optimized')); renderTrace(); $('#replay').click();
+  } catch (e) { $('#tsum').insertAdjacentHTML('afterbegin', `<span class="st st-ko">LIVE: ${esc(e.message)}</span>`); }
+  b.disabled = false;
+};
+renderTrace();
+
+/* ---------- error replay (browser → Explore API, live) ---------- */
+$$('#erreur [data-q]').forEach(b => b.onclick = async () => {
+  const out = b.nextElementSibling; out.textContent = '…';
+  const base = 'https://{{ domain }}/api/explore/v2.1/catalog/datasets/fr-en-annuaire-education/records?limit=0&where=';
+  try { const [bad, good] = await Promise.all(b.dataset.q.split('|').map(w => fetch(base + encodeURIComponent(w)).then(r => r.json())));
+    out.innerHTML = `<span class="st st-LIVE">LIVE</span> ${esc(b.dataset.q.split('|')[0].split(' and ')[0])} → ${bad.total_count} · ${esc(b.dataset.q.split('|')[1].split(' and ')[0])} → ${good.total_count}`;
+  } catch (e) { out.textContent = 'API: ' + e.message; }
+});
+const ct = scen['code-format'];
+if (ct) $('#errtrace').innerHTML = `<div class="grid">${['naked', 'optimized'].filter(m => ct.runs[m]).map(m => { const r = ct.runs[m];
+  const qs = (r.queries || []).map(q => `${q.ok ? '✓' : '✗'} ${esc(q.dataset_id)} ${esc(JSON.stringify(q.params))} → ${esc(q.result ? q.result.total_count : 'error')}`).join('\n');
+  return `<div class="card"><h3>${T['cfg_' + m]} <span class="st st-RECORDED">RECORDED</span> ${r.answer_ok ? '<span class="st st-ok">✓</span>' : '<span class="st st-ko">✗</span>'}</h3><p class="muted" style="margin:0">${esc(ct.question)}</p><pre class="pre">${qs || '—'}</pre><div>${esc(r.answer)}</div><div class="mono muted" style="font-size:12px">${T.route}: ${esc(r.route)} · ${T.evidence}: ${esc(r.evidence.status)} · ${r.llm_calls} ${T.model_calls} · ${r.ms} ms</div></div>`; }).join('')}</div>`;
+
+/* ---------- lab ---------- */
+const chips = byId.lab.chips; $('#cycle').innerHTML = chips.map(c => `<span title="${esc(tx(c.d))}">${esc(c[L] || c.fr)}</span>`).join('<i>→</i>');
+const ent = D.lab.entries;
+if (ent.length) $('#lablog').innerHTML = `<div class="tscroll"><table class="tbl"><tr><th>ts</th><th>step</th><th>${L === 'fr' ? 'détail' : 'detail'}</th><th>decision</th><th>sha</th></tr>` +
+  ent.map(e => `<tr><td class="mono">${esc(e.ts.slice(5, 16).replace('T', ' '))}</td><td class="mono">${esc(e.step)}</td><td>${e.step === 'experiment' ? `<b>${esc(e.dataset)}</b> · ${esc(e.kind)}<pre class="pre" style="margin-top:4px">+ ${esc(e.diff.after)}</pre><span class="muted">${esc((e.gate || []).join('; '))} ${e.fixed ? '· fixed: ' + esc(e.fixed.join(', ')) : ''} ${e.broken && e.broken.length ? '· broken: ' + esc(e.broken.join(', ')) : ''}</span>` : e.failures ? `${Object.keys(e.failures).length} failures · ${esc(Object.entries(Object.values(e.failures).reduce((a, k) => (a[k] = (a[k] || 0) + 1, a), {})).map(([k, v]) => k + ' ' + v).join(', '))} · run #${e.base_run} · ${esc(e.fork)}` : esc(e.reason || (e.model_calls !== undefined ? e.model_calls + ' ' + T.model_calls : ''))}</td><td>${e.decision ? `<span class="st ${e.decision === 'kept' ? 'st-ok' : 'st-ko'}">${esc(e.decision)}</span>` : ''}</td><td class="mono muted">${esc(e.sha)}</td></tr>`).join('') + '</table></div>';
+
+/* ---------- compare ---------- */
+const C = D.comparison;
+const label = c => `${c.suite}${c.split && c.split !== 'all' ? ' · ' + c.split : ''} · n=${c.n} · ${c.model.split('/').pop()} · ${c.date}`;
+$('#cmpset').innerHTML = C.map((c, i) => `<option value="${i}">${esc(label(c))}</option>`).join('');
+const tagsOf = c => [...new Set(c.rows.flatMap(r => r.tags))].sort();
+const fmtPct = x => x == null ? '—' : x.toFixed(1).replace('.0', '') + ' %';
+function summ(rows, m) {
+  const v = rows.map(r => r[m]), ms = v.map(x => x.ms || 0).sort((a, b) => a - b), q = p => ms.length ? ms[Math.min(ms.length - 1, Math.round(p * (ms.length - 1)))] : null;
+  return {acc: 100 * v.filter(x => x.answer_ok).length / v.length, p50: q(.5), p95: q(.95), tokens: v.reduce((a, x) => a + (x.tokens || 0), 0),
+          calls: v.reduce((a, x) => a + (x.llm_calls || 0), 0), wrong: v.filter(x => !x.answer_ok && !x.abstained).length,
+          ver: 100 * v.filter(x => x.evidence === 'verified').length / v.length,
+          routes: Object.entries(v.reduce((a, x) => (x.route && (a[x.route] = (a[x.route] || 0) + 1), a), {})).map(([k, n]) => `${k} ${n}`).join(' · ')};
+}
+function renderCmp() {
+  const c = C[+$('#cmpset').value]; if (!c) return;
+  const tag = $('#cmptag').value, rows = tag ? c.rows.filter(r => r.tags.includes(tag)) : c.rows;
+  const S = Object.fromEntries(['naked', 'compiled', 'optimized'].map(m => [m, summ(rows, m)]));
+  const line = (lab, f, best) => `<tr><td>${lab}</td>${['naked', 'compiled', 'optimized'].map(m => `<td class="num">${f(S[m])}</td>`).join('')}</tr>`;
+  let h = `<div class="tscroll"><table class="tbl"><tr><th>n = ${rows.length}</th><th class="num">${T.cfg_naked}</th><th class="num">${T.cfg_compiled}</th><th class="num">${T.cfg_optimized}</th></tr>` +
+    line(T.m_acc, s => fmtPct(s.acc)) + line(T.m_wrong, s => s.wrong) + line(T.m_verified, s => fmtPct(s.ver)) +
+    line(T.m_p50, s => s.p50 == null ? '—' : (s.p50 / 1000).toFixed(1) + ' s') + line(T.m_p95, s => s.p95 == null ? '—' : (s.p95 / 1000).toFixed(1) + ' s') +
+    line(T.m_calls, s => s.calls) + line(T.m_tokens, s => s.tokens.toLocaleString(L)) + line(T.m_routes, s => s.routes || '—') + '</table></div>';
+  if (!tag) h += `<p class="mono muted" style="font-size:13px;margin:0">${T.cmp_diff}: ` + Object.entries(c.diffs).map(([k, d]) => `${k.replace('naked', 'A').replace('compiled', 'B').replace('optimized', 'C').replace('-', ' vs ')}: ${d.pp > 0 ? '+' : ''}${d.pp} pp [${d.ci[0]}; ${d.ci[1]}] p=${d.p}`).join(' · ') + `</p>`;
+  h += `<p class="mono muted" style="font-size:12px;margin:0">${esc(c.model)} · ${c.date} · runs #${c.runs.join('/#')}${c.commit ? ' · commit ' + esc(c.commit) : ''}</p>`;
+  h += `<details class="only-tech"><summary class="muted">${T.cmp_cases}</summary><div class="tscroll" style="margin-top:10px"><table class="tbl"><tr><th>question</th><th>split</th><th class="num">A</th><th class="num">B</th><th class="num">C</th><th>route C</th></tr>` +
+    rows.map(r => `<tr><td>${esc(r.q)}</td><td class="mono">${esc(r.split || '—')}</td>${['naked', 'compiled', 'optimized'].map(m => `<td class="num ${r[m].answer_ok ? 'ok' : 'ko'}">${r[m].answer_ok ? '✓' : r[m].abstained ? '∅' : '✗'}</td>`).join('')}<td class="mono">${esc(r.optimized.route || '')}</td></tr>`).join('') + '</table></div></details>';
+  $('#cmp').innerHTML = h;
+}
+$('#cmpset').onchange = () => { $('#cmptag').innerHTML = `<option value="">${T.cmp_all}</option>` + tagsOf(C[+$('#cmpset').value]).map(t => `<option>${esc(t)}</option>`).join(''); renderCmp(); };
+$('#cmptag').onchange = renderCmp;
+if (C.length) $('#cmpset').onchange();
+
+function renderLabMode() {
+  const c = C[0];
+  if (!c) { $('#labmode').innerHTML = `<p class="muted">${T.cmp_none}</p>`; return; }
+  const s = c.summary;
+  $('#labmode').innerHTML = `<div class="grid">${['naked', 'compiled', 'optimized'].map(m => `<div class="card"><h3>${T['cfg_' + m]} <span class="st st-RECORDED">RECORDED</span></h3><div style="font:600 34px var(--mono)">${fmtPct(s[m].accuracy)}</div><div class="muted mono" style="font-size:13px">${T.m_acc} · n=${c.n}<br>${T.m_wrong}: ${s[m].wrong_confident} · ${T.m_calls}: ${s[m].llm_calls} · p50 ${(s[m].p50 / 1000).toFixed(1)} s</div></div>`).join('')}</div><p class="muted mono" style="font-size:12px">${esc(label(c))} · <a href="#comparer">${T.nav_cmp} →</a></p>`;
+}
+setMode('today'); select('mcp');
 })();
 </script>
 </body>

@@ -1,0 +1,194 @@
+{
+ "drift": {
+  "id": "drift",
+  "kind": "simulated",
+  "question": "Combien y a-t-il de collèges à Dijon ?",
+  "expected": 23,
+  "title": {
+   "fr": "Le schéma a changé",
+   "en": "The schema changed"
+  },
+  "recorded_at": "2026-11-11T15:28:27+00:00",
+  "commit": "c27210b",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": "the field nom_commune changes type in the local catalog copy (never on the portal)",
+  "runs": {
+   "optimized": {
+    "answer": "La recette est désactivée ; la question repart par le chemin agent (STANDARD).",
+    "answer_ok": null,
+    "route": "STANDARD",
+    "reasons": [
+     "no verified recipe: schema drift on fr-en-annuaire-education: recipe verified on ceae47849fae998c, now c4a6bbadbcc71249"
+    ],
+    "spans": [
+     {
+      "name": "route",
+      "ms": 0,
+      "route": "FAST",
+      "note": "before: schema as verified"
+     },
+     {
+      "name": "route",
+      "ms": 0,
+      "route": "STANDARD",
+      "note": "after: nom_commune type changed"
+     }
+    ],
+    "evidence": {
+     "status": "unverified",
+     "reasons": [
+      "not answered in the simulation"
+     ]
+    },
+    "steps": 0,
+    "tokens": 0,
+    "ms": 0,
+    "llm_calls": 0,
+    "trace": [],
+    "queries": []
+   }
+  }
+ },
+ "stale-cache": {
+  "id": "stale-cache",
+  "kind": "simulated",
+  "question": "Combien y a-t-il de collèges à Dijon ?",
+  "expected": 23,
+  "title": {
+   "fr": "Cache périmé",
+   "en": "Stale cache"
+  },
+  "recorded_at": "2026-11-11T15:28:27+00:00",
+  "commit": "c27210b",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": "the dataset gets a new data_processed date in the local catalog copy",
+  "runs": {
+   "optimized": {
+    "answer": "23 établissements (type_etablissement = Collège, nom_commune = Dijon) — source : fr-en-annuaire-education.",
+    "answer_ok": true,
+    "route": "FAST",
+    "reasons": [
+     "cache key changes with the data version: 801d76102652… → bb5db31e2f47…"
+    ],
+    "spans": [
+     {
+      "name": "query",
+      "ms": 65,
+      "ok": true,
+      "cache": "miss",
+      "note": "1st call"
+     },
+     {
+      "name": "query",
+      "ms": 3,
+      "ok": true,
+      "cache": "hit",
+      "note": "same question again"
+     },
+     {
+      "name": "query",
+      "ms": 64,
+      "ok": true,
+      "cache": "miss",
+      "note": "after a new data version"
+     }
+    ],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-annuaire-education",
+     "query": {
+      "where": "type_etablissement='Collège' and nom_commune='Dijon'",
+      "limit": 0
+     },
+     "source_portal": "data.education.gouv.fr",
+     "source_url": "https://data.education.gouv.fr/explore/dataset/fr-en-annuaire-education/",
+     "schema_version": "7235f8bcfbfb0ce0",
+     "data_version": "2099-01-01T00:00:00+00:00",
+     "api_result": {
+      "total_count": 23,
+      "results": []
+     }
+    },
+    "steps": 0,
+    "tokens": 0,
+    "ms": 153,
+    "llm_calls": 0,
+    "trace": [],
+    "queries": [
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "where": "type_etablissement='Collège' and nom_commune='Dijon'",
+       "limit": 0
+      },
+      "ok": true,
+      "result": {
+       "total_count": 23,
+       "results": []
+      }
+     }
+    ]
+   }
+  }
+ },
+ "forbidden": {
+  "id": "forbidden",
+  "kind": "simulated",
+  "question": "Combien y a-t-il de collèges à Dijon ?",
+  "expected": 23,
+  "title": {
+   "fr": "Jeu de données non autorisé",
+   "en": "Dataset not allowed"
+  },
+  "recorded_at": "2026-11-11T15:28:27+00:00",
+  "commit": "c27210b",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": "the Explore API answers 403 (mock transport), as for a restricted dataset without the right key",
+  "runs": {
+   "optimized": {
+    "answer": "Accès refusé à ce jeu de données : pas de réponse, pas de nombre inventé.",
+    "answer_ok": null,
+    "route": "FAST",
+    "reasons": [
+     "API refused access to this dataset (API key missing or not allowed)"
+    ],
+    "spans": [
+     {
+      "name": "query",
+      "ms": 9,
+      "ok": false
+     }
+    ],
+    "evidence": {
+     "status": "blocked",
+     "reasons": [
+      "no successful query backs this answer"
+     ],
+     "checks": {
+      "schema_valid": false,
+      "executed": false,
+      "result_consistent": false,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": null,
+     "query": null
+    },
+    "steps": 0,
+    "tokens": 0,
+    "ms": 9,
+    "llm_calls": 0,
+    "trace": [],
+    "queries": []
+   }
+  }
+ }
+}
