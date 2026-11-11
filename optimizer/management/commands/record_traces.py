@@ -78,8 +78,8 @@ class Command(BaseCommand):
                 row["runs"]["optimized"] = getattr(self, f"sim_{s['id'].replace('-', '_')}")(domain, q, exp)
                 self.stdout.write(f"{s['id']}: {row['runs']['optimized']['route']}")
             out[s["id"]] = row
-        OUT.parent.mkdir(parents=True, exist_ok=True)
-        OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1, default=str) + "\n")
+            OUT.parent.mkdir(parents=True, exist_ok=True)  # saved after every scenario: a 503 later loses nothing
+            OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1, default=str) + "\n")
         self.stdout.write(f"-> {OUT}")
 
     def sim_drift(self, domain, q, exp):

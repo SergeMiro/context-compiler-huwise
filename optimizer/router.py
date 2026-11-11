@@ -19,7 +19,10 @@ def route(domain, question):
     deep = [why for rx, why in DEEP_SIGNS if re.search(rx, q)]
     if deep:
         return {"route": "DEEP", "reasons": deep, "plan": None, "policy": POLICY_VERSION}
-    p = recipes.plan(domain, question)
+    try:
+        p = recipes.plan(domain, question)
+    except Exception as e:  # value lookup failed (timeout, 5xx): the agent path still works, a guess never runs
+        p = {"reject": f"value lookup failed ({type(e).__name__})"}
     if "reject" in p:
         return {"route": "STANDARD", "reasons": [f"no verified recipe: {p['reject']}"], "plan": None,
                 "calls": p.get("calls", []), "policy": POLICY_VERSION}

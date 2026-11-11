@@ -83,6 +83,12 @@ class RecipeTest(TestCase):
         self.assertEqual(r["route"], "STANDARD")
         self.assertIn("not found", r["reasons"][0])
 
+    def test_lookup_failure_falls_back_to_the_agent(self):
+        tools._http = httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(503)))
+        r = router.route(D, "Combien y a-t-il de collèges à Dijon ?")
+        self.assertEqual(r["route"], "STANDARD")
+        self.assertIn("value lookup failed", r["reasons"][0])
+
     def test_schema_drift_disables_the_recipe(self):
         ds = Dataset.objects.get(portal=self.portal, dataset_id=recipes.DIRECTORY)
         Field.objects.filter(dataset=ds, name="nom_commune").update(type="int")
