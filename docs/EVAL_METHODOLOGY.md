@@ -4,16 +4,17 @@
 
 | | what the agent gets | what it is **not** |
 |---|---|---|
-| **A** `naked` | generic catalog tools named like Huwise MCP's: `search_assets` (BM25 over title/description), `get_asset` (fields, types, description, 3 example records), `search_asset_records` (pass-through ODSQL, limit ≤ 100) | not the Huwise MCP server: the real one needs a portal API key (401 without, tested 11.11.2026), uses vector search and sends facets that A does not. A therefore probably **underestimates** Huwise. Status of a real A run: **NOT_RUN** |
+| **A** `huwise` | the real Huwise MCP server (`https://mcp.huwise.com/mcp`) with its own four tools, names, descriptions and schemas as `tools/list` returns them (`evals/huwise_mcp.py`); the portal url is filled in by us | not Huwy: same free model and system prompt as B and C, not Huwise's model or prompt. Key of an ordinary user account (public data only), created 11.11.2026 |
+| **0** `naked` (control) | generic catalog tools named like Huwise MCP's: `search_assets` (BM25 over title/description), `get_asset` (fields, types, description, 3 example records), `search_asset_records` (pass-through ODSQL, limit ≤ 100) | kept from the first experiments as a control; it is not the Huwise server |
 | **B** `compiled` | `find_dataset` (ES + usage boost, short cards), `explain_dataset` (full card + joins), `query` (validated ODSQL) | — |
 | **C** `optimized` | B + Context Optimizer: router (FAST recipe with 0 model calls / STANDARD / DEEP), grounded query (value hints, cache), evidence check (an unbacked number is not stated) | compression and tool parallelism are not enabled |
 
-Same model, same system prompt, temperature 0, same tool-result truncation, same Explore API, same day, run
-back to back (A, then B, then C) by `manage.py eval --mode abc`. The model is the configured free OpenRouter model
+Same model, same system prompt, temperature 0, same tool-result truncation, same day, run back to back:
+`manage.py eval --mode huwise` (A), then `--mode abc` (0, B, C). The model is the configured free OpenRouter model
 (`CTXC_LLM_MODEL`, recorded on every run).
 
 What a difference between B and C measures: the whole optimizer (routing + grounding + evidence), not context cards
-alone. Between A and B: our cards **and** our search and validator (a stronger search is part of B).
+alone. Between A and B: our cards **and** our search and validator versus Huwise's tools, with the same model.
 
 ## Question sets
 

@@ -213,6 +213,12 @@ How to get a key for data.education.gouv.fr (documented on X8): sign up on the p
 
 A real "Huwise MCP baseline" is possible only after someone creates a portal account and an API key (a user decision; not done here).
 
+Update 11.11.2026, 21:40 UTC: the account owner created a portal account and a read-only API key. With `X-Domain` +
+`X-Apikey`, `initialize` and `tools/list` succeed (server `mcp-server (latest)` 1.28.1, the same four tools), and
+`search_asset_records` on `fr-en-annuaire-education` with `nom_commune="Dijon" and type_etablissement="Collège"` returns
+`total_count: 23`. The key lives outside the repository (`~/.config/huwise/account.env`, mode 600) → VERIFIED; configuration A
+now calls this server.
+
 ## H. Huwy / AI client
 
 | Claim | Quote (verbatim) | URL | Checked | Status |

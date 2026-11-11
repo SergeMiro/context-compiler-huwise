@@ -24,6 +24,10 @@ the next step if the project leaves a single VPS.
 - Only public open data of data.education.gouv.fr via the Explore API (GET). Nothing is ever written to the portal.
 - The client `X-Apikey` is passed through to the Explore API, never stored, never logged, never part of a cache key
   (the cache uses an HMAC of it as "permission scope"; anonymous calls share the `public` scope).
+- The eval's own Huwise MCP key (configuration A): a read-only key of an ordinary user account, kept outside the
+  repository in `~/.config/huwise/account.env` (mode 600), read from `HUWISE_API_KEY`, sent only as the `X-Apikey`
+  header to `mcp.huwise.com`. It is never in the image, the site, the traces or the logs; revocable from the portal's
+  « Clés d'API » tab.
 - PII-like fields get no sample values and never reach cards, prompts or logs.
 - ODSQL validator in front of every query: real field names only, `limit ≤ 100`, no comments, no extra parameters
   (unit + seeded property tests). An unknown field is refused before any API call.
