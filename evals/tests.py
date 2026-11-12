@@ -74,7 +74,7 @@ class AgentLoopTest(TestCase):
         from llm import FakeLLM
         fake = FakeLLM([[("query", {"dataset_id": "fr-en-annuaire-education", "where": "nope=1"})]] * 10)
         res = run_agent("data.education.gouv.fr", "?", "compiled", chat=fake)
-        self.assertEqual((res["steps"], res["answer"]), (MAX_STEPS, ""))
+        self.assertEqual((res["steps"], res["answer"]), (MAX_STEPS + 1, ""))  # + one "answer now" ask
         self.assertEqual(res["queries"][0], {"dataset_id": "fr-en-annuaire-education", "ok": False,
                                              "params": {"where": "nope=1"}, "result": None})
 
@@ -87,9 +87,17 @@ class AgentLoopTest(TestCase):
             seen.append(tools)
             return fake(messages, tools)
         run_agent("data.education.gouv.fr", "?", "compiled", chat=chat)
-        self.assertEqual(len(seen), MAX_STEPS)
-        self.assertTrue(all(seen[:-1]))
-        self.assertIsNone(seen[-1])
+        self.assertEqual(len(seen), MAX_STEPS + 1)
+        self.assertTrue(all(seen[:MAX_STEPS - 1]))
+        self.assertEqual(seen[MAX_STEPS - 1:], [None, None])
+
+    def test_tool_calls_on_the_last_step_get_one_answer_now_ask(self):
+        from evals.agent import MAX_STEPS, run_agent
+        from llm import FakeLLM
+        fake = FakeLLM([[("query", {"dataset_id": "fr-en-annuaire-education", "where": "nope=1"})]] * MAX_STEPS + ["23"])
+        res = run_agent("data.education.gouv.fr", "?", "compiled", chat=fake)
+        self.assertEqual(res["answer"], "23")
+        self.assertIn("sans outil", fake.calls[-1][-1]["content"])
 
     def test_full_run_both_modes_on_fake(self):
         from evals.runner import run_eval, table

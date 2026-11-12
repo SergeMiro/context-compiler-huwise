@@ -103,7 +103,7 @@ Needs Docker, Python 3.12, `libmariadb-dev` and `pkg-config` (for `mysqlclient`)
 python3.12 -m venv .venv && .venv/bin/pip install -r requirements.txt
 cp .env.example .env
 scripts/bootstrap.sh                       # services, schema, scan, signals, cards, ES, Neo4j, golden answers
-.venv/bin/python manage.py test            # 84 tests (use the local ES / Neo4j / MariaDB)
+.venv/bin/python manage.py test            # 85 tests (use the local ES / Neo4j / MariaDB)
 .venv/bin/python manage.py mcp             # MCP server: http://127.0.0.1:8796/mcp (header X-Domain)
 .venv/bin/python scripts/mcp_smoke.py      # find -> explain -> count public collèges in Côte-d'Or = 58
 ```

@@ -107,6 +107,15 @@ def run_agent(domain, question, mode, chat=None, max_steps=MAX_STEPS):
                                                   "results": (result.get("results") or [])[:20]} if ok else None})
             messages.append({"role": "tool", "tool_call_id": call["id"],
                              "content": json.dumps(result, ensure_ascii=False, default=str)[:MAX_RESULT_CHARS]})
+    if not out["answer"] and msg["tool_calls"]:  # some models still call tools on the last, tool-less step: ask once
+        messages.append({"role": "user", "content": "Réponds maintenant avec les données déjà obtenues, sans outil."})
+        t_llm = time.monotonic()
+        r = chat(messages, tools=None)
+        out["spans"].append({"name": "llm", "ms": int((time.monotonic() - t_llm) * 1000), "tokens": r["tokens"],
+                             "model": r.get("model")})
+        out["steps"] += 1
+        out["tokens"] += r["tokens"]
+        out["answer"] = r["message"]["content"] or ""
     out["ms"] = int((time.monotonic() - t0) * 1000)
     out["models"] = sorted({s["model"] for s in out["spans"] if s.get("model")})  # 2 = a fallback happened
     out["transcript"] = messages
