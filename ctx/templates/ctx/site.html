@@ -119,6 +119,12 @@ select{min-height:40px;max-width:100%;padding:0 10px;border:1px solid var(--line
 .simbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
 .simbox div{border:1px dashed var(--bad-line);background:#FFF8F7;border-radius:10px;padding:12px 14px;font-size:15px} .simbox div+div{border-color:var(--good-line);background:#F6FEF8}
 .simbox b{display:block;font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
+.vstrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px} @media (max-width:760px){.vstrip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.vstrip button{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:var(--bg);cursor:pointer;font:14px "IBM Plex Sans",sans-serif;color:var(--fg)}
+.vstrip button.ok{border-color:var(--good-line);background:#F6FEF8} .vstrip button.ko{border-color:var(--bad-line);background:#FFF8F7}
+.vstrip button[aria-pressed=true]{outline:3px solid var(--accent);outline-offset:1px}
+.vstrip .vn{font-weight:600} .vstrip .vr{font:600 20px var(--mono)} .vstrip button.ok .vr{color:var(--good-ink)} .vstrip button.ko .vr{color:var(--bad-ink)} .vstrip .vm{font-size:13px;color:var(--muted)}
+.why{margin:0;font-size:16px;padding:10px 14px;border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0}
 .tres{display:flex;gap:16px;align-items:flex-start;padding:16px 18px;border-radius:12px;border:2px solid var(--line);background:var(--bg)}
 .tres.ok{border-color:var(--good-line);background:#F6FEF8} .tres.ko{border-color:var(--bad-line);background:#FFF8F7}
 .tres .mark{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 22px var(--mono);background:var(--chip);color:var(--muted)}
@@ -307,6 +313,7 @@ body.simple .only-simple-hide{display:none!important}
     <button class="btn" id="live" title="{{ t.live_note }}">{{ t.live_btn }}</button>
   </div>
   <div class="tq" id="tq"></div>
+  <div><h3 style="font-size:17px;margin-bottom:8px">{{ t.vs_title }}</h3><div class="vstrip" id="vstrip"></div></div>
   <div class="tres" id="tres" aria-live="polite"></div>
   <div class="tsteps-h"><h3 id="tsh"></h3><span class="muted">{{ t.steps_hint }}</span></div>
   <div class="tsteps" id="tsteps"></div>
@@ -563,14 +570,20 @@ function renderTrace() {
   const run = live || s.runs[cfg];
   const status = live ? 'LIVE' : sim ? 'SIMULATED' : 'RECORDED';
   $('#tq').innerHTML = `<div><span class="st st-${status}">${T['lbl_' + status]}</span></div><p class="q">« ${esc(s.question)} »</p>` +
-    (s.expected !== undefined && !sim ? `<span class="exp">${T.expected} : <b>${esc(typeof s.expected === 'number' ? Math.round(s.expected * 100) / 100 : s.expected)}</b></span>` : '') +
+    (s.expected !== undefined && !sim ? `<span class="exp">${T.expected} : <b>${esc(s.expected === 'no_data' ? T.exp_nodata : typeof s.expected === 'number' ? Math.round(s.expected * 100) / 100 : s.expected)}</b></span>` : '') +
+    (T['why_' + id] ? `<p class="why">${esc(T['why_' + id])}</p>` : '') +
     (sim ? `<div class="simbox"><div><b>${T.sim_t}</b>${esc(T['fx_' + id] || s.fixture || '')}</div><div><b>${T.sim_r}</b>${esc(T['sim_' + id] || '')}</div></div>` : '');
+  const LTR = {huwise: 'A', naked: '0', compiled: 'B', optimized: 'C'};
+  $('#vstrip').innerHTML = ['huwise', 'naked', 'compiled', 'optimized'].filter(m => s.runs[m]).map(m => { const r = s.runs[m], c = r.answer_ok === true ? 'ok' : r.answer_ok === false ? 'ko' : '';
+    return `<button class="${c}" data-v="${m}" aria-pressed="${!live && m === cfg}"><span class="vn">${T['cfg_' + m]}</span><span class="vr">${c === 'ok' ? '✓ ' + T.v_ok : c === 'ko' ? '✗ ' + T.v_ko : '–'}</span><span class="vm">${(r.ms / 1000).toFixed(1)} s · ${r.llm_calls || 0} ${T.model_calls}</span></button>`; }).join('');
+  $$('#vstrip button').forEach(b => b.onclick = () => $(`#cfg button[data-cfg="${b.dataset.v}"]`).click());
   if (!run) { $('#tsteps').innerHTML = `<p class="muted">${T.no_trace}</p>`; $('#tres').innerHTML = ''; $('#tsh').textContent = ''; return; }
   const steps = stepsOf(run), maxMs = Math.max(1, ...steps.map(x => x.ms || 0));
   const okc = run.answer_ok === true ? 'ok' : run.answer_ok === false ? 'ko' : '';
   const models = live ? (live.models || []) : [];
   $('#tres').className = 'tres ' + okc;
-  $('#tres').innerHTML = `<div class="mark">${okc === 'ok' ? '✓' : okc === 'ko' ? '✗' : '–'}</div><div style="min-width:0"><div class="ans">${esc(ans(run.answer) || '—')}</div>` +
+  const resHead = `<div class="lab mono muted" style="font-size:12px;margin-bottom:4px">${live ? T.lbl_LIVE : T['cfg_' + cfg]} — ${T.res_of}</div>`;
+  $('#tres').innerHTML = `<div class="mark">${okc === 'ok' ? '✓' : okc === 'ko' ? '✗' : '–'}</div><div style="min-width:0">${resHead}<div class="ans">${esc(ans(run.answer) || '—')}</div>` +
     `<div class="meta"><span>${T.route} : <b>${esc(rt(run.route))}</b></span><span>${T.evidence} : <b>${esc(ev(run.evidence && run.evidence.status))}</b></span><span><b>${(run.ms / 1000).toFixed(1)} s</b></span><span><b>${run.llm_calls || 0}</b> ${T.model_calls}</span>` +
     (live ? `<span>${esc(models.join(' → ') || T.no_model)}</span>` + (models.length && !models.includes(provModel()) ? `<span class="st st-neutral">${T.fallback}</span>` : '') : '') + `</div>` +
     (!live ? `<div class="meta only-tech mono" style="font-size:12px">${esc(s.model || '')} · ${esc(s.recorded_at || '')} · ${esc(s.commit || '')} · ${run.tokens || 0} tok</div>` : '') + `</div>`;
