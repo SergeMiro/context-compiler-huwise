@@ -144,6 +144,27 @@ footer .wrap{padding-top:28px;padding-bottom:28px;display:flex;flex-wrap:wrap;ga
 footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)} footer nav{display:flex;flex-wrap:wrap;gap:4px 20px}
 .made{display:inline-flex;align-items:center;gap:6px} .made .sig{display:inline-flex;align-items:center;gap:.3em;color:var(--fg)}
 .craft{width:2em;height:2em;color:var(--accent);stroke-width:1.5;translate:.038em -.153em;transition:transform .4s} .made:hover .craft{transform:rotate(-8deg) scale(1.08)}
+/* one-minute story */
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;align-items:stretch;position:relative}
+.flow .fb{border:2px solid var(--line);border-radius:14px;background:var(--bg);padding:16px;display:flex;flex-direction:column;gap:6px;position:relative}
+.flow .fb b{font-size:17px} .flow .fb span{color:var(--muted);font-size:14px}
+.flow .fb:not(.last)::after{content:"→";position:absolute;right:-24px;top:50%;transform:translateY(-50%);font:600 22px var(--mono);color:var(--faint)}
+.flow .fb.ctx{border-color:var(--accent);background:var(--accent-soft)} .flow .team{font:600 12px var(--mono);color:var(--accent-ink)}
+.labhere{grid-column:2;border:3px dashed var(--purple);border-radius:14px;background:var(--purple-soft);padding:16px;display:flex;flex-direction:column;gap:6px;position:relative}
+.labhere::before{content:"↑";position:absolute;top:-30px;left:50%;transform:translateX(-50%);font:700 24px var(--mono);color:var(--purple)}
+.labhere b{font-size:18px;color:var(--purple-ink)} .labhere span{font-size:14px}
+@media (max-width:900px){.flow{grid-template-columns:1fr;gap:24px}.flow .fb:not(.last)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-24px;transform:translateX(-50%)}.labhere{grid-column:1;grid-row:3;margin-top:8px}.flow .fb.ctx::after{display:none}}
+.vs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.vs .card.bad{border:2px solid var(--bad-line);background:#FFF8F7} .vs .card.good{border:2px solid var(--good-line);background:#F6FEF8}
+.vs .big{font:600 30px var(--mono)} .vs .card.bad .big{color:var(--bad-ink)} .vs .card.good .big{color:var(--good-ink)}
+.ctxcard{border-left:4px solid var(--accent);background:var(--bg);padding:8px 12px;font:13px/1.6 var(--mono);border-radius:0 8px 8px 0;word-break:break-word}
+.lsteps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;counter-reset:l}
+.lsteps div{border:1px solid var(--purple-line);border-radius:12px;padding:14px;background:var(--bg)} .lsteps div::before{counter-increment:l;content:counter(l);display:block;width:26px;height:26px;border-radius:50%;background:var(--purple);color:#fff;font:600 13px/26px var(--mono);text-align:center;margin-bottom:6px}
+.envs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px} @media (max-width:900px){.envs{grid-template-columns:1fr}}
+.envs .card h3{font:600 15px var(--mono)} .envs .who{font-weight:600} .envs ul{margin:0;padding-left:18px;font-size:15px;display:flex;flex-direction:column;gap:4px}
+.envs .card:nth-child(1){border-top:4px solid var(--accent)} .envs .card:nth-child(2){border-top:4px solid var(--purple)} .envs .card:nth-child(3){border-top:4px solid var(--good)}
+.note{font-size:13px;color:var(--muted)} h3.step{font-size:20px}
+body.simple .only-simple-hide{display:none!important}
 </style>
 </head>
 <body>
@@ -169,9 +190,9 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
 <header class="nav"><div class="wrap">
   <a class="brand" href="#top"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#1F2328"/><path d="M9 11h8M9 16h14M9 21h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="11" r="2.2" fill="#54AEFF"/></svg>Context Compiler{% if env == "preprod" %} <span class="st st-PROPOSED">PREPROD</span>{% endif %}</a>
   <nav aria-label="Sections">
-    <a href="#architecture">{{ t.nav_arch }}</a><a href="#trace">{{ t.nav_trace }}</a><a href="#erreur">{{ t.nav_error }}</a>
-    <a href="#lab">{{ t.nav_lab }}</a><a href="#comparer">{{ t.nav_cmp }}</a><a href="#securite">{{ t.nav_safety }}</a>
-    <a href="#methode">{{ t.nav_method }}</a><a href="#technique">{{ t.nav_tech }}</a>
+    <a href="#minute">{{ t.nav_minute }}</a><a class="only-simple-hide" href="#architecture">{{ t.nav_arch }}</a><a class="only-simple-hide" href="#trace">{{ t.nav_trace }}</a><a class="only-simple-hide" href="#erreur">{{ t.nav_error }}</a>
+    <a class="only-simple-hide" href="#lab">{{ t.nav_lab }}</a><a href="#comparer">{{ t.nav_cmp }}</a><a href="#securite">{{ t.nav_safety }}</a>
+    <a class="only-simple-hide" href="#methode">{{ t.nav_method }}</a><a class="only-simple-hide" href="#technique">{{ t.nav_tech }}</a>
   </nav>
   <div class="nav-r">
     <div class="seg" role="group" aria-label="Detail"><button data-view="simple" aria-pressed="false">{{ t.view_simple }}</button><button data-view="tech" aria-pressed="true">{{ t.view_tech }}</button></div>
@@ -189,13 +210,52 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
     <div><b>{{ t.hero_s2t }}</b><span>{{ t.hero_s2 }}</span></div>
     <div><b>{{ t.hero_s3t }}</b><span id="herores">{{ t.hero_s3 }}</span></div>
   </div>
-  <div class="legend">
+  <div class="legend only-tech">
     <div><b>{{ t.legend_origin }}</b><span class="st st-VERIFIED">{{ t.lbl_VERIFIED }}</span>{{ t.st_VERIFIED }} <span class="st st-INFERRED">{{ t.lbl_INFERRED }}</span>{{ t.st_INFERRED }} <span class="st st-PROPOSED">{{ t.lbl_PROPOSED }}</span>{{ t.st_PROPOSED }}</div>
     <div><b>{{ t.legend_exec }}</b><span class="st st-LIVE">{{ t.lbl_LIVE }}</span>{{ t.ex_LIVE }} <span class="st st-RECORDED">{{ t.lbl_RECORDED }}</span>{{ t.ex_RECORDED }} <span class="st st-SIMULATED">{{ t.lbl_SIMULATED }}</span>{{ t.ex_SIMULATED }}</div>
   </div>
 </div></section>
 
-<section id="architecture" class="alt"><div class="wrap sec">
+<section id="minute" class="alt"><div class="wrap sec">
+  <div class="sh"><span class="eyebrow">{{ t.s_eyebrow }}</span><h2>{{ t.s_title }}</h2></div>
+
+  <h3 class="step">1 · {{ t.s1_title }}</h3>
+  <div class="flow">
+    <div class="fb"><b>{{ t.s1_data }}</b><span>{{ t.s1_data_d }}</span></div>
+    <div class="fb ctx"><span class="team">{{ t.s1_team }}</span><b>{{ t.s1_ctx }}</b><span>{{ t.s1_ctx_d }}</span></div>
+    <div class="fb"><b>{{ t.s1_agent }}</b><span>{{ t.s1_agent_d }}</span></div>
+    <div class="fb last"><b>{{ t.s1_answer }}</b><span>{{ t.s1_answer_d }}</span></div>
+    <div class="labhere"><b>{{ t.s1_lab }}</b><span>{{ t.s1_lab_d }}</span></div>
+  </div>
+
+  <h3 class="step">2 · {{ t.s2_title }}</h3>
+  <p class="lead" style="margin:0;color:var(--fg)">{{ t.s2_q }}</p>
+  <div class="vs">
+    <div class="card bad"><h3>{{ t.s2_without }}</h3><span>{{ t.s2_without_d }}</span><pre class="pre">nom_commune = 'DIJON'</pre><div class="big">0</div><span>{{ t.s2_without_r }}</span></div>
+    <div class="card good"><h3>{{ t.s2_with }}</h3><span>{{ t.s2_with_d }}</span>
+      <div class="ctxcard">nom_commune · e.g. 'Agen', 'Abbeville'<br>type_etablissement · e.g. 'Ecole', 'Collège'<br>code_departement · e.g. '059', '013'</div>
+      <pre class="pre">nom_commune = 'Dijon' and type_etablissement = 'Collège'</pre><div class="big">23 ✓</div><span>{{ t.s2_with_r }}</span></div>
+  </div>
+  <p class="note" style="margin:0">{{ t.s2_note }} <a href="#erreur">{{ t.s2_try }}</a></p>
+
+  <h3 class="step">3 · {{ t.s3_title }}</h3>
+  <div class="lsteps"><div>{{ t.s3_1 }}</div><div>{{ t.s3_2 }}</div><div>{{ t.s3_3 }}</div><div>{{ t.s3_4 }}</div></div>
+  <p class="note" style="margin:0">{{ t.s3_note }} <a href="#lab">{{ t.s3_real }}</a></p>
+
+  <h3 class="step">4 · {{ t.s4_title }}</h3>
+  <div class="envs">
+    <div class="card"><h3>DEV</h3><span class="who">{{ t.s4_dev_who }}</span><ul><li>{{ t.s4_dev_1 }}</li><li>{{ t.s4_dev_2 }}</li><li>{{ t.s4_dev_3 }}</li></ul></div>
+    <div class="card"><h3>PREPROD</h3><span class="who">{{ t.s4_pre_who }}</span><ul><li>{{ t.s4_pre_1 }}</li><li>{{ t.s4_pre_2 }}</li><li>{{ t.s4_pre_3 }}</li></ul></div>
+    <div class="card"><h3>PROD</h3><span class="who">{{ t.s4_prod_who }}</span><ul><li>{{ t.s4_prod_1 }}</li><li>{{ t.s4_prod_2 }}</li><li>{{ t.s4_prod_3 }}</li></ul></div>
+  </div>
+  <pre class="pre only-tech">{{ t.s4_cmds }}</pre>
+
+  <h3 class="step">5 · {{ t.s5_title }}</h3>
+  <p class="lead" style="margin:0;color:var(--fg);font-size:20px" id="minres">{{ t.hero_s3 }}</p>
+  <p class="note" style="margin:0">{{ t.s5_note }} <a href="#comparer">{{ t.s5_more }}</a></p>
+</div></section>
+
+<section id="architecture" class="alt only-simple-hide"><div class="wrap sec">
   <div class="sh"><span class="eyebrow">{{ t.map_eyebrow }}</span><h2>{{ t.map_title }}</h2><p>{{ t.map_lead }}</p></div>
   <div class="maphead">
     <div class="seg" role="group" aria-label="Mode" id="modes">
@@ -217,7 +277,7 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
   <div id="labmode" hidden></div>
 </div></section>
 
-<section id="trace"><div class="wrap sec">
+<section id="trace" class="only-simple-hide"><div class="wrap sec">
   <div class="sh"><span class="eyebrow good">{{ t.trace_eyebrow }}</span><h2>{{ t.trace_title }}</h2><p>{{ t.trace_lead }}</p></div>
   <div class="tracebar">
     <label>{{ t.scenario }}<select id="scen"></select></label>
@@ -231,7 +291,7 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
   <div class="answer" id="tanswer"></div>
 </div></section>
 
-<section id="erreur" class="alt"><div class="wrap sec">
+<section id="erreur" class="alt only-simple-hide"><div class="wrap sec">
   <div class="sh"><span class="eyebrow warn">{{ t.err_eyebrow }}</span><h2>{{ t.err_title }}</h2><p>{{ t.err_lead }}</p></div>
   <div class="grid">
     <div class="card"><h3>{{ t.err_case }}</h3>
@@ -247,7 +307,7 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
   <div id="errtrace"></div>
 </div></section>
 
-<section id="lab"><div class="wrap sec">
+<section id="lab" class="only-simple-hide"><div class="wrap sec">
   <div class="sh"><span class="eyebrow purple">{{ t.lab_eyebrow }}</span><h2>{{ t.lab_title }}</h2><p>{{ t.lab_lead }}</p></div>
   <p class="lead" id="labsum" style="margin:0;color:var(--fg)"></p>
   <div class="cycle" id="cycle"></div>
@@ -283,7 +343,7 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
   <p class="lead">{{ t.safety_gate }}</p>
 </div></section>
 
-<section id="methode" class="alt"><div class="wrap sec">
+<section id="methode" class="alt only-simple-hide"><div class="wrap sec">
   <div class="sh"><span class="eyebrow purple">{{ t.method_eyebrow }}</span><h2>{{ t.method_title }}</h2><p>{{ t.method_warn }}</p></div>
   <div class="grid">{% for m in methods %}
     <div class="card"><h3><a href="{{ m.url }}">{{ m.name }}</a></h3>
@@ -293,7 +353,7 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
   </div>
 </div></section>
 
-<section id="technique"><div class="wrap sec">
+<section id="technique" class="only-simple-hide"><div class="wrap sec">
   <div class="sh"><span class="eyebrow">{{ t.tech_eyebrow }}</span><h2>{{ t.tech_title }}</h2></div>
   <div class="tscroll only-tech"><table class="tbl">
     <tr><th>module</th><th>rôle / role</th></tr>
@@ -331,7 +391,8 @@ const store = (k, v) => { try { v === undefined ? null : localStorage.setItem(k,
 
 /* simple / technical */
 const setView = v => { document.body.classList.toggle('simple', v === 'simple'); $$('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === v)); store('ctxc-view', v); };
-$$('[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view)); setView(store('ctxc-view') || 'tech');
+$$('[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view)); setView(store('ctxc-view') || 'simple');
+$$('#minute a[href^="#"]').forEach(a => a.addEventListener('click', () => setView('tech')));  // the detailed screens live in the Technique view
 
 /* ---------- map ---------- */
 const svg = $('#svg'), byId = Object.fromEntries(A.nodes.map(n => [n.id, n]));
@@ -537,7 +598,7 @@ $('#cmpset').onchange = () => { $('#cmptag').innerHTML = `<option value="">${T.c
 $('#cmptag').onchange = renderCmp;
 if (C.length) $('#cmpset').onchange();
 const H = C.find(c => c.split === 'holdout'), hs = H && H.summary, first = H && (H.modes || [])[0];
-if (hs && first && hs.optimized) $('#herores').textContent = T.hero_res.replace('{n}', H.n).replace('{a}', Math.round(hs[first].accuracy) + ' %').replace('{c}', Math.round(hs.optimized.accuracy) + ' %').replace('{wa}', hs[first].wrong_confident).replace('{wc}', hs.optimized.wrong_confident);
+if (hs && first && hs.optimized) $('#herores').textContent = $('#minres').textContent = T.hero_res.replace('{n}', H.n).replace('{a}', Math.round(hs[first].accuracy) + ' %').replace('{c}', Math.round(hs.optimized.accuracy) + ' %').replace('{wa}', hs[first].wrong_confident).replace('{wc}', hs.optimized.wrong_confident);
 
 function renderLabMode() {
   const c = C[0];

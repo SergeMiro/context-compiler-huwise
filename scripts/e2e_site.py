@@ -23,6 +23,9 @@ async def main():
                 if sw > iw:
                     bad.append(f"{w}px {path or 'fr'}: horizontal scroll {sw} > {iw}")
             await pg.goto(URL, wait_until="networkidle")
+            if not await pg.locator("#minute .labhere").is_visible():
+                bad.append(f"{w}px: the one-minute section is not shown by default")
+            await pg.click("[data-view=tech]")  # the map and the trace live in the Technique view
             hidden = await pg.locator(".node.ours.hidden").count()
             await pg.click("[data-mode=ours]")
             shown = await pg.locator(".node.ours:not(.hidden)").count()

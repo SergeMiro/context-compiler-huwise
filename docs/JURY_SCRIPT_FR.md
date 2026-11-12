@@ -1,5 +1,12 @@
 # Script de démonstration — 6 minutes
 
+**Version courte (1 minute, mode « Simple », la page s'ouvre dessus)** — le bloc « En 1 minute », de haut en bas :
+1. Le chemin d'une question : données → **contexte (équipe Context)** → agent → réponse. « Le Lab se branche ici, sur le contexte. »
+2. Sans contexte : `'DIJON'` → 0. Avec la fiche (valeurs réelles écrites `'Agen'`, `'Collège'`) : `'Dijon'` → 23, prouvé par l'API.
+3. Le Lab sur le même exemple : repère l'échec → propose une ligne de fiche → reteste en preprod → garde ou annule.
+4. Qui pilote : DEV l'équipe Context (fiches, questions, règles) · PREPROD le Lab seul (copie isolée, journal) · PROD un humain valide.
+5. Le résultat mesuré, puis « Technique » pour les détails ci-dessous.
+
 Page : <https://context.smiro.dev/> (mode « Technique »). Tous les chiffres viennent des runs enregistrés
 affichés sur la page ; rien n'est tapé à la main. Runs du 11–12.11.2026, modèle gratuit
 `nvidia/nemotron-3.5-super-vl:free`, un run par configuration.
