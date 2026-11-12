@@ -4,9 +4,9 @@
 
 | | production | preprod |
 |---|---|---|
-| hostname | context.smiro.dev | context-preprod.smiro.dev |
-| Compose project | `context-compiler-huwise` (profile `public`) | `ctxc-preprod` (`docker-compose.preprod.yml`) |
-| image | built from `prod` | `ctxc-preprod-mcp`, built from the feature branch |
+| hostname | context.smiro.dev | none: internal only, no public site (removed 12.11.2026) |
+| Compose project | `context-compiler-huwise` (profile `public`) | none: `manage.py` with `.env.preprod` on the host |
+| image | built from `prod` | none (runs on the host, from the working copy) |
 | MariaDB database / user | `ctxc` / `ctxc` | `ctxc_preprod` / `ctxc_preprod` (grants on its own database only) |
 | Elasticsearch alias | `cards` | `cards_preprod` |
 | Neo4j | read + write (projection) | **read-only**: `project_graph` returns "skipped" when `CTXC_ENV=preprod` |
@@ -50,7 +50,7 @@ the next step if the project leaves a single VPS.
 ## Budgets and limits
 
 - Lab: `max_proposals`, `max_llm_calls`, `max_seconds` per cycle (`lab/policy.json`); one cycle at a time (CLI).
-- MCP: 10 calls/s per portal in process; traefik 5 req/s per IP (burst 20) on both hostnames.
+- MCP: 10 calls/s per portal in process; traefik 5 req/s per IP (burst 20) on the public hostname.
 - Live agent duel: capped per day, cached 1 h, 2 concurrent; `/api/demo/run`: FAST only (no model), same rate limits.
 
 ## Log review (11.11.2026)

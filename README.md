@@ -14,7 +14,7 @@ whether it helps.
 - an **improve loop**: an LLM proposes one card edit per failing dataset; the edit is kept only if failures get
   fixed and no passing question breaks. A human can review the diff in Django admin.
 
-**Jury demo:** <https://context.smiro.dev/> (experiments run in preprod: <https://context-preprod.smiro.dev/>) — Huwise's public architecture (every block sourced,
+**Jury demo:** <https://context.smiro.dev/> (experiments run in an internal preprod: own database and index, no public site) — Huwise's public architecture (every block sourced,
 VERIFIED / INFERRED / PROPOSED), two proposed layers (**Context Optimizer**, **AutoContext Lab**), traces of real
 runs, and an A/B/C comparison. Docs: [`docs/HUWISE_SOURCES.md`](docs/HUWISE_SOURCES.md) ·
 [`docs/ARCHITECTURE_PROPOSED.md`](docs/ARCHITECTURE_PROPOSED.md) · [`docs/EVAL_METHODOLOGY.md`](docs/EVAL_METHODOLOGY.md) ·
@@ -124,7 +124,7 @@ first one answers 429; `eval --provider nim` measures it alone (evals never fall
 
 `make test` · `make check` (optimizer checks, no model) · `ENV=preprod make eval` (A/B/C, legacy set) ·
 `ENV=preprod make eval-holdout` · `ENV=preprod make traces` · `make lab` (preprod only) · `make demo`
-(build the preprod showcase, start `docker-compose.preprod.yml`).
+(build the public site from the preprod runs; preprod itself has no public site).
 
 ## Commands
 

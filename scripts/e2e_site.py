@@ -1,5 +1,5 @@
 """End-to-end check of the showcase in a real browser (local Chrome via Playwright, browser: local).
-Usage: python3 scripts/e2e_site.py https://context-preprod.smiro.dev/   -> exit 1 on any failure."""
+Usage: python3 scripts/e2e_site.py https://context.smiro.dev/   -> exit 1 on any failure."""
 import asyncio
 import sys
 

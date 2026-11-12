@@ -254,7 +254,7 @@ TEXT = {
     "safety_eyebrow": {"fr": "Écran 7 · Sécurité", "en": "Screen 7 · Safety"},
     "safety_title": {"fr": "La production ne change que si un humain le décide", "en": "Production only changes if a human decides"},
     "safety_prod": {"fr": "PROD · context.smiro.dev", "en": "PROD · context.smiro.dev"},
-    "safety_preprod": {"fr": "PREPROD · context-preprod.smiro.dev", "en": "PREPROD · context-preprod.smiro.dev"},
+    "safety_preprod": {"fr": "PREPROD · interne, pas de site public", "en": "PREPROD · internal, no public site"},
     "safety_prod_l": {"fr": "Sa propre base. Le public ne peut que lire. Aucune page d'administration en ligne.",
                       "en": "Its own database. The public can only read. No admin page online."},
     "safety_pre_l": {"fr": "Une autre base, un autre index. Le Lab ne tourne qu'ici, avec un budget IA limité.",

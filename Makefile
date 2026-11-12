@@ -15,7 +15,6 @@ traces:          ## record the demo scenarios (calls the model)
 	$(RUN) record_traces $(DOMAIN)
 lab:             ## one AutoContext Lab cycle (refuses outside preprod)
 	set -a && . ./.env.preprod && set +a && .venv/bin/python manage.py lab run $(DOMAIN)
-demo:            ## build the preprod showcase and (re)start the preprod containers
-	set -a && . ./.env.preprod && set +a && .venv/bin/python manage.py build_site $(DOMAIN) site-preprod
-	docker compose -f docker-compose.preprod.yml up -d --build
+demo:            ## build the public site from the preprod runs (served by the `site` container)
+	set -a && . ./.env.preprod && set +a && CTXC_ENV= .venv/bin/python manage.py build_site $(DOMAIN) site
 .PHONY: test eval eval-holdout check traces lab demo

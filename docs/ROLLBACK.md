@@ -30,8 +30,8 @@ from ctx.models import ContextEdit; e = ContextEdit.objects.get(id=<ID>); e.stat
 - Showcase: `site/` is generated; rebuild from the previous commit (`git checkout <sha> -- ctx/` then
   `build_site data.education.gouv.fr site`), nginx serves it live.
 - MCP server: `git checkout prod~1 && docker compose --profile public up -d --build mcp`.
-- Preprod can be removed entirely without touching production:
-  `docker compose -f docker-compose.preprod.yml down`, then drop `ctxc_preprod` and the `cards_preprod_*` index.
+- Preprod has no public site since 12.11.2026 (internal only). It can be removed entirely without touching
+  production: drop `ctxc_preprod` and the `cards_preprod_*` index.
 
 ## Rollback drill (11.11.2026, preprod)
 

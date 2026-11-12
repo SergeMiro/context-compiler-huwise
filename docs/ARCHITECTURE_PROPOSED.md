@@ -72,6 +72,6 @@ Budget per cycle: `max_proposals`, `max_llm_calls`, `max_seconds` (`Budget` wrap
 | command | `optimizer_check <domain>` | deterministic checks → `ctx/traces/checks.json` |
 | command | `lab run <domain>` / `lab log` | preprod only / prints and verifies the chain |
 | migration | `evals/0003_suites_and_optimized` | additive |
-| compose | `docker-compose.preprod.yml` (project `ctxc-preprod`) | `context-preprod.smiro.dev` |
+| preprod | `.env.preprod` (database `ctxc_preprod`, index `cards_preprod`) | internal only, no public site |
 
 Not implemented on purpose: `POST /api/lab/experiments` and any promotion endpoint (the public demo is read-only).
