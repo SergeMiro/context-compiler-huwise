@@ -10,7 +10,7 @@ import llm as llm_mod
 from catalog.models import Dataset
 from ctx.compile import compile_dataset, current
 from ctx.models import ContextEdit
-from evals.models import EvalRun
+from evals.models import EvalCase, EvalRun
 from evals.runner import run_eval
 from projections.es import upsert_es
 
@@ -60,7 +60,9 @@ def llm_calls_today(portal):
 
 def propose(portal, run, chat=None, max_edits=10):
     chat = chat or llm_mod.chat
-    failed = [r for r in run.results.select_related("case") if not r.answer_ok and r.case.expected_datasets]
+    # holdout cases never reach the proposer: neither their questions nor their transcripts
+    failed = [r for r in run.results.select_related("case")
+              if not r.answer_ok and r.case.expected_datasets and r.case.split != "holdout"]
     groups = {}
     for r in failed:
         groups.setdefault(r.case.expected_datasets[0], []).append(r)
@@ -85,18 +87,23 @@ def propose(portal, run, chat=None, max_edits=10):
 
 
 def apply_edit(edit, chat=None):
-    """Try the edit; keep it only if more failing cases pass and no control case regresses."""
+    """Try the edit; keep it only if more failing cases pass and no control case regresses. Preprod only: it writes
+    a candidate card and re-projects it into the search index."""
+    from lab.cycle import guard
+    guard()
     portal, ds = edit.dataset.portal, edit.dataset
     baseline = EvalRun.objects.get(id=edit.eval_before["run"])
     per_case = baseline.metrics["per_case"]
     failed = edit.eval_before["failed"]
-    passing = sorted(s for s, v in per_case.items() if v["answer_ok"])
+    holdout = set(EvalCase.objects.filter(portal=portal, split="holdout").values_list("slug", flat=True))
+    passing = sorted(s for s, v in per_case.items() if v["answer_ok"] and s not in holdout)
     control = random.Random(edit.id).sample(passing, min(CONTROL, len(passing)))
     edit.status = "kept"  # tentatively, so compile includes it
     edit.save(update_fields=["status"])
     compile_dataset(ds)
     upsert_es(ds)
-    after = run_eval(portal, "compiled", chat=chat, slugs=set(failed) | set(control))
+    after = run_eval(portal, baseline.mode, chat=chat, slugs=set(failed) | set(control),
+                     suite=baseline.metrics.get("suite", "education"))
     now = {s: v["answer_ok"] for s, v in after.metrics["per_case"].items()}
     fixed = [s for s in failed if now.get(s)]
     broken = [s for s in control if not now.get(s)]

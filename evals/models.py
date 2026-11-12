@@ -13,6 +13,8 @@ class EvalCase(models.Model):
     expected_value = models.JSONField(null=True)  # filled by golden_refresh, never by hand
     tolerance = models.FloatField(default=0.05)
     tags = models.JSONField(default=list)
+    suite = models.CharField(max_length=40, default="education", db_index=True)  # golden file name
+    split = models.CharField(max_length=10, blank=True, default="")  # dev | val | holdout (optimizer never sees holdout)
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["portal", "slug"], name="uniq_case")]
@@ -20,7 +22,8 @@ class EvalCase(models.Model):
 
 class EvalRun(models.Model):
     portal = models.ForeignKey(Portal, on_delete=models.CASCADE)
-    mode = models.CharField(max_length=10, choices=[("naked", "naked"), ("compiled", "compiled")])
+    # naked = A (generic catalog tools named like Huwise MCP's), compiled = B (cards), optimized = C (cards + optimizer)
+    mode = models.CharField(max_length=10, choices=[("huwise", "huwise"), ("naked", "naked"), ("compiled", "compiled"), ("optimized", "optimized")])
     model = models.CharField(max_length=200)
     card_versions = models.JSONField(default=dict)
     metrics = models.JSONField(default=dict)

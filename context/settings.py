@@ -24,7 +24,7 @@ ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
     "django.contrib.sessions", "django.contrib.messages", "django.contrib.staticfiles",
-    "rest_framework", "catalog", "ctx", "evals",
+    "rest_framework", "catalog", "ctx", "evals", "lab", "optimizer",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -80,3 +80,6 @@ LOGGING = {"version": 1, "disable_existing_loggers": False,
                        "neo4j": {"level": "WARNING"}}}
 ES_INDEX = env("ES_INDEX", "cards")  # alias; physical indices are <alias>_v<N>
 CELERY_BEAT_SCHEDULE = {"scan-all-portals": {"task": "ctx.tasks.scan_all", "schedule": 3600.0}}
+# "prod" or "preprod". Preprod has its own MariaDB database and ES alias; it shares the Neo4j server read-only
+# (graph writes are refused) and is the only place where AutoContext Lab may write candidate cards.
+CTXC_ENV = env("CTXC_ENV", "prod")

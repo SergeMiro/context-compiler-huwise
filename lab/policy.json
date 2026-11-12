@@ -1,0 +1,16 @@
+{
+  "version": "gate-2026-11-11.1",
+  "note": "Fixed before any lab run. Accuracy and safety are hard constraints; latency and tokens are a bounded trade-off.",
+  "editable_artifacts": ["description", "synonyms", "query_template", "note"],
+  "never_editable": ["golden files and expected values", "evals/runner.py scoring", "tools/odsql.py validator",
+                     "optimizer/evidence.py", "lab/policy.json", "lab log"],
+  "gate": {
+    "min_fixed": 1,
+    "max_broken_control": 0,
+    "max_new_wrong_confident": 0,
+    "max_new_query_errors": 0,
+    "max_tokens_increase_pct": 25
+  },
+  "budget": {"max_proposals": 3, "max_llm_calls": 150, "max_seconds": 3600, "control_cases": 10},
+  "promotion": "manual: `manage.py lab promote <edit_id> --approve` in the production environment, then canary"
+}

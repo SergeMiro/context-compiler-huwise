@@ -9,6 +9,7 @@ from django.conf import settings
 
 log = logging.getLogger(__name__)
 RETRY_STATUS = {429, 500, 502, 503, 504}
+ATTEMPTS = 6  # free models answer 429/503 in bursts: 2+4+8+16+32 s of backoff before giving up
 _sleep = time.sleep
 
 
@@ -30,14 +31,14 @@ def chat(messages, tools=None, temperature=0, transport=None):
         body["tools"] = tools
     t0 = time.monotonic()
     with httpx.Client(timeout=settings.CTXC_LLM_TIMEOUT, transport=transport) as c:
-        for attempt in range(4):
+        for attempt in range(ATTEMPTS):
             try:
                 r = c.post(f"{base.rstrip('/')}/chat/completions", json=body, headers={"Authorization": f"Bearer {key}"})
             except httpx.TransportError:
-                if attempt == 3:
+                if attempt == ATTEMPTS - 1:
                     raise
             else:
-                if r.status_code not in RETRY_STATUS or attempt == 3:
+                if r.status_code not in RETRY_STATUS or attempt == ATTEMPTS - 1:
                     break
             _sleep(2 ** (attempt + 1))
     r.raise_for_status()

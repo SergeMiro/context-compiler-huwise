@@ -6,3 +6,6 @@ db.sqlite3
 /out/
 /staticfiles/
 /site/
+.env.preprod
+/site-preprod/
+/var/

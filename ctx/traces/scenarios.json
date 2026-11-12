@@ -1,0 +1,3545 @@
+{
+ "drift": {
+  "id": "drift",
+  "kind": "simulated",
+  "question": "Combien y a-t-il de collèges à Dijon ?",
+  "expected": 23,
+  "title": {
+   "fr": "Le schéma a changé",
+   "en": "The schema changed"
+  },
+  "recorded_at": "2026-11-11T15:28:27+00:00",
+  "commit": "c27210b",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": "the field nom_commune changes type in the local catalog copy (never on the portal)",
+  "runs": {
+   "optimized": {
+    "answer": "La recette est désactivée ; la question repart par le chemin agent (STANDARD).",
+    "answer_ok": null,
+    "route": "STANDARD",
+    "reasons": [
+     "no verified recipe: schema drift on fr-en-annuaire-education: recipe verified on ceae47849fae998c, now c4a6bbadbcc71249"
+    ],
+    "spans": [
+     {
+      "name": "route",
+      "ms": 0,
+      "route": "FAST",
+      "note": "before: schema as verified"
+     },
+     {
+      "name": "route",
+      "ms": 0,
+      "route": "STANDARD",
+      "note": "after: nom_commune type changed"
+     }
+    ],
+    "evidence": {
+     "status": "unverified",
+     "reasons": [
+      "not answered in the simulation"
+     ]
+    },
+    "steps": 0,
+    "tokens": 0,
+    "ms": 0,
+    "llm_calls": 0,
+    "trace": [],
+    "queries": []
+   }
+  }
+ },
+ "stale-cache": {
+  "id": "stale-cache",
+  "kind": "simulated",
+  "question": "Combien y a-t-il de collèges à Dijon ?",
+  "expected": 23,
+  "title": {
+   "fr": "Cache périmé",
+   "en": "Stale cache"
+  },
+  "recorded_at": "2026-11-11T15:28:27+00:00",
+  "commit": "c27210b",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": "the dataset gets a new data_processed date in the local catalog copy",
+  "runs": {
+   "optimized": {
+    "answer": "23 établissements (type_etablissement = Collège, nom_commune = Dijon) — source : fr-en-annuaire-education.",
+    "answer_ok": true,
+    "route": "FAST",
+    "reasons": [
+     "cache key changes with the data version: 801d76102652… → bb5db31e2f47…"
+    ],
+    "spans": [
+     {
+      "name": "query",
+      "ms": 65,
+      "ok": true,
+      "cache": "miss",
+      "note": "1st call"
+     },
+     {
+      "name": "query",
+      "ms": 3,
+      "ok": true,
+      "cache": "hit",
+      "note": "same question again"
+     },
+     {
+      "name": "query",
+      "ms": 64,
+      "ok": true,
+      "cache": "miss",
+      "note": "after a new data version"
+     }
+    ],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-annuaire-education",
+     "query": {
+      "where": "type_etablissement='Collège' and nom_commune='Dijon'",
+      "limit": 0
+     },
+     "source_portal": "data.education.gouv.fr",
+     "source_url": "https://data.education.gouv.fr/explore/dataset/fr-en-annuaire-education/",
+     "schema_version": "7235f8bcfbfb0ce0",
+     "data_version": "2099-01-01T00:00:00+00:00",
+     "api_result": {
+      "total_count": 23,
+      "results": []
+     }
+    },
+    "steps": 0,
+    "tokens": 0,
+    "ms": 153,
+    "llm_calls": 0,
+    "trace": [],
+    "queries": [
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "where": "type_etablissement='Collège' and nom_commune='Dijon'",
+       "limit": 0
+      },
+      "ok": true,
+      "result": {
+       "total_count": 23,
+       "results": []
+      }
+     }
+    ]
+   }
+  }
+ },
+ "forbidden": {
+  "id": "forbidden",
+  "kind": "simulated",
+  "question": "Combien y a-t-il de collèges à Dijon ?",
+  "expected": 23,
+  "title": {
+   "fr": "Jeu de données non autorisé",
+   "en": "Dataset not allowed"
+  },
+  "recorded_at": "2026-11-11T15:28:27+00:00",
+  "commit": "c27210b",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": "the Explore API answers 403 (mock transport), as for a restricted dataset without the right key",
+  "runs": {
+   "optimized": {
+    "answer": "Accès refusé à ce jeu de données : pas de réponse, pas de nombre inventé.",
+    "answer_ok": null,
+    "route": "FAST",
+    "reasons": [
+     "API refused access to this dataset (API key missing or not allowed)"
+    ],
+    "spans": [
+     {
+      "name": "query",
+      "ms": 9,
+      "ok": false
+     }
+    ],
+    "evidence": {
+     "status": "blocked",
+     "reasons": [
+      "no successful query backs this answer"
+     ],
+     "checks": {
+      "schema_valid": false,
+      "executed": false,
+      "result_consistent": false,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": null,
+     "query": null
+    },
+    "steps": 0,
+    "tokens": 0,
+    "ms": 9,
+    "llm_calls": 0,
+    "trace": [],
+    "queries": []
+   }
+  }
+ },
+ "dijon": {
+  "id": "dijon",
+  "kind": "recorded",
+  "question": "Combien y a-t-il de collèges à Dijon ?",
+  "expected": 23,
+  "title": {
+   "fr": "Le cas principal",
+   "en": "The main case"
+  },
+  "recorded_at": "2026-11-12T00:25:59+00:00",
+  "commit": "70e986c",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": null,
+  "runs": {
+   "huwise": {
+    "answer": "Il y a 23 collèges à Dijon.",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-annuaire-education",
+     "query": {
+      "slug": "fr-en-annuaire-education",
+      "select": "count(*) as total",
+      "where": "type_etablissement = \"Collège\" AND nom_commune = \"Dijon\""
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1568,
+      "tokens": 2909
+     },
+     {
+      "name": "search_assets",
+      "ms": 1329,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 4800,
+      "tokens": 4637
+     },
+     {
+      "name": "get_asset",
+      "ms": 539,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1312,
+      "tokens": 6322
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 144,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1225,
+      "tokens": 6474
+     }
+    ],
+    "steps": 4,
+    "tokens": 20342,
+    "ms": 10922,
+    "llm_calls": 4,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "collèges Dijon établissements scolaires",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"total_count\": 26, \"results\": [{\"slug\": \"cartographie\", \"asset_type\": \"ods_classicpage\", \"title\": \"Carte des collèges numériques\", \"links\": {\"front\": \"https://data.education.gouv.fr/explore/assets/cartographie\", \"api\": \"https://data.education.gouv.fr/api/explore/v2.1/catalog/assets/cartographie\"}}, {\"slug\": \"fr-en-carte-scolaire-colleges-publics\", \"asset_type\": \"ods_dataset\", \"title\": \"Carte scol"
+     },
+     {
+      "tool": "get_asset",
+      "args": {
+       "slug": "fr-en-annuaire-education"
+      },
+      "ok": true,
+      "result": "{\"uid\": \"da_o2sf5j\", \"slug\": \"fr-en-annuaire-education\", \"asset_type\": \"ods_dataset\", \"title\": \"Annuaire de l'éducation\", \"description\": \"Annuaire de l'éducation : données sur les établissements publics et privés ouverts situés en France. Le jeu de données couvre le premier degré, le second degré, les établissements médico-sociaux, les Centre d'Information et d'Orientation ainsi que les établissem"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "slug": "fr-en-annuaire-education",
+       "select": "count(*) as total",
+       "where": "type_etablissement = \"Collège\" AND nom_commune = \"Dijon\""
+      },
+      "ok": true,
+      "result": "{\"total_count\": 23, \"results\": [{\"total\": 23}, {\"total\": 23}, {\"total\": 23}, {\"total\": 23}, {\"total\": 23}, {\"total\": 23}, {\"total\": 23}, {\"total\": 23}, {\"total\": 23}, {\"total\": 23}]}"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "slug": "fr-en-annuaire-education",
+       "select": "count(*) as total",
+       "where": "type_etablissement = \"Collège\" AND nom_commune = \"Dijon\""
+      },
+      "ok": true,
+      "result": {
+       "total_count": 23,
+       "results": [
+        {
+         "total": 23
+        },
+        {
+         "total": 23
+        },
+        {
+         "total": 23
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "naked": {
+    "answer": "Il y a 12 collèges à Dijon.",
+    "answer_ok": false,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-colleges-ep",
+     "query": {
+      "select": "count(distinct uai) as nb_colleges",
+      "where": "communen = 'DIJON'",
+      "limit": 1
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1519,
+      "tokens": 754
+     },
+     {
+      "name": "search_assets",
+      "ms": 11,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1424,
+      "tokens": 1269
+     },
+     {
+      "name": "get_asset",
+      "ms": 115,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2303,
+      "tokens": 3156
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 135,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2969,
+      "tokens": 3536
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 70,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2492,
+      "tokens": 3592
+     },
+     {
+      "name": "get_asset",
+      "ms": 24,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 5701,
+      "tokens": 4829
+     }
+    ],
+    "steps": 6,
+    "tokens": 17136,
+    "ms": 16769,
+    "llm_calls": 6,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "question": "collèges Dijon"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-colleges-ep\", \"title\": \"Collèges éducation prioritaire\", \"description\": \"Indicateurs relatifs à l'éducation prioritaire pour les collèges\"}, {\"dataset_id\": \"fr-en-taille-colleges-lycees\", \"title\": \"Taille des collèges et des lycées\", \"description\": \"Tableau statistique : répartition des établissements et des élèves selon le type, la taille et le secteur de l'étab"
+     },
+     {
+      "tool": "get_asset",
+      "args": {
+       "dataset_id": "fr-en-colleges-ep"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-colleges-ep\", \"title\": \"Collèges éducation prioritaire\", \"description\": \"Indicateurs relatifs à l'éducation prioritaire pour les collèges\", \"records_count\": 47552, \"modified\": \"2026-01-29T18:26:28.180000+00:00\", \"keywords\": [\"éducation prioritaire\", \"établissement\", \"école\", \"élèves\", \"REP\", \"REP+\"], \"fields\": [{\"name\": \"id\", \"type\": \"text\", \"label\": \"Identifiant de l'établis"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "dataset_id": "fr-en-colleges-ep",
+       "select": "count(distinct uai) as nb_colleges",
+       "where": "communen = 'DIJON'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 108, \"results\": [{\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colleges\": 12}, {\"nb_colle"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "dataset_id": "fr-en-colleges-ep",
+       "select": "count(distinct uai) as nb_colleges",
+       "where": "communen = 'DIJON'",
+       "limit": 1
+      },
+      "ok": true,
+      "result": "{\"total_count\": 108, \"results\": [{\"nb_colleges\": 12}]}"
+     },
+     {
+      "tool": "get_asset",
+      "args": {
+       "dataset_id": "fr-en-taille-colleges-lycees"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-taille-colleges-lycees\", \"title\": \"Taille des collèges et des lycées\", \"description\": \"Tableau statistique : répartition des établissements et des élèves selon le type, la taille et le secteur de l'établissement Source : RERS - Repères et références statistiques sur les enseignements, la formation et la recherche\", \"records_count\": 344, \"modified\": \"2018-03-26T07:57:09+00:00\""
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-colleges-ep",
+      "params": {
+       "select": "count(distinct uai) as nb_colleges",
+       "where": "communen = 'DIJON'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 108,
+       "results": [
+        {
+         "nb_colleges": 12
+        },
+        {
+         "nb_colleges": 12
+        },
+        {
+         "nb_colleges": 12
+        }
+       ]
+      }
+     },
+     {
+      "dataset_id": "fr-en-colleges-ep",
+      "params": {
+       "select": "count(distinct uai) as nb_colleges",
+       "where": "communen = 'DIJON'",
+       "limit": 1
+      },
+      "ok": true,
+      "result": {
+       "total_count": 108,
+       "results": [
+        {
+         "nb_colleges": 12
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "compiled": {
+    "answer": "Il y a 23 collèges à Dijon.",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-annuaire-education",
+     "query": {
+      "select": "count(*) as n",
+      "where": "type_etablissement = 'Collège' and nom_commune = 'Dijon'"
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1605,
+      "tokens": 793
+     },
+     {
+      "name": "find_dataset",
+      "ms": 10,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1788,
+      "tokens": 2364
+     },
+     {
+      "name": "explain_dataset",
+      "ms": 37,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2873,
+      "tokens": 4089
+     },
+     {
+      "name": "query",
+      "ms": 100,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1091,
+      "tokens": 4253
+     }
+    ],
+    "steps": 4,
+    "tokens": 11499,
+    "ms": 7507,
+    "llm_calls": 4,
+    "trace": [
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "collèges Dijon nombre établissements"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-annuaire-education\", \"card\": \"## fr-en-annuaire-education — Annuaire de l'éducation\\nAnnuaire de l'éducation : données sur les établissements publics et privés ouverts situés en France. Le jeu de données couvre le premier degré, le second degré, les établissements médico-sociaux, les Centre d'Information et d'Orientation ainsi que les établissements administratif"
+     },
+     {
+      "tool": "explain_dataset",
+      "args": {
+       "dataset_id": "fr-en-annuaire-education"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-annuaire-education\", \"card\": \"## fr-en-annuaire-education — Annuaire de l'éducation\\nAnnuaire de l'éducation : données sur les établissements publics et privés ouverts situés en France. Le jeu de données couvre le premier degré, le second degré, les établissements médico-sociaux, les Centre d'Information et d'Orientation ainsi que les établissements administratifs. Sources : "
+     },
+     {
+      "tool": "query",
+      "args": {
+       "dataset_id": "fr-en-annuaire-education",
+       "select": "count(*) as n",
+       "where": "type_etablissement = 'Collège' and nom_commune = 'Dijon'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 23, \"results\": [{\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}, {\"n\": 23}]}"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "select": "count(*) as n",
+       "where": "type_etablissement = 'Collège' and nom_commune = 'Dijon'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 23,
+       "results": [
+        {
+         "n": 23
+        },
+        {
+         "n": 23
+        },
+        {
+         "n": 23
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "optimized": {
+    "answer": "23 établissements (type_etablissement = Collège, nom_commune = Dijon) — source : fr-en-annuaire-education.",
+    "answer_ok": true,
+    "route": "FAST",
+    "reasons": [
+     "verified recipe count_establishments@2026-11-11.1, schema ceae47849fae998c unchanged, every slot resolved to a stored value"
+    ],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-annuaire-education",
+     "query": {
+      "where": "type_etablissement='Collège' and nom_commune='Dijon'",
+      "limit": 0
+     },
+     "source_portal": "data.education.gouv.fr",
+     "source_url": "https://data.education.gouv.fr/explore/dataset/fr-en-annuaire-education/",
+     "schema_version": "7235f8bcfbfb0ce0",
+     "data_version": "2026-11-09T06:01:23.892000+00:00",
+     "api_result": {
+      "total_count": 23,
+      "results": []
+     }
+    },
+    "spans": [
+     {
+      "name": "route",
+      "ms": 31,
+      "route": "FAST",
+      "policy": "route-2026-11-11.1",
+      "value_lookups": 1
+     },
+     {
+      "name": "query",
+      "ms": 49,
+      "ok": true,
+      "cache": "miss"
+     },
+     {
+      "name": "verify",
+      "ms": 4,
+      "status": "verified"
+     }
+    ],
+    "steps": 0,
+    "tokens": 0,
+    "ms": 84,
+    "llm_calls": 0,
+    "trace": [],
+    "queries": [
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "where": "type_etablissement='Collège' and nom_commune='Dijon'",
+       "limit": 0
+      },
+      "ok": true,
+      "result": {
+       "total_count": 23,
+       "results": []
+      }
+     }
+    ]
+   }
+  }
+ },
+ "code-format": {
+  "id": "code-format",
+  "kind": "recorded",
+  "question": "Combien de collèges publics y a-t-il en Côte-d'Or ?",
+  "expected": 58,
+  "title": {
+   "fr": "Code département : '21' ou '021' ?",
+   "en": "Department code: '21' or '021'?"
+  },
+  "recorded_at": "2026-11-12T00:26:35+00:00",
+  "commit": "70e986c",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": null,
+  "runs": {
+   "huwise": {
+    "answer": "<tool_call>\n<function=search_asset_records>\n<parameter=slug>\nfr-en-annuaire-education\n</parameter>\n<parameter=where>\ncode_departement = \"21\"\n</parameter>\n<parameter=select>\ntype_etablissement, statut_public_prive\n</parameter>\n<parameter=limit>\n5\n</parameter>\n</function>\n</tool_call>\n",
+    "answer_ok": false,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "blocked",
+     "reasons": [
+      "number(s) not returned by any query: 21, 5"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": false,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-annuaire-education",
+     "query": {
+      "slug": "fr-en-annuaire-education",
+      "where": "code_departement = \"21\" AND type_etablissement = \"collège\" AND statut_public_prive = \"public\"",
+      "select": "count(*) as total"
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1481,
+      "tokens": 2892
+     },
+     {
+      "name": "search_assets",
+      "ms": 358,
+      "ok": false
+     },
+     {
+      "name": "llm",
+      "ms": 1023,
+      "tokens": 3209
+     },
+     {
+      "name": "search_assets",
+      "ms": 121,
+      "ok": false
+     },
+     {
+      "name": "llm",
+      "ms": 983,
+      "tokens": 3585
+     },
+     {
+      "name": "search_assets",
+      "ms": 1176,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 3314,
+      "tokens": 5622
+     },
+     {
+      "name": "get_asset",
+      "ms": 680,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2405,
+      "tokens": 7194
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 137,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 78732,
+      "tokens": 4635
+     }
+    ],
+    "steps": 6,
+    "tokens": 27137,
+    "ms": 90415,
+    "llm_calls": 6,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "collèges publics Côte-d'Or établissements scolaires",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"name\": \"search_assets\", \"error\": \"(400)\\nReason: 400 for url 'https://data.education.gouv.fr/api/explore/v2.1/catalog/assets?lang=en&select=slug%2C+asset_type%2C+title%2C+description%2C+themes%2C+keywords%2C+fields%2C+default.records_count+as+records_count&where=%28vector_similarity_threshold%28%27coll%C3%A8ges+publics+C%C3%B4te-d%27%27Or+%C3%A9tablissements+scolaires%27%29%29+AND+not+is_exclude"
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "collèges publics département Côte d'Or",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"name\": \"search_assets\", \"error\": \"(400)\\nReason: 400 for url 'https://data.education.gouv.fr/api/explore/v2.1/catalog/assets?lang=en&select=slug%2C+asset_type%2C+title%2C+description%2C+themes%2C+keywords%2C+fields%2C+default.records_count+as+records_count&where=%28vector_similarity_threshold%28%27coll%C3%A8ges+publics+d%C3%A9partement+C%C3%B4te+d%27%27Or%27%29%29+AND+not+is_excluded_from_catalo"
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "colleges publics departement",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"total_count\": 21, \"results\": [{\"slug\": \"fr-en-carte-scolaire-colleges-publics\", \"asset_type\": \"ods_dataset\", \"title\": \"Carte scolaire des collèges publics\", \"description\": \"Cet actif a été lié à l'actif suivant : [Carte scolaire des collèges publics - Visualization](/explore/assets/visualisation-fr-en-carte-scolaire-colleges-publics/)\\n\\n---\\n\\nLes collèges publics accueillent en priorité les\\né"
+     },
+     {
+      "tool": "get_asset",
+      "args": {
+       "slug": "fr-en-annuaire-education"
+      },
+      "ok": true,
+      "result": "{\"uid\": \"da_o2sf5j\", \"slug\": \"fr-en-annuaire-education\", \"asset_type\": \"ods_dataset\", \"title\": \"Annuaire de l'éducation\", \"description\": \"Annuaire de l'éducation : données sur les établissements publics et privés ouverts situés en France. Le jeu de données couvre le premier degré, le second degré, les établissements médico-sociaux, les Centre d'Information et d'Orientation ainsi que les établissem"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "slug": "fr-en-annuaire-education",
+       "where": "code_departement = \"21\" AND type_etablissement = \"collège\" AND statut_public_prive = \"public\"",
+       "select": "count(*) as total"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 0, \"results\": []}"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "slug": "fr-en-annuaire-education",
+       "where": "code_departement = \"21\" AND type_etablissement = \"collège\" AND statut_public_prive = \"public\"",
+       "select": "count(*) as total"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 0,
+       "results": []
+      }
+     }
+    ]
+   },
+   "naked": {
+    "answer": "<tool_call>\n<function=search_asset_records>\n<parameter=dataset_id>\nfr-en-carte-scolaire-colleges-publics\n</parameter>\n<parameter=select>\ncode_rne, count(*) as n\n</parameter>\n<parameter=where>\ncode_departement = '021'\n</parameter>\n<parameter=group_by>\ncode_rne\n</parameter>\n<parameter=limit>\n5000\n</parameter>\n</function>\n</tool_call>\n",
+    "answer_ok": false,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "blocked",
+     "reasons": [
+      "number(s) not returned by any query: 21, 5000"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": false,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+     "query": {
+      "select": "count(*) as n",
+      "where": "code_departement = '021'"
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1864,
+      "tokens": 796
+     },
+     {
+      "name": "search_assets",
+      "ms": 11,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 903,
+      "tokens": 1306
+     },
+     {
+      "name": "get_asset",
+      "ms": 88,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1698,
+      "tokens": 3324
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 87,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1588,
+      "tokens": 3409
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 50,
+      "ok": false
+     },
+     {
+      "name": "llm",
+      "ms": 1928,
+      "tokens": 3566
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 79,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 3945,
+      "tokens": 3614
+     }
+    ],
+    "steps": 6,
+    "tokens": 16015,
+    "ms": 12245,
+    "llm_calls": 6,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "question": "collèges publics Côte-d'Or établissements scolaires"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-carte-scolaire-colleges-publics\", \"title\": \"Carte scolaire des collèges publics\", \"description\": \"Cet actif a été lié à l'actif suivant : Carte scolaire des collèges publics - Visualization Les collèges publics accueillent en priorité les élèves habitant dans leur secteur de recrutement. Ce secteur est déterminé par le lieu de résidence de l’élève. Ce n’est donc "
+     },
+     {
+      "tool": "get_asset",
+      "args": {
+       "dataset_id": "fr-en-carte-scolaire-colleges-publics"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-carte-scolaire-colleges-publics\", \"title\": \"Carte scolaire des collèges publics\", \"description\": \"Cet actif a été lié à l'actif suivant : Carte scolaire des collèges publics - Visualization Les collèges publics accueillent en priorité les élèves habitant dans leur secteur de recrutement. Ce secteur est déterminé par le lieu de résidence de l’élève. Ce n’est donc ni l’école pr"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+       "select": "count(distinct code_rne) as n",
+       "where": "code_departement = '21'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 0, \"results\": []}"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+       "select": "distinct code_departement",
+       "limit": 20
+      },
+      "ok": false,
+      "result": "{\"error\": \"API: ODSQL syntax exception: unexpected code_departement at position 9 in distinct code_departement. Clause(s) containing the error(s): select.\"}"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+       "select": "count(*) as n",
+       "where": "code_departement = '021'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 3145, \"results\": [{\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}, {\"n\": 3145}]}"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+      "params": {
+       "select": "count(distinct code_rne) as n",
+       "where": "code_departement = '21'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 0,
+       "results": []
+      }
+     },
+     {
+      "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+      "params": {
+       "select": "distinct code_departement",
+       "limit": 20
+      },
+      "ok": false,
+      "result": null
+     },
+     {
+      "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+      "params": {
+       "select": "count(*) as n",
+       "where": "code_departement = '021'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 3145,
+       "results": [
+        {
+         "n": 3145
+        },
+        {
+         "n": 3145
+        },
+        {
+         "n": 3145
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "compiled": {
+    "answer": "Il y a 50 collèges publics en Côte-d'Or.",
+    "answer_ok": false,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+     "query": {
+      "select": "code_rne, count(*) as n",
+      "where": "code_departement = '021'",
+      "group_by": "code_rne",
+      "limit": 100
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 2145,
+      "tokens": 834
+     },
+     {
+      "name": "find_dataset",
+      "ms": 11,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1544,
+      "tokens": 2330
+     },
+     {
+      "name": "explain_dataset",
+      "ms": 22,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1850,
+      "tokens": 4021
+     },
+     {
+      "name": "query",
+      "ms": 102,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 5161,
+      "tokens": 4438
+     },
+     {
+      "name": "query",
+      "ms": 101,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 4249,
+      "tokens": 4685
+     },
+     {
+      "name": "query",
+      "ms": 346,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 4323,
+      "tokens": 5364
+     }
+    ],
+    "steps": 6,
+    "tokens": 21672,
+    "ms": 19860,
+    "llm_calls": 6,
+    "trace": [
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "collèges publics Côte-d'Or nombre établissements"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-carte-scolaire-colleges-publics\", \"card\": \"## fr-en-carte-scolaire-colleges-publics — Carte scolaire des collèges publics\\nCet actif a été lié à l'actif suivant : Carte scolaire des collèges publics - Visualization Les collèges publics accueillent en priorité les élèves habitant dans leur secteur de recrutement. Ce secteur est déterminé par le lieu de résidence d"
+     },
+     {
+      "tool": "explain_dataset",
+      "args": {
+       "dataset_id": "fr-en-carte-scolaire-colleges-publics"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-carte-scolaire-colleges-publics\", \"card\": \"## fr-en-carte-scolaire-colleges-publics — Carte scolaire des collèges publics\\nCet actif a été lié à l'actif suivant : Carte scolaire des collèges publics - Visualization Les collèges publics accueillent en priorité les élèves habitant dans leur secteur de recrutement. Ce secteur est déterminé par le lieu de résidence de l’élève. Ce"
+     },
+     {
+      "tool": "query",
+      "args": {
+       "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+       "select": "count(distinct code_rne) as n",
+       "where": "code_departement = '021'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 3145, \"results\": [{\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}, {\"n\": 50}]}"
+     },
+     {
+      "tool": "query",
+      "args": {
+       "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+       "select": "count(*) as n",
+       "where": "code_departement = '021'",
+       "limit": 1
+      },
+      "ok": true,
+      "result": "{\"total_count\": 3145, \"results\": [{\"n\": 3145}]}"
+     },
+     {
+      "tool": "query",
+      "args": {
+       "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+       "select": "code_rne, count(*) as n",
+       "where": "code_departement = '021'",
+       "group_by": "code_rne",
+       "limit": 100
+      },
+      "ok": true,
+      "result": "{\"total_count\": 50, \"results\": [{\"code_rne\": \"0210001M\", \"n\": 20}, {\"code_rne\": \"0210011Y\", \"n\": 22}, {\"code_rne\": \"0210014B\", \"n\": 45}, {\"code_rne\": \"0210024M\", \"n\": 84}, {\"code_rne\": \"0210025N\", \"n\": 122}, {\"code_rne\": \"0210027R\", \"n\": 14}, {\"code_rne\": \"0210029T\", \"n\": 26}, {\"code_rne\": \"0210030U\", \"n\": 21}, {\"code_rne\": \"0210033X\", \"n\": 21}, {\"code_rne\": \"0210034Y\", \"n\": 19}, {\"code_rne\": \"021"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+      "params": {
+       "select": "count(distinct code_rne) as n",
+       "where": "code_departement = '021'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 3145,
+       "results": [
+        {
+         "n": 50
+        },
+        {
+         "n": 50
+        },
+        {
+         "n": 50
+        }
+       ]
+      }
+     },
+     {
+      "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+      "params": {
+       "select": "count(*) as n",
+       "where": "code_departement = '021'",
+       "limit": 1
+      },
+      "ok": true,
+      "result": {
+       "total_count": 3145,
+       "results": [
+        {
+         "n": 3145
+        }
+       ]
+      }
+     },
+     {
+      "dataset_id": "fr-en-carte-scolaire-colleges-publics",
+      "params": {
+       "select": "code_rne, count(*) as n",
+       "where": "code_departement = '021'",
+       "group_by": "code_rne",
+       "limit": 100
+      },
+      "ok": true,
+      "result": {
+       "total_count": 50,
+       "results": [
+        {
+         "code_rne": "0210001M",
+         "n": 20
+        },
+        {
+         "code_rne": "0210011Y",
+         "n": 22
+        },
+        {
+         "code_rne": "0210014B",
+         "n": 45
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "optimized": {
+    "answer": "58 établissements (type_etablissement = Collège, statut_public_prive = Public, libelle_departement = Côte-d'Or) — source : fr-en-annuaire-education.",
+    "answer_ok": true,
+    "route": "FAST",
+    "reasons": [
+     "verified recipe count_establishments@2026-11-11.1, schema ceae47849fae998c unchanged, every slot resolved to a stored value"
+    ],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-annuaire-education",
+     "query": {
+      "where": "type_etablissement='Collège' and statut_public_prive='Public' and libelle_departement=\"Côte-d'Or\"",
+      "limit": 0
+     },
+     "source_portal": "data.education.gouv.fr",
+     "source_url": "https://data.education.gouv.fr/explore/dataset/fr-en-annuaire-education/",
+     "schema_version": "7235f8bcfbfb0ce0",
+     "data_version": "2026-11-09T06:01:23.892000+00:00",
+     "api_result": {
+      "total_count": 58,
+      "results": []
+     }
+    },
+    "spans": [
+     {
+      "name": "route",
+      "ms": 77,
+      "route": "FAST",
+      "policy": "route-2026-11-11.1",
+      "value_lookups": 2
+     },
+     {
+      "name": "query",
+      "ms": 48,
+      "ok": true,
+      "cache": "miss"
+     },
+     {
+      "name": "verify",
+      "ms": 2,
+      "status": "verified"
+     }
+    ],
+    "steps": 0,
+    "tokens": 0,
+    "ms": 128,
+    "llm_calls": 0,
+    "trace": [],
+    "queries": [
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "where": "type_etablissement='Collège' and statut_public_prive='Public' and libelle_departement=\"Côte-d'Or\"",
+       "limit": 0
+      },
+      "ok": true,
+      "result": {
+       "total_count": 58,
+       "results": []
+      }
+     }
+    ]
+   }
+  }
+ },
+ "trap-dataset": {
+  "id": "trap-dataset",
+  "kind": "recorded",
+  "question": "Combien de lycées des métiers en Bourgogne-Franche-Comté ?",
+  "expected": 33,
+  "title": {
+   "fr": "Le mauvais jeu de données",
+   "en": "The wrong dataset"
+  },
+  "recorded_at": "2026-11-12T00:28:37+00:00",
+  "commit": "70e986c",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": null,
+  "runs": {
+   "huwise": {
+    "answer": "Il y a 33 lycées des métiers en Bourgogne-Franche-Comté.",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-lycees-metiers",
+     "query": {
+      "slug": "fr-en-lycees-metiers",
+      "where": "libelle_region = \"Bourgogne-Franche-Comté\"",
+      "select": "count(*) as total"
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 9046,
+      "tokens": 2910
+     },
+     {
+      "name": "search_assets",
+      "ms": 1077,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2263,
+      "tokens": 4654
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 281,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 3451,
+      "tokens": 4772
+     }
+    ],
+    "steps": 3,
+    "tokens": 12336,
+    "ms": 16121,
+    "llm_calls": 3,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "lycée des métiers Bourgogne-Franche-Comté",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"total_count\": 19, \"results\": [{\"slug\": \"carte-des-lycees-des-metiers\", \"asset_type\": \"ods_classicpage\", \"title\": \"Carte des lycées des métiers\", \"links\": {\"front\": \"https://data.education.gouv.fr/explore/assets/carte-des-lycees-des-metiers\", \"api\": \"https://data.education.gouv.fr/api/explore/v2.1/catalog/assets/carte-des-lycees-des-metiers\"}}, {\"slug\": \"fr-en-lycees-metiers\", \"asset_type\": \"ods_"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "slug": "fr-en-lycees-metiers",
+       "where": "libelle_region = \"Bourgogne-Franche-Comté\"",
+       "select": "count(*) as total"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 33, \"results\": [{\"total\": 33}, {\"total\": 33}, {\"total\": 33}, {\"total\": 33}, {\"total\": 33}, {\"total\": 33}, {\"total\": 33}, {\"total\": 33}, {\"total\": 33}, {\"total\": 33}]}"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-lycees-metiers",
+      "params": {
+       "slug": "fr-en-lycees-metiers",
+       "where": "libelle_region = \"Bourgogne-Franche-Comté\"",
+       "select": "count(*) as total"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 33,
+       "results": [
+        {
+         "total": 33
+        },
+        {
+         "total": 33
+        },
+        {
+         "total": 33
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "naked": {
+    "answer": "Il y a 33 lycées des métiers en Bourgogne-Franche-Comté.",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-lycees-metiers",
+     "query": {
+      "select": "count(*) as n",
+      "where": "libelle_region = 'Bourgogne-Franche-Comté'"
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1336,
+      "tokens": 789
+     },
+     {
+      "name": "search_assets",
+      "ms": 10,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1569,
+      "tokens": 1287
+     },
+     {
+      "name": "get_asset",
+      "ms": 149,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1196,
+      "tokens": 3167
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 74,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1142,
+      "tokens": 3376
+     }
+    ],
+    "steps": 4,
+    "tokens": 8619,
+    "ms": 5480,
+    "llm_calls": 4,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "question": "lycées des métiers Bourgogne-Franche-Comté"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-lycees-metiers\", \"title\": \"Lycées des métiers\", \"description\": \"Ce jeu de données précise les filières de rattachement de chaque lycée des métiers, ainsi que son label. Le label « Lycée des métiers » permet d'identifier des pôles de compétences en matière de formation professionnelle, de certification et de coopération avec les entreprises au sein d’une filière \""
+     },
+     {
+      "tool": "get_asset",
+      "args": {
+       "dataset_id": "fr-en-lycees-metiers"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-lycees-metiers\", \"title\": \"Lycées des métiers\", \"description\": \"Ce jeu de données précise les filières de rattachement de chaque lycée des métiers, ainsi que son label. Le label « Lycée des métiers » permet d'identifier des pôles de compétences en matière de formation professionnelle, de certification et de coopération avec les entreprises au sein d’une filière professionnell"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "dataset_id": "fr-en-lycees-metiers",
+       "select": "count(*) as n",
+       "where": "libelle_region = 'Bourgogne-Franche-Comté'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 33, \"results\": [{\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}]}"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-lycees-metiers",
+      "params": {
+       "select": "count(*) as n",
+       "where": "libelle_region = 'Bourgogne-Franche-Comté'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 33,
+       "results": [
+        {
+         "n": 33
+        },
+        {
+         "n": 33
+        },
+        {
+         "n": 33
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "compiled": {
+    "answer": "Il y a 33 lycées des métiers en Bourgogne-Franche-Comté.",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-lycees-metiers",
+     "query": {
+      "select": "count(*) as n",
+      "where": "libelle_region = 'Bourgogne-Franche-Comté'"
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1381,
+      "tokens": 762
+     },
+     {
+      "name": "find_dataset",
+      "ms": 11,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1160,
+      "tokens": 2281
+     },
+     {
+      "name": "explain_dataset",
+      "ms": 29,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1191,
+      "tokens": 3354
+     },
+     {
+      "name": "query",
+      "ms": 67,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 975,
+      "tokens": 3527
+     }
+    ],
+    "steps": 4,
+    "tokens": 9924,
+    "ms": 4817,
+    "llm_calls": 4,
+    "trace": [
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "lycées des métiers Bourgogne-Franche-Comté nombre"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-lycees-metiers\", \"card\": \"## fr-en-lycees-metiers — Lycées des métiers\\nCe jeu de données précise les filières de rattachement de chaque lycée des métiers, ainsi que son label.\\n763 rows · updated 07.09.2026 (annual) · Licence Ouverte v2.0 (Etalab) · Direction générale de l'Enseignement scolaire\\nKeys: code_departement, code_postal\\nFields: ndeg_uai (N° UAI), nom"
+     },
+     {
+      "tool": "explain_dataset",
+      "args": {
+       "dataset_id": "fr-en-lycees-metiers"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-lycees-metiers\", \"card\": \"## fr-en-lycees-metiers — Lycées des métiers\\nCe jeu de données précise les filières de rattachement de chaque lycée des métiers, ainsi que son label. Le label « Lycée des métiers » permet d'identifier des pôles de compétences en matière de formation professionnelle, de certification et de coopération avec les entreprises au sein d’une filière profes"
+     },
+     {
+      "tool": "query",
+      "args": {
+       "dataset_id": "fr-en-lycees-metiers",
+       "select": "count(*) as n",
+       "where": "libelle_region = 'Bourgogne-Franche-Comté'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 33, \"results\": [{\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}]}"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-lycees-metiers",
+      "params": {
+       "select": "count(*) as n",
+       "where": "libelle_region = 'Bourgogne-Franche-Comté'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 33,
+       "results": [
+        {
+         "n": 33
+        },
+        {
+         "n": 33
+        },
+        {
+         "n": 33
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "optimized": {
+    "answer": "Il y a 33 lycées des métiers en Bourgogne-Franche-Comté.",
+    "answer_ok": true,
+    "route": "STANDARD",
+    "reasons": [
+     "no verified recipe: words the recipe does not cover: metiers"
+    ],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-lycees-metiers",
+     "query": {
+      "select": "count(*) as n",
+      "where": "libelle_region = 'Bourgogne-Franche-Comté'"
+     },
+     "source_portal": "data.education.gouv.fr",
+     "source_url": "https://data.education.gouv.fr/explore/dataset/fr-en-lycees-metiers/",
+     "schema_version": "4054291d5b442a5b",
+     "data_version": "2026-09-07T14:30:49.656000+00:00",
+     "api_result": {
+      "total_count": 33,
+      "results": [
+       {
+        "n": 33
+       },
+       {
+        "n": 33
+       },
+       {
+        "n": 33
+       }
+      ]
+     }
+    },
+    "spans": [
+     {
+      "name": "route",
+      "ms": 0,
+      "route": "STANDARD",
+      "policy": "route-2026-11-11.1",
+      "value_lookups": 0
+     },
+     {
+      "name": "llm",
+      "ms": 1693,
+      "tokens": 819
+     },
+     {
+      "name": "find_dataset",
+      "ms": 11,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 972,
+      "tokens": 2258
+     },
+     {
+      "name": "explain_dataset",
+      "ms": 21,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2352,
+      "tokens": 3342
+     },
+     {
+      "name": "query",
+      "ms": 102,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1326,
+      "tokens": 3533
+     },
+     {
+      "name": "verify",
+      "ms": 3,
+      "status": "verified"
+     }
+    ],
+    "steps": 4,
+    "tokens": 9952,
+    "ms": 6483,
+    "llm_calls": 4,
+    "trace": [
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "lycées des métiers Bourgogne-Franche-Comté nombre"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-lycees-metiers\", \"card\": \"## fr-en-lycees-metiers — Lycées des métiers\\nCe jeu de données précise les filières de rattachement de chaque lycée des métiers, ainsi que son label.\\n763 rows · updated 07.09.2026 (annual) · Licence Ouverte v2.0 (Etalab) · Direction générale de l'Enseignement scolaire\\nKeys: code_departement, code_postal\\nFields: ndeg_uai (N° UAI), nom"
+     },
+     {
+      "tool": "explain_dataset",
+      "args": {
+       "dataset_id": "fr-en-lycees-metiers"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-lycees-metiers\", \"card\": \"## fr-en-lycees-metiers — Lycées des métiers\\nCe jeu de données précise les filières de rattachement de chaque lycée des métiers, ainsi que son label. Le label « Lycée des métiers » permet d'identifier des pôles de compétences en matière de formation professionnelle, de certification et de coopération avec les entreprises au sein d’une filière profes"
+     },
+     {
+      "tool": "query",
+      "args": {
+       "dataset_id": "fr-en-lycees-metiers",
+       "select": "count(*) as n",
+       "where": "libelle_region = 'Bourgogne-Franche-Comté'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 33, \"results\": [{\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}, {\"n\": 33}], \"cache\": \"miss\"}"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-lycees-metiers",
+      "params": {
+       "select": "count(*) as n",
+       "where": "libelle_region = 'Bourgogne-Franche-Comté'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 33,
+       "results": [
+        {
+         "n": 33
+        },
+        {
+         "n": 33
+        },
+        {
+         "n": 33
+        }
+       ]
+      }
+     }
+    ]
+   }
+  }
+ },
+ "aggregate": {
+  "id": "aggregate",
+  "kind": "recorded",
+  "question": "Quel est l'IPS moyen des collèges de Côte-d'Or à la rentrée 2025-2026 ?",
+  "expected": 105.87962962962963,
+  "title": {
+   "fr": "Une moyenne (agrégation)",
+   "en": "An average (aggregation)"
+  },
+  "recorded_at": "2026-11-12T00:29:10+00:00",
+  "commit": "70e986c",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": null,
+  "runs": {
+   "huwise": {
+    "answer": "L'IPS moyen des collèges de Côte-d'Or à la rentrée 2025-2026 est de 105,88 (calculé sur 54 établissements).",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "partially_verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API",
+      "a query returned 0 rows: a filter value may be written differently in the data"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": false,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-ips-colleges-ap2023",
+     "query": {
+      "slug": "fr-en-ips-colleges-ap2023",
+      "where": "rentree_scolaire = \"2025-2026\" AND code_du_departement = \"21\"",
+      "select": "avg(ips) as ips_moyen, count(*) as nb_colleges"
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1709,
+      "tokens": 2897
+     },
+     {
+      "name": "search_assets",
+      "ms": 333,
+      "ok": false
+     },
+     {
+      "name": "llm",
+      "ms": 959,
+      "tokens": 3221
+     },
+     {
+      "name": "search_assets",
+      "ms": 1162,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2258,
+      "tokens": 5133
+     },
+     {
+      "name": "get_asset",
+      "ms": 739,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1779,
+      "tokens": 6992
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 141,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2348,
+      "tokens": 7043
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 142,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 3905,
+      "tokens": 5051
+     }
+    ],
+    "steps": 6,
+    "tokens": 30337,
+    "ms": 15480,
+    "llm_calls": 6,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "IPS collèges Côte-d'Or indice position sociale",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"name\": \"search_assets\", \"error\": \"(400)\\nReason: 400 for url 'https://data.education.gouv.fr/api/explore/v2.1/catalog/assets?lang=en&select=slug%2C+asset_type%2C+title%2C+description%2C+themes%2C+keywords%2C+fields%2C+default.records_count+as+records_count&where=%28vector_similarity_threshold%28%27IPS+coll%C3%A8ges+C%C3%B4te-d%27%27Or+indice+position+sociale%27%29%29+AND+not+is_excluded_from_cat"
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "IPS collèges indice position sociale",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"total_count\": 37, \"results\": [{\"slug\": \"fr-en-ips_colleges\", \"asset_type\": \"ods_dataset\", \"title\": \"Indices de position sociale des collèges (2016-2021)\", \"description\": \"L’indice de position sociale (IPS) permet d'appréhender le\\nstatut social des élèves à partir des professions et catégories sociales (PCS)\\nde leurs parents. Pour chaque PCS, la valeur numérique de l’IPS correspond à un\\nrésumé"
+     },
+     {
+      "tool": "get_asset",
+      "args": {
+       "slug": "fr-en-ips-colleges-ap2023"
+      },
+      "ok": true,
+      "result": "{\"uid\": \"da_rhqi59\", \"slug\": \"fr-en-ips-colleges-ap2023\", \"asset_type\": \"ods_dataset\", \"title\": \"Indices de position sociale des collèges (à partir de 2023)\", \"description\": \"L’indice de position sociale (IPS) permet d'appréhender le statut social des élèves à partir des professions et catégories sociales (PCS) de leurs parents. À chaque PCS ou couple de PCS est associée une valeur numérique de l’"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "slug": "fr-en-ips-colleges-ap2023",
+       "where": "departement = \"Côte-d'Or\" AND rentree_scolaire = \"2025-2026\"",
+       "select": "avg(ips) as ips_moyen, count(*) as nb_colleges"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 0, \"results\": []}"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "slug": "fr-en-ips-colleges-ap2023",
+       "where": "rentree_scolaire = \"2025-2026\" AND code_du_departement = \"21\"",
+       "select": "avg(ips) as ips_moyen, count(*) as nb_colleges"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 54, \"results\": [{\"ips_moyen\": 105.87962962962963, \"nb_colleges\": 54}, {\"ips_moyen\": 105.87962962962963, \"nb_colleges\": 54}, {\"ips_moyen\": 105.87962962962963, \"nb_colleges\": 54}, {\"ips_moyen\": 105.87962962962963, \"nb_colleges\": 54}, {\"ips_moyen\": 105.87962962962963, \"nb_colleges\": 54}, {\"ips_moyen\": 105.87962962962963, \"nb_colleges\": 54}, {\"ips_moyen\": 105.87962962962963, \"nb_colleg"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-ips-colleges-ap2023",
+      "params": {
+       "slug": "fr-en-ips-colleges-ap2023",
+       "where": "departement = \"Côte-d'Or\" AND rentree_scolaire = \"2025-2026\"",
+       "select": "avg(ips) as ips_moyen, count(*) as nb_colleges"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 0,
+       "results": []
+      }
+     },
+     {
+      "dataset_id": "fr-en-ips-colleges-ap2023",
+      "params": {
+       "slug": "fr-en-ips-colleges-ap2023",
+       "where": "rentree_scolaire = \"2025-2026\" AND code_du_departement = \"21\"",
+       "select": "avg(ips) as ips_moyen, count(*) as nb_colleges"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 54,
+       "results": [
+        {
+         "ips_moyen": 105.87962962962963,
+         "nb_colleges": 54
+        },
+        {
+         "ips_moyen": 105.87962962962963,
+         "nb_colleges": 54
+        },
+        {
+         "ips_moyen": 105.87962962962963,
+         "nb_colleges": 54
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "naked": {
+    "answer": "L'IPS moyen des collèges de Côte-d'Or à la rentrée 2025-2026 est de 105,88.",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-ips-colleges-ap2023",
+     "query": {
+      "select": "avg(ips) as ips_moyen",
+      "where": "code_du_departement = '21' AND rentree_scolaire = '2025-2026'"
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1203,
+      "tokens": 761
+     },
+     {
+      "name": "search_assets",
+      "ms": 12,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1885,
+      "tokens": 1461
+     },
+     {
+      "name": "get_asset",
+      "ms": 62,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1896,
+      "tokens": 3269
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 41,
+      "ok": false
+     },
+     {
+      "name": "llm",
+      "ms": 1484,
+      "tokens": 3401
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 42,
+      "ok": false
+     },
+     {
+      "name": "llm",
+      "ms": 2837,
+      "tokens": 3529
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 65,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 3725,
+      "tokens": 3979
+     }
+    ],
+    "steps": 6,
+    "tokens": 16400,
+    "ms": 13258,
+    "llm_calls": 6,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "question": "IPS collèges Côte-d'Or 2025-2026"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-college-effectifs-niveau-sexe-lv\", \"title\": \"Effectifs d’élèves en collège\", \"description\": \"Ce jeu de données contient les effectifs des collèges par niveau, sexe, principales langues vivantes 1 et langues vivantes 2. Les élèves qui suivent un enseignement de niveau collège peuvent être scolarisés dans des établissements autres. Le jeu de données présente les ef"
+     },
+     {
+      "tool": "get_asset",
+      "args": {
+       "dataset_id": "fr-en-ips-colleges-ap2023"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-ips-colleges-ap2023\", \"title\": \"Indices de position sociale des collèges (à partir de 2023)\", \"description\": \"L’indice de position sociale (IPS) permet d'appréhender le statut social des élèves à partir des professions et catégories sociales (PCS) de leurs parents. À chaque PCS ou couple de PCS est associée une valeur numérique de l’IPS. Cette valeur numérique correspond à un"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "dataset_id": "fr-en-ips-colleges-ap2023",
+       "select": "avg(ips) as ips_moyen",
+       "where": "departement = 'CÔTE-D'OR' AND rentree_scolaire = '2025-2026'"
+      },
+      "ok": false,
+      "result": "{\"error\": \"API: ODSQL syntax exception: unexpected 2025 at position 50 in departement = 'CÔTE-D'OR' AND rentree_scolaire = '2025-2026'. Clause(s) containing the error(s): where.\"}"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "dataset_id": "fr-en-ips-colleges-ap2023",
+       "select": "avg(ips) as ips_moyen",
+       "where": "departement = 'CÔTE-D''OR' AND rentree_scolaire = '2025-2026'"
+      },
+      "ok": false,
+      "result": "{\"error\": \"API: ODSQL syntax exception: unexpected 'OR' at position 22 in departement = 'CÔTE-D''OR' AND rentree_scolaire = '2025-2026'. Clause(s) containing the error(s): where.\"}"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "dataset_id": "fr-en-ips-colleges-ap2023",
+       "select": "avg(ips) as ips_moyen",
+       "where": "code_du_departement = '21' AND rentree_scolaire = '2025-2026'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 54, \"results\": [{\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105."
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-ips-colleges-ap2023",
+      "params": {
+       "select": "avg(ips) as ips_moyen",
+       "where": "departement = 'CÔTE-D'OR' AND rentree_scolaire = '2025-2026'"
+      },
+      "ok": false,
+      "result": null
+     },
+     {
+      "dataset_id": "fr-en-ips-colleges-ap2023",
+      "params": {
+       "select": "avg(ips) as ips_moyen",
+       "where": "departement = 'CÔTE-D''OR' AND rentree_scolaire = '2025-2026'"
+      },
+      "ok": false,
+      "result": null
+     },
+     {
+      "dataset_id": "fr-en-ips-colleges-ap2023",
+      "params": {
+       "select": "avg(ips) as ips_moyen",
+       "where": "code_du_departement = '21' AND rentree_scolaire = '2025-2026'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 54,
+       "results": [
+        {
+         "ips_moyen": 105.87962962962963
+        },
+        {
+         "ips_moyen": 105.87962962962963
+        },
+        {
+         "ips_moyen": 105.87962962962963
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "compiled": {
+    "answer": "L'IPS moyen des collèges de Côte-d'Or à la rentrée 2025-2026 est de **105,88**.",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-ips-colleges-ap2023",
+     "query": {
+      "select": "avg(ips) as ips_moyen",
+      "where": "code_du_departement = '21' and rentree_scolaire = '2025-2026'"
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1055,
+      "tokens": 782
+     },
+     {
+      "name": "find_dataset",
+      "ms": 10,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2085,
+      "tokens": 2343
+     },
+     {
+      "name": "explain_dataset",
+      "ms": 18,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2770,
+      "tokens": 4152
+     },
+     {
+      "name": "query",
+      "ms": 99,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 5128,
+      "tokens": 5196
+     }
+    ],
+    "steps": 4,
+    "tokens": 12473,
+    "ms": 11169,
+    "llm_calls": 4,
+    "trace": [
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "IPS moyen collèges Côte-d'Or rentrée 2025-2026"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-college-effectifs-niveau-sexe-lv\", \"card\": \"## fr-en-college-effectifs-niveau-sexe-lv — Effectifs d’élèves en collège\\nCe jeu de données contient les effectifs des collèges par niveau, sexe, principales langues vivantes 1 et langues vivantes 2. Les élèves qui suivent un enseignement de niveau collège peuvent être scolarisés dans des établissements autres.\\n58556 "
+     },
+     {
+      "tool": "explain_dataset",
+      "args": {
+       "dataset_id": "fr-en-ips-colleges-ap2023"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-ips-colleges-ap2023\", \"card\": \"## fr-en-ips-colleges-ap2023 — Indices de position sociale des collèges (à partir de 2023)\\nL’indice de position sociale (IPS) permet d'appréhender le statut social des élèves à partir des professions et catégories sociales (PCS) de leurs parents. À chaque PCS ou couple de PCS est associée une valeur numérique de l’IPS. Cette valeur numérique co"
+     },
+     {
+      "tool": "query",
+      "args": {
+       "dataset_id": "fr-en-ips-colleges-ap2023",
+       "select": "avg(ips) as ips_moyen",
+       "where": "code_du_departement = '21' and rentree_scolaire = '2025-2026'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 54, \"results\": [{\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105.87962962962963}, {\"ips_moyen\": 105."
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-ips-colleges-ap2023",
+      "params": {
+       "select": "avg(ips) as ips_moyen",
+       "where": "code_du_departement = '21' and rentree_scolaire = '2025-2026'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 54,
+       "results": [
+        {
+         "ips_moyen": 105.87962962962963
+        },
+        {
+         "ips_moyen": 105.87962962962963
+        },
+        {
+         "ips_moyen": 105.87962962962963
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "optimized": {
+    "answer": "L'IPS moyen des collèges de Côte-d'Or à la rentrée 2025-2026 est de 105,88.",
+    "answer_ok": true,
+    "route": "STANDARD",
+    "reasons": [
+     "no verified recipe: not a count question"
+    ],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-ips-colleges-ap2023",
+     "query": {
+      "select": "avg(ips) as ips_moyen",
+      "where": "code_du_departement = '21' and rentree_scolaire = '2025-2026'",
+      "limit": 1
+     },
+     "source_portal": "data.education.gouv.fr",
+     "source_url": "https://data.education.gouv.fr/explore/dataset/fr-en-ips-colleges-ap2023/",
+     "schema_version": "b5dd5dd7b4333797",
+     "data_version": "2026-09-01T09:31:02.578000+00:00",
+     "api_result": {
+      "total_count": 54,
+      "results": [
+       {
+        "ips_moyen": 105.87962962962963
+       }
+      ]
+     }
+    },
+    "spans": [
+     {
+      "name": "route",
+      "ms": 0,
+      "route": "STANDARD",
+      "policy": "route-2026-11-11.1",
+      "value_lookups": 0
+     },
+     {
+      "name": "llm",
+      "ms": 1112,
+      "tokens": 781
+     },
+     {
+      "name": "find_dataset",
+      "ms": 23,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2148,
+      "tokens": 2249
+     },
+     {
+      "name": "explain_dataset",
+      "ms": 18,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2216,
+      "tokens": 4069
+     },
+     {
+      "name": "query",
+      "ms": 128,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 7192,
+      "tokens": 4650
+     },
+     {
+      "name": "verify",
+      "ms": 4,
+      "status": "verified"
+     }
+    ],
+    "steps": 4,
+    "tokens": 11749,
+    "ms": 12843,
+    "llm_calls": 4,
+    "trace": [
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "IPS moyen collèges Côte-d'Or 2025-2026"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-college-effectifs-niveau-sexe-lv\", \"card\": \"## fr-en-college-effectifs-niveau-sexe-lv — Effectifs d’élèves en collège\\nCe jeu de données contient les effectifs des collèges par niveau, sexe, principales langues vivantes 1 et langues vivantes 2. Les élèves qui suivent un enseignement de niveau collège peuvent être scolarisés dans des établissements autres.\\n58556 "
+     },
+     {
+      "tool": "explain_dataset",
+      "args": {
+       "dataset_id": "fr-en-ips-colleges-ap2023"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-ips-colleges-ap2023\", \"card\": \"## fr-en-ips-colleges-ap2023 — Indices de position sociale des collèges (à partir de 2023)\\nL’indice de position sociale (IPS) permet d'appréhender le statut social des élèves à partir des professions et catégories sociales (PCS) de leurs parents. À chaque PCS ou couple de PCS est associée une valeur numérique de l’IPS. Cette valeur numérique co"
+     },
+     {
+      "tool": "query",
+      "args": {
+       "dataset_id": "fr-en-ips-colleges-ap2023",
+       "select": "avg(ips) as ips_moyen",
+       "where": "code_du_departement = '21' and rentree_scolaire = '2025-2026'",
+       "limit": 1
+      },
+      "ok": true,
+      "result": "{\"total_count\": 54, \"results\": [{\"ips_moyen\": 105.87962962962963}], \"cache\": \"miss\"}"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-ips-colleges-ap2023",
+      "params": {
+       "select": "avg(ips) as ips_moyen",
+       "where": "code_du_departement = '21' and rentree_scolaire = '2025-2026'",
+       "limit": 1
+      },
+      "ok": true,
+      "result": {
+       "total_count": 54,
+       "results": [
+        {
+         "ips_moyen": 105.87962962962963
+        }
+       ]
+      }
+     }
+    ]
+   }
+  }
+ },
+ "ambiguous": {
+  "id": "ambiguous",
+  "kind": "recorded",
+  "question": "Combien de lycées en Guadeloupe ?",
+  "expected": 49,
+  "title": {
+   "fr": "Lieu ambigu (département = région)",
+   "en": "Ambiguous place (department = region)"
+  },
+  "recorded_at": "2026-11-12T00:30:03+00:00",
+  "commit": "70e986c",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": null,
+  "runs": {
+   "huwise": {
+    "answer": "Il y a 49 lycées en Guadeloupe.",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "partially_verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API",
+      "a query returned 0 rows: a filter value may be written differently in the data"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": false,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-annuaire-education",
+     "query": {
+      "slug": "fr-en-annuaire-education",
+      "where": "libelle_departement = \"Guadeloupe\"",
+      "select": "type_etablissement, count(*) as total",
+      "group_by": "type_etablissement",
+      "limit": 20
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 2055,
+      "tokens": 2924
+     },
+     {
+      "name": "search_assets",
+      "ms": 1255,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2198,
+      "tokens": 4625
+     },
+     {
+      "name": "get_asset",
+      "ms": 568,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2291,
+      "tokens": 6350
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 276,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1325,
+      "tokens": 6417
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 153,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 10859,
+      "tokens": 6606
+     },
+     {
+      "name": "search_asset_records",
+      "ms": 278,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1525,
+      "tokens": 4134
+     }
+    ],
+    "steps": 6,
+    "tokens": 31056,
+    "ms": 22788,
+    "llm_calls": 6,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "lycées Guadeloupe établissements scolaires",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"total_count\": 21, \"results\": [{\"slug\": \"carte-des-lycees-des-metiers\", \"asset_type\": \"ods_classicpage\", \"title\": \"Carte des lycées des métiers\", \"links\": {\"front\": \"https://data.education.gouv.fr/explore/assets/carte-des-lycees-des-metiers\", \"api\": \"https://data.education.gouv.fr/api/explore/v2.1/catalog/assets/carte-des-lycees-des-metiers\"}}, {\"slug\": \"fr-en-lycees-metiers\", \"asset_type\": \"ods_"
+     },
+     {
+      "tool": "get_asset",
+      "args": {
+       "slug": "fr-en-annuaire-education"
+      },
+      "ok": true,
+      "result": "{\"uid\": \"da_o2sf5j\", \"slug\": \"fr-en-annuaire-education\", \"asset_type\": \"ods_dataset\", \"title\": \"Annuaire de l'éducation\", \"description\": \"Annuaire de l'éducation : données sur les établissements publics et privés ouverts situés en France. Le jeu de données couvre le premier degré, le second degré, les établissements médico-sociaux, les Centre d'Information et d'Orientation ainsi que les établissem"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "slug": "fr-en-annuaire-education",
+       "where": "type_etablissement = \"lycée\" AND libelle_departement = \"Guadeloupe\"",
+       "select": "count(*) as total"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 0, \"results\": []}"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "slug": "fr-en-annuaire-education",
+       "where": "libelle_departement LIKE \"%Guadeloupe%\"",
+       "select": "libelle_departement, count(*) as total",
+       "group_by": "libelle_departement",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"total_count\": 1, \"results\": [{\"libelle_departement\": \"Guadeloupe\", \"total\": 446}]}"
+     },
+     {
+      "tool": "search_asset_records",
+      "args": {
+       "slug": "fr-en-annuaire-education",
+       "where": "libelle_departement = \"Guadeloupe\"",
+       "select": "type_etablissement, count(*) as total",
+       "group_by": "type_etablissement",
+       "limit": 20
+      },
+      "ok": true,
+      "result": "{\"total_count\": 8, \"results\": [{\"total\": 5}, {\"type_etablissement\": \"Autre\", \"total\": 5}, {\"type_etablissement\": \"Collège\", \"total\": 71}, {\"type_etablissement\": \"Ecole\", \"total\": 276}, {\"type_etablissement\": \"Information et orientation\", \"total\": 5}, {\"type_etablissement\": \"Lycée\", \"total\": 49}, {\"type_etablissement\": \"Médico-social\", \"total\": 20}, {\"type_etablissement\": \"Service Administratif\", \""
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "slug": "fr-en-annuaire-education",
+       "where": "type_etablissement = \"lycée\" AND libelle_departement = \"Guadeloupe\"",
+       "select": "count(*) as total"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 0,
+       "results": []
+      }
+     },
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "slug": "fr-en-annuaire-education",
+       "where": "libelle_departement LIKE \"%Guadeloupe%\"",
+       "select": "libelle_departement, count(*) as total",
+       "group_by": "libelle_departement",
+       "limit": 10
+      },
+      "ok": true,
+      "result": {
+       "total_count": 1,
+       "results": [
+        {
+         "libelle_departement": "Guadeloupe",
+         "total": 446
+        }
+       ]
+      }
+     },
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "slug": "fr-en-annuaire-education",
+       "where": "libelle_departement = \"Guadeloupe\"",
+       "select": "type_etablissement, count(*) as total",
+       "group_by": "type_etablissement",
+       "limit": 20
+      },
+      "ok": true,
+      "result": {
+       "total_count": 8,
+       "results": [
+        {
+         "total": 5
+        },
+        {
+         "type_etablissement": "Autre",
+         "total": 5
+        },
+        {
+         "type_etablissement": "Collège",
+         "total": 71
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "naked": {
+    "answer": "pas de données",
+    "answer_ok": false,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "unverified",
+     "reasons": [
+      "abstention: nothing to verify against the API"
+     ],
+     "checks": {
+      "schema_valid": false,
+      "executed": false,
+      "result_consistent": false,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": null,
+     "query": null
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1702,
+      "tokens": 789
+     },
+     {
+      "name": "search_assets",
+      "ms": 8,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1709,
+      "tokens": 1309
+     },
+     {
+      "name": "get_asset",
+      "ms": 62,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1457,
+      "tokens": 2600
+     },
+     {
+      "name": "search_assets",
+      "ms": 9,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1369,
+      "tokens": 3030
+     },
+     {
+      "name": "search_assets",
+      "ms": 10,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 984,
+      "tokens": 3564
+     },
+     {
+      "name": "search_assets",
+      "ms": 10,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2513,
+      "tokens": 3794
+     }
+    ],
+    "steps": 6,
+    "tokens": 15086,
+    "ms": 9838,
+    "llm_calls": 6,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "question": "lycées Guadeloupe établissements scolaires"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-indice_eloignement_lycee_ap2020\", \"title\": \"Indice d'éloignement des lycées\", \"description\": \"L’éloignement des lycées peut être décrit statistiquement de manière continue à l’aide d’un indicateur synthétique qui tient compte, pour un établissement donné, de multiples dimensions : du lieu de résidence des élèves qu’il scolarise, de l’offre d’enseignement et des é"
+     },
+     {
+      "tool": "get_asset",
+      "args": {
+       "dataset_id": "fr-en-taille-colleges-lycees"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-taille-colleges-lycees\", \"title\": \"Taille des collèges et des lycées\", \"description\": \"Tableau statistique : répartition des établissements et des élèves selon le type, la taille et le secteur de l'établissement Source : RERS - Repères et références statistiques sur les enseignements, la formation et la recherche\", \"records_count\": 344, \"modified\": \"2018-03-26T07:57:09+00:00\""
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "question": "établissements scolaires lycée département Guadeloupe région"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-boursiers-par-departement\", \"title\": \"Boursiers par département\", \"description\": \"Nombre de boursiers à la rentrée 2020 par départements selon le type d'établissements et le secteur. Le nombre de boursiers au dernier échelon correspond à l'échelon 3 pour les établissements de type collège et à l'échelon 6 pour les établissements de type lycée. Les données <5 ont "
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "question": "liste établissements scolaires département Guadeloupe lycée"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-cites_scolaires\", \"title\": \"Liste des cités scolaires\", \"description\": \"Liste géolocalisée des établissements publics et privés appartenant à une cité scolaire en France, comprenant des établissements du premier et du second degré.\"}, {\"dataset_id\": \"fr-en-boursiers-par-departement\", \"title\": \"Boursiers par département\", \"description\": \"Nombre de boursiers à la r"
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "question": "RERS établissements scolaires liste département académie Guadeloupe"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-cites_scolaires\", \"title\": \"Liste des cités scolaires\", \"description\": \"Liste géolocalisée des établissements publics et privés appartenant à une cité scolaire en France, comprenant des établissements du premier et du second degré.\"}, {\"dataset_id\": \"fr-en-donnees-cartes-mouvement-interdepartemental-premier-degre-public\", \"title\": \"Données relatives aux cartes du"
+     }
+    ],
+    "queries": []
+   },
+   "compiled": {
+    "answer": "Il y a 49 lycées en Guadeloupe.",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-annuaire-education",
+     "query": {
+      "select": "count(*) as n",
+      "where": "type_etablissement = 'Lycée' and code_departement = '971'"
+     }
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1568,
+      "tokens": 809
+     },
+     {
+      "name": "find_dataset",
+      "ms": 10,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 10339,
+      "tokens": 2934
+     },
+     {
+      "name": "explain_dataset",
+      "ms": 16,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1328,
+      "tokens": 4172
+     },
+     {
+      "name": "query",
+      "ms": 103,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1292,
+      "tokens": 4381
+     }
+    ],
+    "steps": 4,
+    "tokens": 12296,
+    "ms": 14660,
+    "llm_calls": 4,
+    "trace": [
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "lycées Guadeloupe nombre établissements"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-adresse-et-geolocalisation-etablissements-premier-et-second-degre\", \"card\": \"## fr-en-adresse-et-geolocalisation-etablissements-premier-et-second-degre — Adresse et géolocalisation des établissements d'enseignement des premier et second degrés\\nListe géolocalisée des établissements d'enseignement des premier et second degrés (tous ministères de tutelle, secteurs "
+     },
+     {
+      "tool": "explain_dataset",
+      "args": {
+       "dataset_id": "fr-en-annuaire-education"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-annuaire-education\", \"card\": \"## fr-en-annuaire-education — Annuaire de l'éducation\\nAnnuaire de l'éducation : données sur les établissements publics et privés ouverts situés en France. Le jeu de données couvre le premier degré, le second degré, les établissements médico-sociaux, les Centre d'Information et d'Orientation ainsi que les établissements administratifs. Sources : "
+     },
+     {
+      "tool": "query",
+      "args": {
+       "dataset_id": "fr-en-annuaire-education",
+       "select": "count(*) as n",
+       "where": "type_etablissement = 'Lycée' and code_departement = '971'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 49, \"results\": [{\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}]}"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "select": "count(*) as n",
+       "where": "type_etablissement = 'Lycée' and code_departement = '971'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 49,
+       "results": [
+        {
+         "n": 49
+        },
+        {
+         "n": 49
+        },
+        {
+         "n": 49
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "optimized": {
+    "answer": "Il y a 49 lycées en Guadeloupe.",
+    "answer_ok": true,
+    "route": "STANDARD",
+    "reasons": [
+     "no verified recipe: place 'guadeloupe' ambiguous: libelle_departement=Guadeloupe, libelle_region=Guadeloupe"
+    ],
+    "evidence": {
+     "status": "verified",
+     "reasons": [
+      "every number in the answer equals a value returned by the API"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": true,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "fr-en-annuaire-education",
+     "query": {
+      "select": "count(*) as n",
+      "where": "code_departement = '971' and type_etablissement = 'Lycée'"
+     },
+     "source_portal": "data.education.gouv.fr",
+     "source_url": "https://data.education.gouv.fr/explore/dataset/fr-en-annuaire-education/",
+     "schema_version": "7235f8bcfbfb0ce0",
+     "data_version": "2026-11-09T06:01:23.892000+00:00",
+     "api_result": {
+      "total_count": 49,
+      "results": [
+       {
+        "n": 49
+       },
+       {
+        "n": 49
+       },
+       {
+        "n": 49
+       }
+      ]
+     }
+    },
+    "spans": [
+     {
+      "name": "route",
+      "ms": 77,
+      "route": "STANDARD",
+      "policy": "route-2026-11-11.1",
+      "value_lookups": 2
+     },
+     {
+      "name": "llm",
+      "ms": 1724,
+      "tokens": 809
+     },
+     {
+      "name": "find_dataset",
+      "ms": 12,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 4018,
+      "tokens": 2708
+     },
+     {
+      "name": "explain_dataset",
+      "ms": 14,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1332,
+      "tokens": 4179
+     },
+     {
+      "name": "query",
+      "ms": 108,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2381,
+      "tokens": 4528
+     },
+     {
+      "name": "verify",
+      "ms": 4,
+      "status": "verified"
+     }
+    ],
+    "steps": 4,
+    "tokens": 12224,
+    "ms": 9673,
+    "llm_calls": 4,
+    "trace": [
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "lycées Guadeloupe nombre établissements"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-adresse-et-geolocalisation-etablissements-premier-et-second-degre\", \"card\": \"## fr-en-adresse-et-geolocalisation-etablissements-premier-et-second-degre — Adresse et géolocalisation des établissements d'enseignement des premier et second degrés\\nListe géolocalisée des établissements d'enseignement des premier et second degrés (tous ministères de tutelle, secteurs "
+     },
+     {
+      "tool": "explain_dataset",
+      "args": {
+       "dataset_id": "fr-en-annuaire-education"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"fr-en-annuaire-education\", \"card\": \"## fr-en-annuaire-education — Annuaire de l'éducation\\nAnnuaire de l'éducation : données sur les établissements publics et privés ouverts situés en France. Le jeu de données couvre le premier degré, le second degré, les établissements médico-sociaux, les Centre d'Information et d'Orientation ainsi que les établissements administratifs. Sources : "
+     },
+     {
+      "tool": "query",
+      "args": {
+       "dataset_id": "fr-en-annuaire-education",
+       "select": "count(*) as n",
+       "where": "code_departement = '971' and type_etablissement = 'Lycée'"
+      },
+      "ok": true,
+      "result": "{\"total_count\": 49, \"results\": [{\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}, {\"n\": 49}], \"cache\": \"miss\"}"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "fr-en-annuaire-education",
+      "params": {
+       "select": "count(*) as n",
+       "where": "code_departement = '971' and type_etablissement = 'Lycée'"
+      },
+      "ok": true,
+      "result": {
+       "total_count": 49,
+       "results": [
+        {
+         "n": 49
+        },
+        {
+         "n": 49
+        },
+        {
+         "n": 49
+        }
+       ]
+      }
+     }
+    ]
+   }
+  }
+ },
+ "no-data": {
+  "id": "no-data",
+  "kind": "recorded",
+  "question": "Quels sont les horaires de la piscine olympique de Dijon ?",
+  "expected": "no_data",
+  "title": {
+   "fr": "Pas de données sur ce portail",
+   "en": "No data on this portal"
+  },
+  "recorded_at": "2026-11-12T00:31:00+00:00",
+  "commit": "70e986c",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "fixture": null,
+  "runs": {
+   "huwise": {
+    "answer": "pas de données",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "unverified",
+     "reasons": [
+      "abstention: nothing to verify against the API"
+     ],
+     "checks": {
+      "schema_valid": false,
+      "executed": false,
+      "result_consistent": false,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": null,
+     "query": null
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1020,
+      "tokens": 2836
+     },
+     {
+      "name": "search_assets",
+      "ms": 1088,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 3036,
+      "tokens": 4663
+     },
+     {
+      "name": "search_assets",
+      "ms": 1137,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1159,
+      "tokens": 6371
+     },
+     {
+      "name": "search_assets",
+      "ms": 944,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1239,
+      "tokens": 8305
+     },
+     {
+      "name": "search_assets",
+      "ms": 1306,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2690,
+      "tokens": 10119
+     },
+     {
+      "name": "search_assets",
+      "ms": 977,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 6878,
+      "tokens": 9529
+     }
+    ],
+    "steps": 6,
+    "tokens": 41823,
+    "ms": 21481,
+    "llm_calls": 6,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "piscine olympique Dijon horaires",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"total_count\": 33, \"results\": [{\"slug\": \"fr-en-ecoles-labellisees-30-minutes-d-activite-physique-quotidienne-30-apq\", \"asset_type\": \"ods_dataset\", \"title\": \"Ecoles labellisées \\\"30 minutes d'activité physique quotidienne\\\" (30'APQ)\", \"description\": \"Plus d’activités physiques et sportives dès l’école primaire : c’est le\\ncap que le Ministère de l’Éducation nationale, de la Jeunesse et des\\nSports"
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "piscine Dijon",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"total_count\": 23, \"results\": [{\"slug\": \"fr-en-pix_participations_aux_campagnes_par_etablissement_sans_collecte_de_profil\", \"asset_type\": \"ods_dataset\", \"title\": \"Pix - Participations aux campagnes d'évaluation (parcours) par établissement\", \"description\": \"Ce jeu de données reprend les participations aux différentes campagnes (parcours de rentrée, disciplinaires et thématiques) des collèges et l"
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "piscine olympique Dijon horaires ouverture",
+       "limit": 10
+      },
+      "ok": true,
+      "result": "{\"total_count\": 24, \"results\": [{\"slug\": \"fr-en-ecoles-labellisees-30-minutes-d-activite-physique-quotidienne-30-apq\", \"asset_type\": \"ods_dataset\", \"title\": \"Ecoles labellisées \\\"30 minutes d'activité physique quotidienne\\\" (30'APQ)\", \"description\": \"Plus d’activités physiques et sportives dès l’école primaire : c’est le\\ncap que le Ministère de l’Éducation nationale, de la Jeunesse et des\\nSports"
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "piscine Dijon horaires",
+       "limit": 20
+      },
+      "ok": true,
+      "result": "{\"total_count\": 23, \"results\": [{\"slug\": \"fr-en-pix_resultats_des_campagnes_de_rentree_par_eple\", \"asset_type\": \"ods_dataset\", \"title\": \"Pix - Résultats par palier des parcours de rentrée pour les élèves des collèges et lycées\", \"description\": \"Ce jeu de données reprend les résultats des parcours de rentrée des collèges et lycées publics et privés sous contrat (hors établissements agricoles et éta"
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "query": "piscine olympique Dijon",
+       "limit": 20
+      },
+      "ok": true,
+      "result": "{\"total_count\": 32, \"results\": [{\"slug\": \"paris-2024-psa-snm\", \"asset_type\": \"ods_dataset\", \"title\": \"Paris 2024 - PSA spectateurs\", \"description\": \"Ce jeu de données recense les PSA (Pedestrian Screening Area) et les entrées spectateurs associés pour chaque site de compétition et le Parc des Champions.  \\n  \\nOG2024 = Jeux Olympiques  \\nPG2024 = Jeux Paralympiques\\n\\nDernière mise à jour : 20/07/"
+     }
+    ],
+    "queries": []
+   },
+   "naked": {
+    "answer": "pas de données",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "unverified",
+     "reasons": [
+      "abstention: nothing to verify against the API"
+     ],
+     "checks": {
+      "schema_valid": false,
+      "executed": false,
+      "result_consistent": false,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": null,
+     "query": null
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 3620,
+      "tokens": 791
+     },
+     {
+      "name": "search_assets",
+      "ms": 9,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 911,
+      "tokens": 1194
+     },
+     {
+      "name": "search_assets",
+      "ms": 8,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1139,
+      "tokens": 1751
+     },
+     {
+      "name": "search_assets",
+      "ms": 7,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1486,
+      "tokens": 1854
+     }
+    ],
+    "steps": 4,
+    "tokens": 5590,
+    "ms": 7184,
+    "llm_calls": 4,
+    "trace": [
+     {
+      "tool": "search_assets",
+      "args": {
+       "question": "piscine olympique Dijon horaires"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"paris24-calendrier-de-sessions-version-simplifiee-eng\", \"title\": \"Paris 2024 - Calendrier des sessions [Version simplifiée ENG]\", \"description\": \"Calendrier des sessions des Jeux Olympiques et Paralympiques Ce jeu de données rassemble les principales données relatives à toutes les sessions de compétition se déroulant pendant les Jeux Olympiques et Paralympiques avec le"
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "question": "piscine Dijon horaires ouverture"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"paris-2024-entrees-ceremonie-douverture-paralympique\", \"title\": \"Paris 2024 - Entrées Cérémonie d'ouverture Paralympique\", \"description\": \"Ce dataset comprend les entrées des spectateurs détenteurs de billets associées à la session POC01 de la cérémonie d'ouverture des Jeux Paralympiques (CER3)\"}, {\"dataset_id\": \"paris-2024-entrees-ceremonie-d-ouverture-olympique\", \"ti"
+     },
+     {
+      "tool": "search_assets",
+      "args": {
+       "question": "piscine Dijon"
+      },
+      "ok": true,
+      "result": "{\"results\": []}"
+     }
+    ],
+    "queries": []
+   },
+   "compiled": {
+    "answer": "pas de données",
+    "answer_ok": true,
+    "route": "AGENT",
+    "reasons": [],
+    "evidence": {
+     "status": "unverified",
+     "reasons": [
+      "abstention: nothing to verify against the API"
+     ],
+     "checks": {
+      "schema_valid": false,
+      "executed": false,
+      "result_consistent": false,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": null,
+     "query": null
+    },
+    "spans": [
+     {
+      "name": "llm",
+      "ms": 1978,
+      "tokens": 837
+     },
+     {
+      "name": "find_dataset",
+      "ms": 11,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1034,
+      "tokens": 1786
+     },
+     {
+      "name": "find_dataset",
+      "ms": 10,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 967,
+      "tokens": 3152
+     }
+    ],
+    "steps": 3,
+    "tokens": 5775,
+    "ms": 4003,
+    "llm_calls": 3,
+    "trace": [
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "horaires piscine olympique Dijon"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"paris-2024-voies-olympiques-et-paralympiques\", \"card\": \"## paris-2024-voies-olympiques-et-paralympiques — Paris 2024 - Voies Olympiques et Paralympiques\\nRéseau des voies et itinéraires Olympique et Paralympique.\\n2000 rows · updated 01.10.2024 · Licence Ouverte v2.0 (Etalab) · Ministère des Sports\\nFields: fid, fid_1, osm_id, fclass, oneway, maxspeed, orn_id, domanial"
+     },
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "piscine Dijon horaires"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-organisation-du-temps-scolaire\", \"card\": \"## fr-en-organisation-du-temps-scolaire — Organisation du temps scolaire\\nL'organisation du temps scolaire répond à des objectifs pédagogiques pour permettre aux enfants de mieux apprendre à l'école : favoriser les apprentissages fondamentaux le matin, au moment où les élèves sont les plus attentifs ; bénéficier de 5 mati"
+     }
+    ],
+    "queries": []
+   },
+   "optimized": {
+    "answer": "Je ne peux pas donner de réponse vérifiée : number(s) not returned by any query: 2.1231e+08, 5.",
+    "answer_ok": false,
+    "route": "STANDARD",
+    "reasons": [
+     "no verified recipe: not a count question"
+    ],
+    "evidence": {
+     "status": "blocked",
+     "reasons": [
+      "number(s) not returned by any query: 2.1231e+08, 5"
+     ],
+     "checks": {
+      "schema_valid": true,
+      "executed": true,
+      "result_consistent": false,
+      "semantic_correctness": "not checked at runtime (golden eval only)"
+     },
+     "dataset_id": "data-es-recensement-des-equipements-sportifs-et-lieux-de-pratique-complet",
+     "query": {
+      "select": "inst_nom, new_name, inst_cp, equip_numero, inst_numero",
+      "where": "new_name = 'Dijon' AND inst_nom LIKE '%piscine%olympique%'",
+      "limit": 20
+     },
+     "source_portal": "data.education.gouv.fr",
+     "source_url": "https://data.education.gouv.fr/explore/dataset/data-es-recensement-des-equipements-sportifs-et-lieux-de-pratique-complet/",
+     "schema_version": "a616a650ef2327dc",
+     "data_version": "2026-11-08T07:22:50+00:00",
+     "api_result": {
+      "total_count": 6,
+      "results": [
+       {
+        "inst_nom": "Piscine olympique Dijon Métropole",
+        "new_name": "Dijon",
+        "inst_cp": "21000",
+        "equip_numero": "E004I212310139",
+        "inst_numero": "I212310139"
+       },
+       {
+        "inst_nom": "Piscine olympique Dijon Métropole",
+        "new_name": "Dijon",
+        "inst_cp": "21000",
+        "equip_numero": "E006I212310139",
+        "inst_numero": "I212310139"
+       },
+       {
+        "inst_nom": "Piscine olympique Dijon Métropole",
+        "new_name": "Dijon",
+        "inst_cp": "21000",
+        "equip_numero": "E002I212310139",
+        "inst_numero": "I212310139"
+       }
+      ]
+     }
+    },
+    "spans": [
+     {
+      "name": "route",
+      "ms": 0,
+      "route": "STANDARD",
+      "policy": "route-2026-11-11.1",
+      "value_lookups": 0
+     },
+     {
+      "name": "llm",
+      "ms": 2725,
+      "tokens": 838
+     },
+     {
+      "name": "find_dataset",
+      "ms": 10,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1535,
+      "tokens": 1796
+     },
+     {
+      "name": "find_dataset",
+      "ms": 9,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1938,
+      "tokens": 3083
+     },
+     {
+      "name": "find_dataset",
+      "ms": 9,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 1152,
+      "tokens": 4354
+     },
+     {
+      "name": "explain_dataset",
+      "ms": 15,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 2667,
+      "tokens": 6030
+     },
+     {
+      "name": "query",
+      "ms": 949,
+      "ok": true
+     },
+     {
+      "name": "llm",
+      "ms": 8945,
+      "tokens": 6686
+     },
+     {
+      "name": "verify",
+      "ms": 3,
+      "status": "blocked"
+     }
+    ],
+    "steps": 6,
+    "tokens": 22787,
+    "ms": 19964,
+    "llm_calls": 6,
+    "trace": [
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "horaires piscine olympique Dijon"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"paris-2024-voies-olympiques-et-paralympiques\", \"card\": \"## paris-2024-voies-olympiques-et-paralympiques — Paris 2024 - Voies Olympiques et Paralympiques\\nRéseau des voies et itinéraires Olympique et Paralympique.\\n2000 rows · updated 01.10.2024 · Licence Ouverte v2.0 (Etalab) · Ministère des Sports\\nFields: fid, fid_1, osm_id, fclass, oneway, maxspeed, orn_id, domanial"
+     },
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "piscine Dijon horaires ouverture"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"fr-en-annuaire-education\", \"card\": \"## fr-en-annuaire-education — Annuaire de l'éducation\\nAnnuaire de l'éducation : données sur les établissements publics et privés ouverts situés en France. Le jeu de données couvre le premier degré, le second degré, les établissements médico-sociaux, les Centre d'Information et d'Orientation ainsi que les établissements administratif"
+     },
+     {
+      "tool": "find_dataset",
+      "args": {
+       "question": "piscine olympique Dijon équipements sportifs horaires"
+      },
+      "ok": true,
+      "result": "{\"results\": [{\"dataset_id\": \"data-es-recensement-des-equipements-sportifs-et-lieux-de-pratique-complet\", \"card\": \"## data-es-recensement-des-equipements-sportifs-et-lieux-de-pratique-complet — Data ES - Recensement des équipements sportifs et lieux de pratique (Complet)\\nBase de donnée officielle des équipements sportifs en France Data ES est la base de données des équipements sportifs et des lieu"
+     },
+     {
+      "tool": "explain_dataset",
+      "args": {
+       "dataset_id": "data-es-recensement-des-equipements-sportifs-et-lieux-de-pratique-complet"
+      },
+      "ok": true,
+      "result": "{\"dataset_id\": \"data-es-recensement-des-equipements-sportifs-et-lieux-de-pratique-complet\", \"card\": \"## data-es-recensement-des-equipements-sportifs-et-lieux-de-pratique-complet — Data ES - Recensement des équipements sportifs et lieux de pratique (Complet)\\nBase de donnée officielle des équipements sportifs en France Data ES est la base de données des équipements sportifs et des lieux de pratique"
+     },
+     {
+      "tool": "query",
+      "args": {
+       "dataset_id": "data-es-recensement-des-equipements-sportifs-et-lieux-de-pratique-complet",
+       "select": "inst_nom, new_name, inst_cp, equip_numero, inst_numero",
+       "where": "new_name = 'Dijon' AND inst_nom LIKE '%piscine%olympique%'",
+       "limit": 20
+      },
+      "ok": true,
+      "result": "{\"total_count\": 6, \"results\": [{\"inst_nom\": \"Piscine olympique Dijon Métropole\", \"new_name\": \"Dijon\", \"inst_cp\": \"21000\", \"equip_numero\": \"E004I212310139\", \"inst_numero\": \"I212310139\"}, {\"inst_nom\": \"Piscine olympique Dijon Métropole\", \"new_name\": \"Dijon\", \"inst_cp\": \"21000\", \"equip_numero\": \"E006I212310139\", \"inst_numero\": \"I212310139\"}, {\"inst_nom\": \"Piscine olympique Dijon Métropole\", \"new_name"
+     }
+    ],
+    "queries": [
+     {
+      "dataset_id": "data-es-recensement-des-equipements-sportifs-et-lieux-de-pratique-complet",
+      "params": {
+       "select": "inst_nom, new_name, inst_cp, equip_numero, inst_numero",
+       "where": "new_name = 'Dijon' AND inst_nom LIKE '%piscine%olympique%'",
+       "limit": 20
+      },
+      "ok": true,
+      "result": {
+       "total_count": 6,
+       "results": [
+        {
+         "inst_nom": "Piscine olympique Dijon Métropole",
+         "new_name": "Dijon",
+         "inst_cp": "21000",
+         "equip_numero": "E004I212310139",
+         "inst_numero": "I212310139"
+        },
+        {
+         "inst_nom": "Piscine olympique Dijon Métropole",
+         "new_name": "Dijon",
+         "inst_cp": "21000",
+         "equip_numero": "E006I212310139",
+         "inst_numero": "I212310139"
+        },
+        {
+         "inst_nom": "Piscine olympique Dijon Métropole",
+         "new_name": "Dijon",
+         "inst_cp": "21000",
+         "equip_numero": "E002I212310139",
+         "inst_numero": "I212310139"
+        }
+       ]
+      }
+     }
+    ]
+   }
+  }
+ }
+}

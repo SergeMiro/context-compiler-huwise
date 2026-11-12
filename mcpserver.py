@@ -111,6 +111,8 @@ def _route(kind):
                 return 429, {"error": "rate limited: max 10 calls per second"}
             try:
                 args = dict(request.query_params)
+                if kind == "demo/run":
+                    return demo_run(args)
                 return live_agent(args) if kind == "agent" else api_call(kind, args)
             except Exception:  # upstream timeout, ES down: a clean JSON error for the page, details in the log
                 log.exception("api %s failed", kind)
@@ -166,6 +168,21 @@ def live_agent(args):
     return 200, body
 
 
-for _kind in ("find", "explain", "query", "raw", "agent"):
+def demo_run(args):
+    """Live configuration C on a scenario question, only when the route needs no model (FAST). A question that would
+    need the agent returns 409: the page then shows the recorded trace, never a fake live one."""
+    from optimizer import pipeline, router
+    from optimizer.scenarios import BY_ID
+    s = BY_ID.get((args.get("scenario") or "")[:40])
+    if s is None or s["kind"] != "recorded":
+        return 404, {"error": "unknown scenario (simulated scenarios are not run live)"}
+    if router.route(DEMO_PORTAL, s["question"])["route"] != "FAST":
+        return 409, {"error": "this question needs the model: recorded trace only"}
+    res = pipeline.answer(DEMO_PORTAL, s["question"])
+    return 200, {k: res[k] for k in ("answer", "route", "reasons", "evidence", "spans", "steps", "tokens", "llm_calls",
+                                     "ms", "queries")} | {"answer_ok": None, "trace": []}
+
+
+for _kind in ("find", "explain", "query", "raw", "agent", "demo/run"):
     server.custom_route(f"/api/{_kind}", methods=["GET"])(_route(_kind))
 

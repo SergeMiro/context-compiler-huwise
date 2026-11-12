@@ -14,6 +14,14 @@ whether it helps.
 - an **improve loop**: an LLM proposes one card edit per failing dataset; the edit is kept only if failures get
   fixed and no passing question breaks. A human can review the diff in Django admin.
 
+**Jury demo (preprod):** <https://context-preprod.smiro.dev/> — Huwise's public architecture (every block sourced,
+VERIFIED / INFERRED / PROPOSED), two proposed layers (**Context Optimizer**, **AutoContext Lab**), traces of real
+runs, and an A/B/C comparison. Docs: [`docs/HUWISE_SOURCES.md`](docs/HUWISE_SOURCES.md) ·
+[`docs/ARCHITECTURE_PROPOSED.md`](docs/ARCHITECTURE_PROPOSED.md) · [`docs/EVAL_METHODOLOGY.md`](docs/EVAL_METHODOLOGY.md) ·
+[`docs/SECURITY_AND_ISOLATION.md`](docs/SECURITY_AND_ISOLATION.md) · [`docs/ROLLBACK.md`](docs/ROLLBACK.md) ·
+[`docs/RESEARCH_RATIONALE.md`](docs/RESEARCH_RATIONALE.md) · [`docs/DATA_PROVENANCE.md`](docs/DATA_PROVENANCE.md) ·
+[`docs/ARCHITECTURE_BASELINE.md`](docs/ARCHITECTURE_BASELINE.md) · French talk track: [`docs/JURY_SCRIPT_FR.md`](docs/JURY_SCRIPT_FR.md).
+
 **Live:** showcase <https://context.smiro.dev/> · read-only MCP `https://context.smiro.dev/mcp`
 (`claude mcp add --transport http context https://context.smiro.dev/mcp --header "X-Domain: data.education.gouv.fr"`).
 
@@ -39,7 +47,11 @@ Feb–Nov 2026). It is used here as the usage signal: the directory `fr-en-annua
 
 ## Result
 
-Same model, same prompt, 30 golden questions, scored without an LLM judge (correct answers):
+A/B/C results (same model, same questions, A = generic tools named like Huwise MCP's — **not** the Huwise server,
+which needs a portal API key): see [`docs/EVAL_METHODOLOGY.md`](docs/EVAL_METHODOLOGY.md).
+
+Earlier internal experiment, A vs B only, on the 30 questions written together with the cards (history, not
+evidence against Huwy):
 
 | model | naked (generic catalog tools) | compiled (cards) | tokens |
 |---|---|---|---|
@@ -95,6 +107,12 @@ LLM features (eval, improve) need any OpenAI-compatible endpoint in `.env`: `CTX
 .venv/bin/celery -A context worker -B                                  # hourly scan -> compile -> project
 ```
 
+## Make targets
+
+`make test` · `make check` (optimizer checks, no model) · `ENV=preprod make eval` (A/B/C, legacy set) ·
+`ENV=preprod make eval-holdout` · `ENV=preprod make traces` · `make lab` (preprod only) · `make demo`
+(build the preprod showcase, start `docker-compose.preprod.yml`).
+
 ## Commands
 
 | command | does |
@@ -108,7 +126,10 @@ LLM features (eval, improve) need any OpenAI-compatible endpoint in `.env`: `CTX
 | `eval <domain> --mode naked\|compiled\|both` | run the golden set, print the comparison table |
 | `improve <domain> --mode propose\|auto` | propose / test / keep or revert card edits |
 | `mcp [--host]`, `bench <domain>` | MCP server; latency p50/p95 |
-| `build_site <domain> <dir>` | showcase in French: `index.html` (architecture, comparison, agent duel, live tools, eval bars, traps, a card, an edit) + `eval.json` (recorded duel) + `llms.txt` + pages |
+| `eval … --mode abc --suite <set> --split <dev\|val\|holdout>` | A (naked) + B (compiled) + C (optimized) on the same cases |
+| `record_traces <domain>` / `optimizer_check <domain>` | demo traces (A/B/C + simulated) / deterministic optimizer checks |
+| `lab run <domain>` / `lab log` | one AutoContext Lab cycle (refuses outside `CTXC_ENV=preprod`) / print and verify the chained log |
+| `build_site <domain> <dir>` | jury showcase (`index.html` in French, `en/index.html`), `data/*.json` (architecture, scenarios, comparison, lab), `llms.txt` + pages |
 
 The showcase calls a small read-only JSON API served by the MCP container: `/api/find`, `/api/explain`,
 `/api/query` (validated), `/api/raw` (generic pass-through, the baseline) and `/api/agent?slug=&mode=` — a live run of

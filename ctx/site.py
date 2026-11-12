@@ -1,6 +1,10 @@
-"""Static showcase of a portal (French): index.html + eval.json (recorded agent duel) + llms.txt + datasets/*.md.
-Everything comes from the database; the "relancer en direct" button calls /api/agent on the MCP server."""
+"""Static jury showcase (French, English copy under /en/): architecture map, traces, lab, A/B/C comparison.
+Everything shown comes from files and the database: ctx/architecture.json (sources in docs/HUWISE_SOURCES.md),
+ctx/traces/scenarios.json (record_traces), eval runs (eval --mode abc) and the lab log. Nothing is typed by hand."""
 import json
+import math
+import random
+import re
 from pathlib import Path
 
 from django.conf import settings
@@ -8,140 +12,167 @@ from django.template.loader import render_to_string
 
 from catalog.models import Dataset, Field
 from ctx.export import export_llms
-from evals.golden import NO_DATA
-from evals.models import EvalResult, EvalRun
-from evals.runner import condense
+from evals.models import EvalCase, EvalRun
 
-# the four examples on the page, one story each; the texts describe the transcripts of STORIES_RUNS and are shown
-# only for that pair (a newer eval keeps the labels and drops the texts until they are rewritten)
-STORIES_RUNS = (10, 11)
-STORIES = [
-    {"slug": "eleves-colleges-paris-2025", "label": "Le piège du format",
-     "naked": "Quatre requêtes refusées par l'API : l'année est stockée comme une date, pas comme du texte. "
-              "Puis « Paris » au lieu de « PARIS » : 0 ligne. Plus d'étapes, pas de réponse.",
-     "compiled": "La fiche montre le format : year(rentree_scolaire)=2025 et departement='PARIS'. Juste du premier coup."},
-    {"slug": "lycees-prives-academie-dijon", "label": "Perdu dans le catalogue",
-     "naked": "Deux recherches sans trouver l'annuaire : son titre ne dit ni « lycée » ni « école ». "
-              "Il prend un autre jeu, devine un code d'académie et trouve 0 ligne.",
-     "compiled": "L'annuaire arrive en tête : c'est le jeu que les agents utilisent le plus sur ce portail. "
-                 "Une recherche, une requête : 47."},
-    {"slug": "departement-plus-colleges-prives", "label": "Faux mais sûr de lui",
-     "naked": "Prend le mauvais jeu de données et répond « le Nord » avec assurance. La bonne réponse est Paris.",
-     "compiled": "Trouve l'annuaire, compte les collèges privés par département : Paris, 103."},
-    {"slug": "academie-plus-ecoles", "label": "Abandonne trop tôt",
-     "naked": "Trois requêtes refusées sur le format de l'année, puis il conclut « pas de données ». "
-              "Les données existent.",
-     "compiled": "Une requête groupée par académie sur l'annuaire : Versailles, 3 353 écoles."},
-]
-METRICS = [("answer_ok", "Réponse correcte", "%"), ("dataset_ok", "Bon jeu de données", "%"),
-           ("odsql_first_try", "Requête valide du 1er coup", "%")]
-# (logo file, label, detail, brand colour, colour on dark background) — the stack badges, grouped in the template
-# by position: [:3] application, [3:8] data and queues, [8:] infra
-STACK = [("python", "Python", "3.12", "#3776AB", "#6fa8dc"), ("django", "Django + DRF", "5.2", "#092E20", "#44B78B"),
-         ("modelcontextprotocol", "MCP Python SDK", "2.3", "#000000", "#e7ebf3"),
-         ("mariadb", "MariaDB", "11.4", "#003545", "#C49A6C"), ("celery", "Celery", "5.6", "#37814A", "#8dc63f"),
-         ("rabbitmq", "RabbitMQ", "4.1", "#FF6600", "#FF6600"), ("elasticsearch", "Elasticsearch", "8.15", "#005571", "#00BFB3"),
-         ("neo4j", "Neo4j", "5.26", "#4581C3", "#6fa3e0"), ("docker", "Docker", "Compose", "#2496ED", "#2496ED"), ("traefikproxy", "Traefik", "proxy + TLS", "#24A1C1", "#24A1C1"),
-         ("nginx", "Nginx", "site statique", "#009639", "#3ecf6e"), ("letsencrypt", "Let's Encrypt", "HTTPS", "#003A70", "#FFA400")]
-LOGOS = Path(__file__).parent / "logos"
+from .site_text import LIMITS, METHODS, TEXT
+
+HERE = Path(__file__).parent
+LOGOS = HERE / "logos"
+STACK = [("python", "Python", "3.12", "#3776AB"), ("django", "Django + DRF", "5.2", "#092E20"),
+         ("modelcontextprotocol", "MCP Python SDK", "2.3", "#000000"), ("mariadb", "MariaDB", "11.4", "#003545"),
+         ("celery", "Celery", "5.6", "#37814A"), ("rabbitmq", "RabbitMQ", "4.1", "#FF6600"),
+         ("elasticsearch", "Elasticsearch", "8.15", "#005571"), ("neo4j", "Neo4j", "5.26", "#4581C3"),
+         ("docker", "Docker", "Compose", "#2496ED"), ("traefikproxy", "Traefik", "proxy + TLS", "#24A1C1"),
+         ("nginx", "Nginx", "site", "#009639"), ("letsencrypt", "Let's Encrypt", "HTTPS", "#003A70")]
 
 
 def stack():
-    import re
     out = []
-    for name, label, detail, light, dark in STACK:
+    for name, label, detail, color in STACK:
         svg = (LOGOS / f"{name}.svg").read_text()
-        svg = re.sub(r"<svg[^>]*>", '<svg viewBox="0 0 24 24" aria-hidden="true">', svg).replace("<title>", "<!--").replace("</title>", "-->")
-        out.append({"svg": svg, "label": label, "detail": detail, "light": light, "dark": dark})
+        svg = re.sub(r"<svg[^>]*>", '<svg viewBox="0 0 24 24" aria-hidden="true">', svg)
+        out.append({"svg": svg.replace("<title>", "<!--").replace("</title>", "-->"), "label": label,
+                    "detail": detail, "color": color})
     return out
 
 
-
-
 def nb(n):
-    return f"{n:,}".replace(",", " ")
+    return f"{n:,}".replace(",", " ")
 
 
-def stories_for(run_ids, slugs):
-    same = tuple(run_ids) == STORIES_RUNS
-    return [st if same else {"slug": st["slug"], "label": st["label"]} for st in STORIES if st["slug"] in slugs]
+def triples(portal):
+    """Every A/B/C comparison: for each finished optimized run, the closest earlier finished compiled and naked runs
+    with the same model, suite, split and n (a re-run C after a crash still pairs with its A and B). Newest first."""
+    key = lambda r: (r.metrics.get("suite"), r.metrics.get("split"), r.metrics.get("n"))  # noqa: E731
+    done = EvalRun.objects.filter(portal=portal, finished_at__isnull=False)
+
+    def prev(c, mode):
+        return next((r for r in done.filter(mode=mode, model=c.model, id__lt=c.id).order_by("-id") if key(r) == key(c)),
+                    None)
+    out = []
+    for c in done.filter(mode="optimized").order_by("-id"):
+        a, b = prev(c, "naked"), prev(c, "compiled")
+        if a and b and c.metrics.get("n", 0) > 3:
+            h = prev(c, "huwise")  # optional: the real Huwise MCP run on the same questions, when one exists
+            out.append(((h,) if h else ()) + (a, b, c))
+    return sorted(out, key=lambda t: t[-1].metrics.get("split") != "holdout")  # the clean set opens first
 
 
-def full_pairs(portal):
-    """Every `eval --mode both` over the full golden set, newest first: a compiled run right after a naked run of
-    the same model (same cards, same harness)."""
-    full = portal.eval_cases.count()
+def mcnemar(x, y):
+    """Exact two-sided McNemar p-value for paired booleans."""
+    b = sum(1 for i, j in zip(x, y) if i and not j)
+    c = sum(1 for i, j in zip(x, y) if j and not i)
+    n = b + c
+    if n == 0:
+        return 1.0
+    k = min(b, c)
+    return min(1.0, 2 * sum(math.comb(n, i) for i in range(k + 1)) / 2 ** n)
+
+
+def boot_ci(x, y, n=2000, seed=13):
+    """95 % paired bootstrap CI of mean(y) - mean(x), in percentage points."""
+    rnd, idx, diffs = random.Random(seed), range(len(x)), []
+    for _ in range(n):
+        s = [rnd.choice(idx) for _ in idx]
+        diffs.append(100 * sum(y[i] - x[i] for i in s) / len(s))
+    diffs.sort()
+    return round(diffs[int(.025 * n)], 1), round(diffs[int(.975 * n)], 1)
+
+
+def pct(xs, q):
+    xs = sorted(xs)
+    if not xs:
+        return None
+    i, f = divmod(q * (len(xs) - 1), 1)  # linear interpolation: the median of an even n is the mean of the two middle values
+    i = int(i)
+    return round(xs[i] + (xs[min(i + 1, len(xs) - 1)] - xs[i]) * f)
+
+
+def comparison(portal):
+    cases = {c.slug: c for c in EvalCase.objects.filter(portal=portal)}
+    out = []
+    for runs in triples(portal):
+        modes = [r.mode for r in runs]
+        slugs = [s for s in runs[-1].metrics["per_case"] if all(s in r.metrics["per_case"] for r in runs)]
+        per = {r.mode: r.metrics["per_case"] for r in runs}
+        ok = {m: [int(per[m][s]["answer_ok"]) for s in slugs] for m in modes}
+        summary = {}
+        for r in runs:
+            pc = [per[r.mode][s] for s in slugs]
+            ms = [v.get("ms", 0) for v in pc]
+            summary[r.mode] = {
+                "run": r.id, "accuracy": round(100 * sum(ok[r.mode]) / len(slugs), 1),
+                "dataset_ok": r.metrics.get("dataset_ok"), "first_try": r.metrics.get("odsql_first_try"),
+                "p50": pct(ms, .5), "p95": pct(ms, .95), "tokens": sum(v.get("tokens", 0) for v in pc),
+                "llm_calls": sum(v.get("llm_calls", 0) for v in pc),
+                "wrong_confident": sum(1 for v in pc if not v["answer_ok"] and not v.get("abstained")),
+                "verified": round(100 * sum(v.get("evidence") == "verified" for v in pc) / len(pc), 1),
+                "routes": r.metrics.get("routes") or {}}
+        diffs = {f"{y}-{x}": {"ci": boot_ci(ok[x], ok[y]), "p": round(mcnemar(ok[x], ok[y]), 3),
+                              "pp": round(100 * (sum(ok[y]) - sum(ok[x])) / len(slugs), 1)}
+                 for x, y in (("huwise", "compiled"), ("huwise", "optimized"), ("naked", "compiled"),
+                              ("compiled", "optimized"), ("naked", "optimized")) if x in modes}
+        rows = [{"slug": s, "q": cases[s].question if s in cases else s, "tags": cases[s].tags if s in cases else [],
+                 "split": cases[s].split if s in cases else "",
+                 **{m: {k: per[m][s].get(k) for k in ("answer_ok", "route", "evidence", "ms", "tokens", "llm_calls",
+                                                      "abstained")} for m in modes}} for s in slugs]
+        a = runs[-1]
+        out.append({"suite": a.metrics.get("suite"), "split": a.metrics.get("split"), "n": len(slugs),
+                    "model": a.model, "date": a.finished_at.strftime("%d.%m.%Y"), "modes": modes,
+                    "commit": a.metrics.get("commit", ""), "runs": [r.id for r in runs],
+                    "summary": summary, "diffs": diffs, "rows": rows})
+    return out
+
+
+def legacy_pairs(portal):
+    """The earlier internal naked/compiled experiments, shown as history only."""
+    full = EvalCase.objects.filter(portal=portal, suite="education").count()
+    seen, out = set(), []
     for c in EvalRun.objects.filter(portal=portal, mode="compiled", finished_at__isnull=False).order_by("-id"):
-        n = EvalRun.objects.filter(portal=portal, id=c.id - 1, mode="naked", model=c.model).first()
-        if n and n.metrics.get("n") == c.metrics.get("n") == full:
-            yield n, c
+        n = EvalRun.objects.filter(id=c.id - 1, mode="naked", model=c.model).first()
+        if n and n.metrics.get("n") == c.metrics.get("n") == full and c.model not in seen and not c.metrics.get("suite"):
+            seen.add(c.model)
+            out.append({"model": c.model, "naked": n.metrics.get("answer_ok"), "compiled": c.metrics.get("answer_ok"),
+                        "runs": [n.id, c.id], "date": c.finished_at.strftime("%d.%m.%Y")})
+    return out
 
 
-def latest_pair(portal):
-    return next(full_pairs(portal), None)
-
-
-def tokens_pct(pair):
-    n, c = pair
-    return round(100 * (c.metrics["tokens"] - n.metrics["tokens"]) / n.metrics["tokens"]) if n.metrics.get("tokens") else None
-
-
-def signed(p):
-    """+2 %, −4 %, 0 % (typographic minus)."""
-    return None if p is None else ("0" if p == 0 else f"{p:+d}".replace("-", "−")) + " %"
-
-
-def per_model(portal):
-    """Latest full pair of each model, for the results table."""
-    seen = {}
-    for n, c in full_pairs(portal):
-        seen.setdefault(c.model, {"model": c.model.split("/")[-1].removesuffix(":free"), "free": c.model.endswith(":free"),
-                                  "naked": n.metrics.get("answer_ok"), "compiled": c.metrics.get("answer_ok"),
-                                  "tokens": signed(tokens_pct((n, c)))})
-    return list(seen.values())
-
-
-def _expected(case):
-    return "pas de données" if case.expected_value == NO_DATA else case.expected_value
-
-
-def _row(result, run):
-    per = run.metrics.get("per_case", {}).get(result.case.slug, {})
-    return {"answer": result.answer, "answer_ok": result.answer_ok, "dataset_ok": per.get("dataset_ok", False),
-            "found_dataset": result.found_dataset, "steps": result.steps, "ms": result.ms, "tokens": result.tokens,
-            "trace": condense(result.transcript)}
-
-
-def duel_data(pair):
-    naked, compiled = pair
-    by = {r.case_id: r for r in EvalResult.objects.filter(run=naked).select_related("case")}
-    cases = []
-    for r in EvalResult.objects.filter(run=compiled).select_related("case").order_by("case_id"):
-        if r.case_id in by:
-            c = r.case
-            cases.append({"slug": c.slug, "question": c.question, "tags": c.tags, "expected": _expected(c),
-                          "naked": _row(by[r.case_id], naked), "compiled": _row(r, compiled)})
-    stories = stories_for((naked.id, compiled.id), {c["slug"] for c in cases})
-    return {"model": compiled.model, "date": compiled.finished_at.strftime("%d.%m.%Y"), "runs": [naked.id, compiled.id],
-            "stories": stories, "cases": cases}
+def lab_data():
+    from lab import log
+    rows = log.read()
+    ok, bad = log.verify(rows)
+    return {"chain_ok": ok, "bad_line": bad, "entries": [r["entry"] | {"sha": r["sha"][:12]} for r in rows],
+            "policy": json.loads((Path(settings.BASE_DIR) / "lab" / "policy.json").read_text())}
 
 
 def build_site(portal, out_dir):
     out = Path(out_dir)
     pages = export_llms(portal, out)
-    pair = latest_pair(portal)
-    if pair:
-        (out / "eval.json").write_text(json.dumps(duel_data(pair), ensure_ascii=False), encoding="utf-8")
-    bars = [{"label": label, "naked": pair[0].metrics.get(k) or 0, "compiled": pair[1].metrics.get(k) or 0}
-            for k, label, _ in METRICS] if pair else []
-    ctx = {
-        "domain": portal.domain, "pages": pages, "pair": pair, "bars": bars, "stack": stack(),
-        "live_model": settings.CTXC_LLM_MODEL,
-        "datasets": nb(Dataset.objects.filter(portal=portal).count()),
-        "fields": nb(Field.objects.filter(dataset__portal=portal).count()),
-        "steps": [f"{pair[i].metrics.get('steps_avg') or 0:.2f}".rstrip("0").rstrip(".").replace(".", ",") for i in (0, 1)]
-        if pair else None,
-        "tokens": signed(tokens_pct(pair)) if pair else None, "models": per_model(portal),
-    }
-    (out / "index.html").write_text(render_to_string("ctx/site.html", ctx), encoding="utf-8")
+    arch = json.loads((HERE / "architecture.json").read_text())
+    traces_file = HERE / "traces" / "scenarios.json"
+    scenarios = json.loads(traces_file.read_text()) if traces_file.exists() else {}
+    checks_file = HERE / "traces" / "checks.json"
+    checks = json.loads(checks_file.read_text()) if checks_file.exists() else None
+    if checks:
+        checks["meta_ok"] = sum(m["holds"] is True for m in checks["metamorphic"])
+    data = {"architecture": arch, "scenarios": scenarios, "comparison": comparison(portal),
+            "legacy": legacy_pairs(portal), "lab": lab_data(), "checks": checks}
+    (out / "data").mkdir(parents=True, exist_ok=True)
+    for name, value in data.items():  # the read-only "API" of the page: /data/<name>.json
+        (out / "data" / f"{name}.json").write_text(json.dumps(value, ensure_ascii=False, default=str), encoding="utf-8")
+    base = {"domain": portal.domain, "pages": pages, "stack": stack(), "live_model": settings.CTXC_LLM_MODEL,
+            "datasets": nb(Dataset.objects.filter(portal=portal).count()),
+            "fields": nb(Field.objects.filter(dataset__portal=portal).count()),
+            "data_json": json.dumps(data, ensure_ascii=False, default=str).replace("</", "<\\/"),
+            "env": settings.CTXC_ENV, "cmp": data["comparison"], "legacy": data["legacy"], "lab": data["lab"],
+            "checks": checks}
+    for lang, path in (("fr", out / "index.html"), ("en", out / "en" / "index.html")):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        t = {k: v[lang] if isinstance(v, dict) else v for k, v in TEXT.items()}
+        methods = [{k: (v[lang] if isinstance(v, dict) else v) for k, v in m.items()} for m in METHODS]
+        path.write_text(render_to_string("ctx/site.html", base | {"lang": lang, "t": t, "t_json": json.dumps(t, ensure_ascii=False),
+                                                                  "methods": methods, "limits": [x[lang] for x in LIMITS],
+                                                                  "root": "" if lang == "fr" else "../"}),
+                        encoding="utf-8")
     return pages
+
