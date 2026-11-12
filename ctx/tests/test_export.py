@@ -69,3 +69,17 @@ class PctTest(TestCase):
         self.assertEqual(pct([100, 4000, 200, 3000], .5), 1600)
         self.assertEqual(pct([5], .95), 5)
         self.assertIsNone(pct([], .5))
+
+
+class TriplesTest(TestCase):
+    def test_a_recorded_after_c_still_pairs(self):
+        from django.utils import timezone
+        from ctx.site import triples
+        from evals.models import EvalRun
+        p = Portal.objects.create(domain="t.example")
+        m = {"suite": "s", "split": "all", "n": 30}
+        mk = lambda mode: EvalRun.objects.create(portal=p, mode=mode, model="x", metrics=m, finished_at=timezone.now())  # noqa: E731
+        a, b, c = mk("naked"), mk("compiled"), mk("optimized")
+        self.assertEqual(triples(p), [(a, b, c)])
+        h = mk("huwise")
+        self.assertEqual(triples(p), [(h, a, b, c)])

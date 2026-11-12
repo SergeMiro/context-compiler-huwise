@@ -9,12 +9,12 @@ whether it helps.
 - **Neo4j** graph of datasets that can be joined (shared keys) and lineage;
 - an **MCP server** with three tools — `find_dataset`, `explain_dataset`, `query` (ODSQL validated against the
   real schema before it costs the client any quota);
-- an **eval harness**: the same agent answers 30 golden questions with generic catalog tools (`naked`) and with
-  the compiled cards (`compiled`), scored without an LLM judge;
+- an **eval harness**: the same agent and model answer the same questions with the real Huwise MCP server (A),
+  generic catalog tools (0), our cards (B) and cards + Context Optimizer (C), scored without an LLM judge;
 - an **improve loop**: an LLM proposes one card edit per failing dataset; the edit is kept only if failures get
   fixed and no passing question breaks. A human can review the diff in Django admin.
 
-**Jury demo (preprod):** <https://context-preprod.smiro.dev/> — Huwise's public architecture (every block sourced,
+**Jury demo:** <https://context.smiro.dev/> (experiments run in preprod: <https://context-preprod.smiro.dev/>) — Huwise's public architecture (every block sourced,
 VERIFIED / INFERRED / PROPOSED), two proposed layers (**Context Optimizer**, **AutoContext Lab**), traces of real
 runs, and an A/B/C comparison. Docs: [`docs/HUWISE_SOURCES.md`](docs/HUWISE_SOURCES.md) ·
 [`docs/ARCHITECTURE_PROPOSED.md`](docs/ARCHITECTURE_PROPOSED.md) · [`docs/EVAL_METHODOLOGY.md`](docs/EVAL_METHODOLOGY.md) ·
@@ -47,10 +47,21 @@ Feb–Nov 2026). It is used here as the usage signal: the directory `fr-en-annua
 
 ## Result
 
-A/B/C results (same model, same questions, A = generic tools named like Huwise MCP's — **not** the Huwise server,
-which needs a portal API key): see [`docs/EVAL_METHODOLOGY.md`](docs/EVAL_METHODOLOGY.md).
+Holdout, 26 questions the lab never saw, same free model (`nvidia/nemotron-3.5-super-vl:free`), one run per
+configuration, 12.11.2026 — A is the real Huwise MCP server (`mcp.huwise.com`, ordinary user key) driven by our model
+and prompt, **not** Huwy:
 
-Earlier internal experiment, A vs B only, on the 30 questions written together with the cards (history, not
+| | A · Huwise MCP | 0 · generic tools | B · cards | C · cards + optimizer |
+|---|---|---|---|---|
+| correct answer | 50.0 % | 38.5 % | 73.1 % | **96.2 %** |
+| wrong and stated as fact | 12 | 13 | 7 | 1 |
+| model calls | 136 | 147 | 126 | 56 |
+
+B − A +23 pp, 95 % CI [−4 ; +50], p = 0.18 (not significant) · C − A +46 pp, CI [+23 ; +65], p = 0.002. Small n,
+questions written by the author, half the holdout takes a FAST recipe (an upper bound). Details, legacy set and the
+lab cycle: [`docs/EVAL_METHODOLOGY.md`](docs/EVAL_METHODOLOGY.md).
+
+Earlier internal experiment, 0 vs B only, on the 30 questions written together with the cards (history, not
 evidence against Huwy):
 
 | model | naked (generic catalog tools) | compiled (cards) | tokens |
@@ -92,7 +103,7 @@ Needs Docker, Python 3.12, `libmariadb-dev` and `pkg-config` (for `mysqlclient`)
 python3.12 -m venv .venv && .venv/bin/pip install -r requirements.txt
 cp .env.example .env
 scripts/bootstrap.sh                       # services, schema, scan, signals, cards, ES, Neo4j, golden answers
-.venv/bin/python manage.py test            # 45 tests (use the local ES / Neo4j / MariaDB)
+.venv/bin/python manage.py test            # 80 tests (use the local ES / Neo4j / MariaDB)
 .venv/bin/python manage.py mcp             # MCP server: http://127.0.0.1:8796/mcp (header X-Domain)
 .venv/bin/python scripts/mcp_smoke.py      # find -> explain -> count public collèges in Côte-d'Or = 58
 ```
@@ -123,10 +134,10 @@ LLM features (eval, improve) need any OpenAI-compatible endpoint in `.env`: `CTX
 | `project <domain> [--rebuild-index]` | ES + Neo4j for this portal (other portals untouched) |
 | `export_llms <domain> <dir>` | `llms.txt` + one markdown page per dataset |
 | `golden_refresh <domain>` | load `evals/golden/<set>.json`, compute expected answers from the API |
-| `eval <domain> --mode naked\|compiled\|both` | run the golden set, print the comparison table |
+| `eval <domain> --mode huwise\|naked\|compiled\|optimized\|both` | run the golden set, print the comparison table (`huwise` needs `HUWISE_API_KEY`) |
 | `improve <domain> --mode propose\|auto` | propose / test / keep or revert card edits |
 | `mcp [--host]`, `bench <domain>` | MCP server; latency p50/p95 |
-| `eval … --mode abc --suite <set> --split <dev\|val\|holdout>` | A (naked) + B (compiled) + C (optimized) on the same cases |
+| `eval … --mode abc --suite <set> --split <dev\|val\|holdout>` | 0 (naked) + B (compiled) + C (optimized) on the same cases |
 | `record_traces <domain>` / `optimizer_check <domain>` | demo traces (A/B/C + simulated) / deterministic optimizer checks |
 | `lab run <domain>` / `lab log` | one AutoContext Lab cycle (refuses outside `CTXC_ENV=preprod`) / print and verify the chained log |
 | `build_site <domain> <dir>` | jury showcase (`index.html` in French, `en/index.html`), `data/*.json` (architecture, scenarios, comparison, lab), `llms.txt` + pages |

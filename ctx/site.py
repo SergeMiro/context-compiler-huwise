@@ -49,11 +49,15 @@ def triples(portal):
     def prev(c, mode):
         return next((r for r in done.filter(mode=mode, model=c.model, id__lt=c.id).order_by("-id") if key(r) == key(c)),
                     None)
+
+    def near(c, mode):  # A may be recorded after C (it needs its own key and quota): closest earlier, else first later
+        return prev(c, mode) or next((r for r in done.filter(mode=mode, model=c.model, id__gt=c.id).order_by("id")
+                                      if key(r) == key(c)), None)
     out = []
     for c in done.filter(mode="optimized").order_by("-id"):
         a, b = prev(c, "naked"), prev(c, "compiled")
         if a and b and c.metrics.get("n", 0) > 3:
-            h = prev(c, "huwise")  # optional: the real Huwise MCP run on the same questions, when one exists
+            h = near(c, "huwise")  # optional: the real Huwise MCP run on the same questions, when one exists
             out.append(((h,) if h else ()) + (a, b, c))
     return sorted(out, key=lambda t: t[-1].metrics.get("split") != "holdout")  # the clean set opens first
 
