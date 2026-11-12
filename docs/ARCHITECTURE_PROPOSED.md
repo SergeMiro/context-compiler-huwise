@@ -65,7 +65,7 @@ Budget per cycle: `max_proposals`, `max_llm_calls`, `max_seconds` (`Budget` wrap
 
 | kind | name | notes |
 |---|---|---|
-| route | `GET /api/demo/run?scenario=` | live configuration C, only when the route is FAST (no model); otherwise 409 and the page shows the recording |
+| route | `GET /api/demo/run?scenario=| route | `GET /api/demo/run?scenario=` | live configuration C, only when the route is FAST (no model); otherwise 409 and the page shows the recording |mode=| route | `GET /api/demo/run?scenario=` | live configuration C, only when the route is FAST (no model); otherwise 409 and the page shows the recording |provider=` | runs the chosen configuration live (C on a FAST route: no model); daily cap, 404/400/503 on bad input |
 | static data | `/data/architecture.json`, `/data/scenarios.json`, `/data/comparison.json`, `/data/lab.json`, `/data/legacy.json` | the page's read-only API (the proposed `GET /api/architecture`, `/api/demo/scenarios`, `/api/evals/comparison`, `/api/lab/experiments` as files) |
 | command | `eval --mode abc --suite --split` | A/B/C on the same cases |
 | command | `record_traces <domain>` | recorded A/B/C traces + simulated scenarios → `ctx/traces/scenarios.json` |

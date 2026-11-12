@@ -138,8 +138,8 @@
     "en": "list of datasets, fields, AI search"
    },
    "purpose": {
-    "fr": "La liste de tous les jeux : titres, descriptions, champs, types, droits. Le catalogue = la liste ; le JSON = juste le format de réponse.",
-    "en": "The list of all datasets: titles, descriptions, fields, types, rights. Catalog = the list; JSON = just the reply format."
+    "fr": "La liste de tous les jeux de données : titres, descriptions, champs, types, droits. C'est là qu'un agent cherche quel jeu utiliser.",
+    "en": "The list of all datasets: titles, descriptions, fields, types, rights. This is where an agent looks for which dataset to use."
    },
    "io": {
     "fr": "Entre : descriptions publiées · Sort : recherche, schéma",
@@ -447,8 +447,8 @@
     "en": "more correct, shorter, proven answers"
    },
    "purpose": {
-    "fr": "Notre ajout entre les données et l'agent. Pas d'IA ici. Il lit l'API publique et sert l'agent. Il n'écrit rien sur le portail.",
-    "en": "Our addition between the data and the agent. No AI here. It reads the public API and serves the agent. It writes nothing to the portal."
+    "fr": "Notre ajout, entre les données et l'agent. Il n'utilise pas d'IA. Il lit l'API publique, aide l'agent, et n'écrit rien sur le portail.",
+    "en": "Our addition, between the data and the agent. It uses no AI. It reads the public API, helps the agent, and writes nothing to the portal."
    },
    "io": {
     "fr": "Entre : question · Sort : réponse + preuve",
@@ -457,7 +457,7 @@
    "chips": [
     {
      "id": "cards",
-     "fr": "Cartes compilées",
+     "fr": "Fiches compilées",
      "en": "Compiled cards",
      "code": "ctx/compile.py",
      "d": {
@@ -487,8 +487,8 @@
     },
     {
      "id": "router",
-     "fr": "Routeur FAST · STANDARD · DEEP",
-     "en": "Router FAST · STANDARD · DEEP",
+     "fr": "Routeur : rapide · normal · approfondi",
+     "en": "Router: fast · normal · deep",
      "code": "optimizer/router.py",
      "d": {
       "fr": "Question simple : réponse sans IA. Sinon : l'agent. Question complexe : plus d'étapes.",
@@ -517,8 +517,8 @@
     },
     {
      "id": "drift",
-     "fr": "Dérive & fraîcheur",
-     "en": "Drift & freshness",
+     "fr": "Changement de schéma ou de données",
+     "en": "Schema or data change",
      "code": "optimizer/recipes.py · cache.py",
      "d": {
       "fr": "Si le schéma ou les données changent, la requête toute prête est coupée et le cache ignoré.",
@@ -596,8 +596,8 @@
     },
     {
      "id": "fork",
-     "fr": "4 Fork",
-     "en": "4 Fork",
+     "fr": "4 Copie isolée",
+     "en": "4 Isolated copy",
      "code": "lab/cycle.py guard()",
      "d": {
       "fr": "Ne tourne qu'en preprod (autre base, autre index).",
@@ -626,8 +626,8 @@
     },
     {
      "id": "gate",
-     "fr": "7 Quality gate",
-     "en": "7 Quality gate",
+     "fr": "7 Règles pour garder",
+     "en": "7 Keep rules",
      "code": "lab/policy.json",
      "d": {
       "fr": "Garde seulement si : au moins 1 corrigée, aucune cassée, pas plus de 25 % de jetons.",
@@ -646,12 +646,12 @@
     },
     {
      "id": "log",
-     "fr": "9 Journal chaîné",
-     "en": "9 Chained log",
+     "fr": "9 Journal scellé",
+     "en": "9 Sealed log",
      "code": "lab/log.py",
      "d": {
-      "fr": "Chaque ligne est liée à la précédente : une modification se voit.",
-      "en": "Each line is linked to the previous one: an edit shows."
+      "fr": "Chaque ligne contient l'empreinte de la précédente : toute modification se voit.",
+      "en": "Each line holds the fingerprint of the previous one: any change shows."
      }
     },
     {

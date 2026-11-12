@@ -32,7 +32,7 @@ montre des mesures reproductibles — avec leurs limites. »
 
 ## 2:20 — Écran 3 : une question tracée (70 s)
 
-- Scénario « Le cas principal », configuration **C**, *Rejouer le scénario* : route FAST → une requête Explore API →
+- Scénario « Le cas principal », configuration **C**, *Rejouer* : route FAST → une requête Explore API →
   vérification. « 23 collèges à Dijon, zéro appel au modèle, la preuve est le total_count de l'API. »
 - *Lancer en direct* : badge **LIVE**, l'appel part maintenant — pour la version choisie (A, 0, B ou C).
 - Sélecteur **Modèle** : OpenRouter (`nemotron-3.5-super-vl`) ou NVIDIA NIM (`nemotron-3-ultra-550b`). « Deux
@@ -76,7 +76,7 @@ d'usage. »
 
 - *Pourquoi pas de vecteurs ?* — Le classement BM25 + signal d'usage met le bon jeu en tête sur ce portail ; on
   ajoute des vecteurs quand l'éval montre que le rappel est le goulot.
-- *Que se passe-t-il si le schéma change ?* — Écran 3, scénario « Le schéma a changé » (SIMULATED) : la recette se
+- *Que se passe-t-il si le schéma change ?* — Écran 3, scénario « Le schéma a changé » (simulé) : la recette se
   désactive, la question repart par l'agent ; le cache change de clé avec la version de données.
 - *Et les droits ?* — La clé du client est transmise, jamais stockée ; le cache est séparé par périmètre de droits
   (HMAC de la clé) ; un 403 donne un refus, pas un nombre (scénario « Jeu de données non autorisé »).

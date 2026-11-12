@@ -187,11 +187,11 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
   <div class="steps">
     <div><b>{{ t.hero_s1t }}</b><span>{{ t.hero_s1 }}</span></div>
     <div><b>{{ t.hero_s2t }}</b><span>{{ t.hero_s2 }}</span></div>
-    <div><b>{{ t.hero_s3t }}</b><span>{{ t.hero_s3 }}</span></div>
+    <div><b>{{ t.hero_s3t }}</b><span id="herores">{{ t.hero_s3 }}</span></div>
   </div>
   <div class="legend">
-    <div><b>{{ t.legend_origin }}</b><span class="st st-VERIFIED">VERIFIED</span>{{ t.st_VERIFIED }} <span class="st st-INFERRED">INFERRED</span>{{ t.st_INFERRED }} <span class="st st-PROPOSED">PROPOSED</span>{{ t.st_PROPOSED }}</div>
-    <div><b>{{ t.legend_exec }}</b><span class="st st-LIVE">LIVE</span>{{ t.ex_LIVE }} <span class="st st-RECORDED">RECORDED</span>{{ t.ex_RECORDED }} <span class="st st-SIMULATED">SIMULATED</span>{{ t.ex_SIMULATED }}</div>
+    <div><b>{{ t.legend_origin }}</b><span class="st st-VERIFIED">{{ t.lbl_VERIFIED }}</span>{{ t.st_VERIFIED }} <span class="st st-INFERRED">{{ t.lbl_INFERRED }}</span>{{ t.st_INFERRED }} <span class="st st-PROPOSED">{{ t.lbl_PROPOSED }}</span>{{ t.st_PROPOSED }}</div>
+    <div><b>{{ t.legend_exec }}</b><span class="st st-LIVE">{{ t.lbl_LIVE }}</span>{{ t.ex_LIVE }} <span class="st st-RECORDED">{{ t.lbl_RECORDED }}</span>{{ t.ex_RECORDED }} <span class="st st-SIMULATED">{{ t.lbl_SIMULATED }}</span>{{ t.ex_SIMULATED }}</div>
   </div>
 </div></section>
 
@@ -241,7 +241,7 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
       <pre class="pre">where = code_departement='21' and type_etablissement='Collège'</pre>
       <button class="btn" data-q="code_departement='21' and type_etablissement='Collège'|code_departement='021' and type_etablissement='Collège'">{{ t.err_try }}</button><div class="mono muted" aria-live="polite"></div></div>
     <div class="card" style="border-color:var(--purple-line)"><h3>Context Optimizer</h3><p class="muted" style="margin:0">{{ t.err_fix }}</p>
-      <pre class="pre">{"total_count": 0, "hint": ["nom_commune: 'DIJON' is stored as 'Dijon'"]}
+      <pre class="pre only-tech">{"total_count": 0, "hint": ["nom_commune: 'DIJON' is stored as 'Dijon'"]}
 {"total_count": 0, "hint": ["code_departement: codes are written with leading zeros, try '021'"]}</pre></div>
   </div>
   <div id="errtrace"></div>
@@ -249,22 +249,23 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
 
 <section id="lab"><div class="wrap sec">
   <div class="sh"><span class="eyebrow purple">{{ t.lab_eyebrow }}</span><h2>{{ t.lab_title }}</h2><p>{{ t.lab_lead }}</p></div>
+  <p class="lead" id="labsum" style="margin:0;color:var(--fg)"></p>
   <div class="cycle" id="cycle"></div>
   <div class="grid">
-    <div class="card"><h3>{{ t.lab_budget }}</h3><ul class="clean mono" style="font-size:13px">{% for k, v in lab.policy.budget.items %}<li>{{ k }} = {{ v }}</li>{% endfor %}</ul></div>
-    <div class="card"><h3>{{ t.lab_gate }} <span class="st st-neutral">{{ lab.policy.version }}</span></h3><ul class="clean mono" style="font-size:13px">{% for k, v in lab.policy.gate.items %}<li>{{ k }} = {{ v }}</li>{% endfor %}</ul></div>
+    <div class="card"><h3>{{ t.lab_budget }}</h3><ul class="clean" style="font-size:14px" id="labbudget"></ul></div>
+    <div class="card"><h3>{{ t.lab_gate }} <span class="st st-neutral">{{ lab.policy.version }}</span></h3><ul class="clean" style="font-size:14px" id="labgate"></ul></div>
   </div>
-  <div class="card"><h3>{{ t.lab_log }} {% if lab.entries %}<span class="st {% if lab.chain_ok %}st-ok{% else %}st-ko{% endif %}">{% if lab.chain_ok %}{{ t.lab_chain_ok }}{% else %}{{ t.lab_chain_bad }} {{ lab.bad_line }}{% endif %}</span> <span class="st st-RECORDED">RECORDED</span>{% endif %}</h3>
+  <div class="card"><h3>{{ t.lab_log }} {% if lab.entries %}<span class="st {% if lab.chain_ok %}st-ok{% else %}st-ko{% endif %}">{% if lab.chain_ok %}{{ t.lab_chain_ok }}{% else %}{{ t.lab_chain_bad }} {{ lab.bad_line }}{% endif %}</span> <span class="st st-RECORDED">{{ t.lbl_RECORDED }}</span>{% endif %}</h3>
     <div id="lablog">{% if not lab.entries %}<p class="muted">{{ t.lab_empty }}</p>{% endif %}</div></div>
 </div></section>
 
 <section id="comparer" class="alt"><div class="wrap sec">
   <div class="sh"><span class="eyebrow">{{ t.cmp_eyebrow }}</span><h2>{{ t.cmp_title }}</h2><p>{{ t.cmp_lead }}</p></div>
-  <p class="answer" style="border-color:var(--warn-line);background:var(--warn-soft);margin:0">{{ t.cmp_caveat }}</p>
-  <div class="tracebar"><label>{{ t.cmp_set }}<select id="cmpset"></select></label><label>{{ t.cmp_tag }}<select id="cmptag"></select></label><span class="st st-RECORDED">RECORDED</span></div>
+  <p class="answer" style="border-color:var(--warn-line);background:var(--warn-soft);margin:0">{{ t.cmp_caveat }}<span class="only-tech"> {{ t.cmp_caveat_tech }}</span></p>
+  <div class="tracebar"><label>{{ t.cmp_set }}<select id="cmpset"></select></label><label>{{ t.cmp_tag }}<select id="cmptag"></select></label><span class="st st-RECORDED">{{ t.lbl_RECORDED }}</span></div>
   <div id="cmp"><p class="muted">{{ t.cmp_none }}</p></div>
-  {% if checks %}<div class="card" style="overflow-x:auto"><h3>{{ t.chk_title }} <span class="st st-RECORDED">RECORDED</span> <span class="mono muted" style="font-size:12px;font-weight:400">{{ checks.recorded_at }}</span></h3>
-    <table class="tbl"><tr><td>{{ t.chk_recipes }}</td><td class="num">{% for k, v in checks.recipes.items %}{{ k }} : {{ v.fast }}/{{ v.n }} · {{ v.fast_correct }}/{{ v.fast }}<br>{% endfor %}</td></tr>
+  {% if checks %}<div class="card" style="overflow-x:auto"><h3>{{ t.chk_title }} <span class="st st-RECORDED">{{ t.lbl_RECORDED }}</span> <span class="mono muted" style="font-size:12px;font-weight:400">{{ checks.recorded_at }}</span></h3>
+    <table class="tbl"><tr><td>{{ t.chk_recipes }}</td><td class="num">{% for k, v in checks.recipes.items %}{{ v.fast }} {{ t.chk_of }} {{ v.n }} · {{ v.fast_correct }}/{{ v.fast }} <span class="muted only-tech">({{ k }})</span><br>{% endfor %}</td></tr>
     <tr><td>{{ t.chk_meta }}</td><td class="num">{{ checks.meta_ok }}/{{ checks.metamorphic|length }}</td></tr>
     <tr><td>{{ t.chk_comp }}</td><td class="num">{{ checks.compression.all_needed_fields_kept }}/{{ checks.compression.cases }} · −{{ checks.compression.tokens_saved_median_pct }} %</td></tr>
     <tr><td>{{ t.chk_lat }}</td><td class="num">{{ checks.latency.cold_p50_ms }} / {{ checks.latency.cold_p95_ms }} ms · {{ checks.latency.warm_p50_ms }} / {{ checks.latency.warm_p95_ms }} ms</td></tr></table></div>{% endif %}
@@ -359,12 +360,12 @@ const edgeEls = A.edges.map((e, i) => {
 });
 const nodeEls = A.nodes.map(n => {
   const cls = ['node', n.layer === 'ours' ? 'ours' : '', n.zone ? 'zone' : '', n.status === 'VERIFIED' ? 'st-v' : n.status === 'INFERRED' ? 'st-i' : ''].join(' ');
-  const g = el('g', {class: cls, tabindex: 0, role: 'button', 'data-id': n.id, 'data-layer': n.layer, 'aria-label': `${tx(n.title)} — ${n.status}`});
+  const g = el('g', {class: cls, tabindex: 0, role: 'button', 'data-id': n.id, 'data-layer': n.layer, 'aria-label': `${tx(n.title)} — ${T['lbl_' + n.status]}`});
   g.appendChild(el('rect', {class: 'box', x: n.x, y: n.y, width: n.w, height: n.h, rx: 10}));
   const fo = el('foreignObject', {x: n.x, y: n.y, width: n.w, height: n.h});
   const div = el('div', {class: 'nfo'}, XH);
   const tagCls = {VERIFIED: 'st-VERIFIED', INFERRED: 'st-INFERRED', PROPOSED: 'st-PROPOSED'}[n.status];
-  div.innerHTML = `<div class="nt"><svg class="i" style="width:15px;height:15px"><use href="#${n.icon}"/></svg>${esc(tx(n.title))}</div><div class="ns"><span class="tag ${tagCls}">${n.status}</span> ${esc(tx(n.sub))}</div>` +
+  div.innerHTML = `<div class="nt"><svg class="i" style="width:15px;height:15px"><use href="#${n.icon}"/></svg>${esc(tx(n.title))}</div><div class="ns"><span class="tag ${tagCls}">${T['lbl_' + n.status]}</span> ${esc(tx(n.sub))}</div>` +
     (n.chips ? `<div class="chips">${n.chips.map(c => `<span>${esc(c[L] || c.fr)}</span>`).join('')}</div>` : '');
   fo.appendChild(div); g.appendChild(fo);
   g.onclick = () => select(n.id); g.onkeydown = ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); select(n.id); } };
@@ -376,12 +377,12 @@ $('#ekeys').innerHTML = Object.entries(A.edge_kinds).map(([k, v]) => `<span><svg
 
 function select(id) {
   const n = byId[id]; nodeEls.forEach(g => g.classList.toggle('sel', g.dataset.id === id));
-  let h = `<h3>${esc(tx(n.title))} <span class="st st-${n.status}">${n.status}</span></h3><dl>`;
+  let h = `<h3>${esc(tx(n.title))} <span class="st st-${n.status}">${T['lbl_' + n.status]}</span></h3><dl>`;
   h += `<div><dt>${T.p_purpose}</dt><dd>${esc(tx(n.purpose))}</dd></div><div><dt>${T.p_io}</dt><dd>${esc(tx(n.io))}</dd></div>`;
   if (n.tools) h += `<div><dt>${T.p_tools}</dt><dd>${n.tools.map(x => `<code class="icode">${x}</code>`).join(' ')}</dd></div>`;
   if (n.example) h += `<div><dt>${T.p_example}</dt><dd><pre>${esc(n.example)}</pre></dd></div>`;
   if (n.chips) h += `<div><dt>${T.p_parts}</dt><dd><ul class="clean" style="font-size:13px">${n.chips.map(c => `<li><b>${esc(c[L] || c.fr)}</b> — ${esc(tx(c.d))} <code class="icode">${esc(c.code)}</code></li>`).join('')}</ul></dd></div>`;
-  if (n.note) h += `<div><dt>Note</dt><dd>${esc(tx(n.note))}</dd></div>`;
+  if (n.note) h += `<div><dt>${T.p_note}</dt><dd>${esc(tx(n.note))}</dd></div>`;
   if (n.layer !== 'ours') h += `<div><dt>${T.p_sources}</dt><dd style="display:flex;flex-direction:column;gap:6px">${n.sources.length ? n.sources.map(s => `<blockquote>“${esc(s.quote)}”<br><a href="${esc(s.url)}">${esc(s.url)}</a></blockquote>`).join('') : `<span class="muted">${T.p_nosource}</span>`}</dd></div>`;
   $('#panel').innerHTML = h + '</dl>';
 }
@@ -416,8 +417,10 @@ function highlight(ids) {
 }
 
 /* ---------- trace ---------- */
-const scen = D.scenarios, ids = Object.keys(scen);
-$('#scen').innerHTML = ids.map(i => `<option value="${i}">${esc(tx(scen[i].title))} — ${scen[i].kind === 'simulated' ? 'SIMULATED' : 'RECORDED'}</option>`).join('');
+const scen = D.scenarios, ids = Object.keys(scen).sort((a, b) => (scen[a].kind === 'simulated') - (scen[b].kind === 'simulated'));
+$('#scen').innerHTML = ids.map(i => `<option value="${i}">${esc(tx(scen[i].title))}${scen[i].kind === 'simulated' ? ' (' + T.lbl_SIMULATED + ')' : ''}</option>`).join('');
+const rt = r => T['rt_' + r] || r || '—', ev = s => T['ev_' + s] || s || '—';
+const ans = a => /^\s*<tool_call>/.test(a || '') ? T.no_final : (a || '');
 let cfg = 'optimized', live = null, timer = null;
 const provBtn = () => document.querySelector('#prov button[aria-pressed="true"]');
 const provName = () => (provBtn() || {dataset: {}}).dataset.prov || '', provModel = () => (provBtn() || {dataset: {}}).dataset.model || '';
@@ -429,12 +432,12 @@ function stepsOf(run, kind) {
   const trace = [...(run.trace || [])], q = [...(run.queries || [])], out = [];
   const userNode = cfg === 'naked' || cfg === 'huwise' ? ['user', 'mcp'] : ['user', 'opt'];
   for (const s of run.spans || []) {
-    if (s.name === 'llm') { out.push({tool: 'LLM', nodes: userNode, ms: s.ms, tokens: s.tokens, input: '(prompt + tool results)', output: '→ next tool call or final answer'}); continue; }
-    if (s.name === 'route') { out.push({tool: 'route()', nodes: ['opt'], ms: s.ms, input: run.question || '', output: `${s.route}${s.note ? ' · ' + s.note : ''}\n${(run.reasons || []).join('\n')}`, source: s.policy}); continue; }
-    if (s.name === 'verify') { out.push({tool: 'evidence.check()', nodes: ['opt'], ms: s.ms, input: 'answer + query results', output: `${run.evidence.status}\n${(run.evidence.reasons || []).join('\n')}`}); continue; }
+    if (s.name === 'llm') { out.push({tool: 'LLM', key: 'llm', nodes: userNode, ms: s.ms, tokens: s.tokens, input: '(prompt + tool results)', output: '→ next tool call or final answer'}); continue; }
+    if (s.name === 'route') { out.push({tool: 'route()', key: 'route', nodes: ['opt'], ms: s.ms, input: run.question || '', output: `${s.route}${s.note ? ' · ' + s.note : ''}\n${(run.reasons || []).join('\n')}`, source: s.policy}); continue; }
+    if (s.name === 'verify') { out.push({tool: 'evidence.check()', key: 'verify', nodes: ['opt'], ms: s.ms, input: 'answer + query results', output: `${run.evidence.status}\n${(run.evidence.reasons || []).join('\n')}`}); continue; }
     const tr = cfg === 'optimized' && s.name === 'query' && !trace.length ? null : trace.shift();
     const qq = s.name === 'query' || s.name === 'search_asset_records' ? q.shift() : null;
-    out.push({tool: s.name, nodes: A.tool_nodes[s.name] || ['opt'], ms: s.ms, ok: s.ok, cache: s.cache, note: s.note,
+    out.push({tool: s.name, key: s.name, nodes: A.tool_nodes[s.name] || ['opt'], ms: s.ms, ok: s.ok, cache: s.cache, note: s.note,
               input: tr ? tr.args : (qq ? qq.params : ''), output: tr ? tr.result : (qq ? qq.result : (s.ok === false ? 'error' : '')),
               source: (tr && tr.args && (tr.args.dataset_id || tr.args.slug)) || (qq && qq.dataset_id) || ''});
   }
@@ -450,17 +453,17 @@ function renderTrace() {
   const status = live ? 'LIVE' : s.kind === 'simulated' ? 'SIMULATED' : 'RECORDED';
   const steps = stepsOf(run, status);
   const okChip = run.answer_ok === true ? '<span class="st st-ok">✓</span>' : run.answer_ok === false ? '<span class="st st-ko">✗</span>' : '';
-  $('#tsum').innerHTML = `<span class="st st-${status}">${status}</span><span><b>${T.route}</b> ${esc(run.route)}</span><span><b>${T.evidence}</b> ${esc(run.evidence && run.evidence.status)}</span>` +
-    `<span class="mono">${run.ms} ms · ${run.tokens || 0} tok · ${run.llm_calls || 0} ${T.model_calls}</span>` +
+  $('#tsum').innerHTML = `<span class="st st-${status}">${T['lbl_' + status]}</span><span><b>${T.route}</b> ${esc(rt(run.route))}</span><span><b>${T.evidence}</b> ${esc(ev(run.evidence && run.evidence.status))}</span>` +
+    `<span class="mono">${(run.ms / 1000).toFixed(1)} s · ${run.llm_calls || 0} ${T.model_calls}</span><span class="mono muted only-tech">${run.tokens || 0} tok</span>` +
     (s.expected !== undefined && s.kind === 'recorded' ? `<span>${T.expected}: <b class="mono">${esc(typeof s.expected === 'number' ? Math.round(s.expected * 100) / 100 : s.expected)}</b></span>` : '') +
     (live ? `<span class="mono muted">${esc((live.models || []).join(' → ') || T.no_model)}</span>` + (live.models && live.models.length && !live.models.includes(provModel()) ? `<span class="st st-neutral">${T.fallback}</span>` : '')
-          : `<span class="mono muted">${esc(s.model || '')} · ${esc(s.recorded_at || '')} · ${esc(s.commit || '')}</span>`) + (s.fixture ? `<span class="muted">fixture: ${esc(s.fixture)}</span>` : '');
-  $('#tsteps').innerHTML = steps.map((st, i) => `<div class="tstep" data-i="${i}"><button aria-expanded="false"><span class="mono">${esc(st.tool)}</span>${st.cache ? `<span class="st st-neutral">cache ${st.cache}</span>` : ''}${st.ok === false ? '<span class="st st-ko">error</span>' : ''}${st.note ? `<span class="muted">${esc(st.note)}</span>` : ''}<span class="ms">${st.ms} ms${st.tokens ? ' · ' + st.tokens + ' tok' : ''}</span></button>
+          : `<span class="mono muted only-tech">${esc(s.model || '')} · ${esc(s.recorded_at || '')} · ${esc(s.commit || '')}</span>`) + (s.fixture ? `<span class="muted"><b>${T.fixture} :</b> ${esc(T['fx_' + $('#scen').value] || s.fixture)}</span>` : '');
+  $('#tsteps').innerHTML = steps.map((st, i) => `<div class="tstep" data-i="${i}"><button aria-expanded="false"><span>${esc(T['sp_' + st.key] || st.tool)}</span><span class="mono muted only-tech" style="font-size:12px">${esc(st.tool)}</span>${st.cache ? `<span class="st st-neutral">cache ${st.cache}</span>` : ''}${st.ok === false ? '<span class="st st-ko">error</span>' : ''}${st.note ? `<span class="muted">${esc(st.note)}</span>` : ''}<span class="ms">${st.ms} ms${st.tokens ? ' · ' + st.tokens + ' tok' : ''}</span></button>
     <dl class="tbody"><dt>${T.f_input}</dt><dd><pre>${esc(short(st.input))}</pre></dd><dt>${T.f_tool}</dt><dd class="mono">${esc(st.tool)}</dd><dt>${T.f_output}</dt><dd><pre>${esc(short(st.output))}</pre></dd>
-    <dt>${T.f_time}</dt><dd class="mono">${st.ms} ms</dd><dt>${T.f_tokens}</dt><dd class="mono">${st.tokens ?? '—'}</dd><dt>${T.f_source}</dt><dd class="mono">${esc(st.source || '—')}</dd><dt>${T.f_status}</dt><dd><span class="st st-${status}">${status}</span></dd></dl></div>`).join('');
+    <dt>${T.f_time}</dt><dd class="mono">${st.ms} ms</dd><dt>${T.f_tokens}</dt><dd class="mono">${st.tokens ?? '—'}</dd><dt>${T.f_source}</dt><dd class="mono">${esc(st.source || '—')}</dd><dt>${T.f_status}</dt><dd><span class="st st-${status}">${T['lbl_' + status]}</span></dd></dl></div>`).join('');
   const open = i => { $$('.tstep').forEach((d, j) => { d.classList.toggle('on', j === i); d.querySelector('button').setAttribute('aria-expanded', j === i); }); if (steps[i]) highlight(steps[i].nodes); };
   $$('.tstep>button').forEach((b, i) => b.onclick = () => { clearInterval(timer); if (mode !== 'trace') setMode('trace'); open(i); });
-  $('#tanswer').innerHTML = `<b>${T.answer}</b> ${okChip} ${esc(run.answer)}`;
+  $('#tanswer').innerHTML = `<b>${T.answer}</b> ${okChip} ${esc(ans(run.answer))}`;
   $('#replay').onclick = () => { if (mode !== 'trace') setMode('trace'); let i = 0; open(0); clearInterval(timer); timer = setInterval(() => { i++; if (i >= steps.length) { clearInterval(timer); return; } open(i); }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 1600 : 1100); };
 }
 $('#live').onclick = async () => {
@@ -468,7 +471,7 @@ $('#live').onclick = async () => {
   b.textContent = '…';
   try { const r = await fetch(`/api/demo/run?scenario=${encodeURIComponent($('#scen').value)}&mode=${cfg}&provider=${encodeURIComponent(provName())}`); const j = await r.json();
     if (!r.ok) throw new Error(j.error || r.status); live = j; renderTrace(); $('#replay').click();
-  } catch (e) { $('#tsum').insertAdjacentHTML('afterbegin', `<span class="st st-ko">LIVE: ${esc(e.message)}</span>`); }
+  } catch (e) { $('#tsum').insertAdjacentHTML('afterbegin', `<span class="st st-ko">${T.lbl_LIVE} : ${esc(e.message)}</span>`); }
   b.disabled = false; b.textContent = T.live_btn;
 };
 renderTrace();
@@ -478,23 +481,30 @@ $$('#erreur [data-q]').forEach(b => b.onclick = async () => {
   const out = b.nextElementSibling; out.textContent = '…';
   const base = 'https://{{ domain }}/api/explore/v2.1/catalog/datasets/fr-en-annuaire-education/records?limit=0&where=';
   try { const [bad, good] = await Promise.all(b.dataset.q.split('|').map(w => fetch(base + encodeURIComponent(w)).then(r => r.json())));
-    out.innerHTML = `<span class="st st-LIVE">LIVE</span> ${esc(b.dataset.q.split('|')[0].split(' and ')[0])} → ${bad.total_count} · ${esc(b.dataset.q.split('|')[1].split(' and ')[0])} → ${good.total_count}`;
+    out.innerHTML = `<span class="st st-LIVE">{{ t.lbl_LIVE }}</span> ${esc(b.dataset.q.split('|')[0].split(' and ')[0])} → ${bad.total_count} · ${esc(b.dataset.q.split('|')[1].split(' and ')[0])} → ${good.total_count}`;
   } catch (e) { out.textContent = 'API: ' + e.message; }
 });
 const ct = scen['code-format'];
-if (ct) $('#errtrace').innerHTML = `<div class="grid">${['huwise', 'naked', 'optimized'].filter(m => ct.runs[m]).map(m => { const r = ct.runs[m];
+if (ct) $('#errtrace').innerHTML = `<p style="margin:0 0 12px;font-weight:600">{{ t.err_same }}</p><div class="grid">${['huwise', 'naked', 'optimized'].filter(m => ct.runs[m]).map(m => { const r = ct.runs[m];
   const qs = (r.queries || []).map(q => `${q.ok ? '✓' : '✗'} ${esc(q.dataset_id)} ${esc(JSON.stringify(q.params))} → ${esc(q.result ? q.result.total_count : 'error')}`).join('\n');
-  return `<div class="card"><h3>${T['cfg_' + m]} <span class="st st-RECORDED">RECORDED</span> ${r.answer_ok ? '<span class="st st-ok">✓</span>' : '<span class="st st-ko">✗</span>'}</h3><p class="muted" style="margin:0">${esc(ct.question)}</p><pre class="pre">${qs || '—'}</pre><div>${esc(r.answer)}</div><div class="mono muted" style="font-size:12px">${T.route}: ${esc(r.route)} · ${T.evidence}: ${esc(r.evidence.status)} · ${r.llm_calls} ${T.model_calls} · ${r.ms} ms</div></div>`; }).join('')}</div>`;
+  return `<div class="card"><h3>${T['cfg_' + m]} <span class="st st-RECORDED">{{ t.lbl_RECORDED }}</span> ${r.answer_ok ? '<span class="st st-ok">✓</span>' : '<span class="st st-ko">✗</span>'}</h3><p class="muted" style="margin:0">${esc(ct.question)}</p><pre class="pre only-tech">${qs || '—'}</pre><div>${esc(ans(r.answer))}</div><div class="muted" style="font-size:13px">${T.route} : ${esc(rt(r.route))} · ${T.evidence} : ${esc(ev(r.evidence.status))} · ${r.llm_calls} ${T.model_calls} · ${(r.ms / 1000).toFixed(1)} s</div></div>`; }).join('')}</div>`;
 
 /* ---------- lab ---------- */
 const chips = byId.lab.chips; $('#cycle').innerHTML = chips.map(c => `<span title="${esc(tx(c.d))}">${esc(c[L] || c.fr)}</span>`).join('<i>→</i>');
-const ent = D.lab.entries;
-if (ent.length) $('#lablog').innerHTML = `<div class="tscroll"><table class="tbl"><tr><th>ts</th><th>step</th><th>${L === 'fr' ? 'détail' : 'detail'}</th><th>decision</th><th>sha</th></tr>` +
-  ent.map(e => `<tr><td class="mono">${esc(e.ts.slice(5, 16).replace('T', ' '))}</td><td class="mono">${esc(e.step)}</td><td>${e.step === 'experiment' ? `<b>${esc(e.dataset)}</b> · ${esc(e.kind)}<pre class="pre" style="margin-top:4px">+ ${esc(e.diff.after)}</pre><span class="muted">${esc((e.gate || []).join('; '))} ${e.fixed ? '· fixed: ' + esc(e.fixed.join(', ')) : ''} ${e.broken && e.broken.length ? '· broken: ' + esc(e.broken.join(', ')) : ''}</span>` : e.failures ? `${Object.keys(e.failures).length} failures · ${esc(Object.entries(Object.values(e.failures).reduce((a, k) => (a[k] = (a[k] || 0) + 1, a), {})).map(([k, v]) => k + ' ' + v).join(', '))} · run #${e.base_run} · ${esc(e.fork)}` : esc(e.reason || (e.model_calls !== undefined ? e.model_calls + ' ' + T.model_calls : ''))}</td><td>${e.decision ? `<span class="st ${e.decision === 'kept' ? 'st-ok' : 'st-ko'}">${esc(e.decision)}</span>` : ''}</td><td class="mono muted">${esc(e.sha)}</td></tr>`).join('') + '</table></div>';
+const pol = D.lab.policy || {}, polList = o => Object.entries(o || {}).map(([k, v]) => `<li><b class="mono">${esc(v)}</b> ${esc(T['pol_' + k] || k)} <code class="icode only-tech">${esc(k)}</code></li>`).join('');
+$('#labbudget').innerHTML = polList(pol.budget); $('#labgate').innerHTML = polList(pol.gate);
+const ent = D.lab.entries, fk = k => T['fk_' + k] || k, tries = ent.filter(e => e.step === 'experiment');
+if (tries.length) $('#labsum').textContent = T.lab_sum.replace('{n}', tries.length).replace('{k}', tries.filter(e => e.decision === 'kept').length).replace('{r}', tries.filter(e => e.decision !== 'kept').length);
+const why = e => e.broken && e.broken.length ? `${T.lw_fixed} : ${esc((e.fixed || []).join(', '))} · ${T.lw_broken} : ${esc(e.broken.join(', '))}` : !(e.fixed && e.fixed.length) ? T.lw_none_fixed : `${T.lw_fixed} : ${esc(e.fixed.join(', '))}`;
+if (ent.length) $('#lablog').innerHTML = `<div class="tscroll"><table class="tbl"><tr><th>${T.lg_when}</th><th>${T.lg_step}</th><th>${T.lg_what}</th><th>${T.lg_dec}</th><th class="only-tech">sha</th></tr>` +
+  ent.map(e => `<tr><td class="mono">${esc(e.ts.slice(5, 16).replace('T', ' '))}</td><td>${esc(T['ls_' + e.step] || e.step)}</td><td>${e.step === 'experiment'
+    ? `<b>${esc(e.dataset)}</b> <span class="muted">· ${why(e)}</span><div class="only-tech"><span class="mono muted" style="font-size:12px">${esc(e.kind)} · ${esc((e.gate || []).join('; '))}</span><pre class="pre" style="margin-top:4px">+ ${esc(e.diff.after)}</pre></div>`
+    : e.failures ? `${Object.keys(e.failures).length} ${T.lw_failures} : ${esc(Object.entries(Object.values(e.failures).reduce((a, k) => (a[k] = (a[k] || 0) + 1, a), {})).map(([k, v]) => fk(k) + ' ×' + v).join(', '))}<span class="mono muted only-tech" style="font-size:12px"> · run #${e.base_run} · ${esc(e.fork)}</span>`
+    : esc(e.reason || (e.model_calls !== undefined ? e.model_calls + ' ' + T.model_calls : ''))}</td><td>${e.decision ? `<span class="st ${e.decision === 'kept' ? 'st-ok' : 'st-ko'}">${esc(T['ld_' + e.decision] || e.decision)}</span>` : ''}</td><td class="mono muted only-tech">${esc(e.sha)}</td></tr>`).join('') + '</table></div>';
 
 /* ---------- compare ---------- */
 const C = D.comparison;
-const label = c => `${c.suite}${c.split && c.split !== 'all' ? ' · ' + c.split : ''} · n=${c.n} · ${c.model.split('/').pop()} · ${c.date}`;
+const label = c => `${(c.split === 'holdout' ? T.set_holdout : T.set_old).replace('{n}', c.n)} · ${c.date}`;
 $('#cmpset').innerHTML = C.map((c, i) => `<option value="${i}">${esc(label(c))}</option>`).join('');
 const tagsOf = c => [...new Set(c.rows.flatMap(r => r.tags))].sort();
 const fmtPct = x => x == null ? '—' : x.toFixed(1).replace('.0', '') + ' %';
@@ -503,7 +513,7 @@ function summ(rows, m) {
   return {acc: 100 * v.filter(x => x.answer_ok).length / v.length, p50: q(.5), p95: q(.95), tokens: v.reduce((a, x) => a + (x.tokens || 0), 0),
           calls: v.reduce((a, x) => a + (x.llm_calls || 0), 0), wrong: v.filter(x => !x.answer_ok && !x.abstained).length,
           ver: 100 * v.filter(x => x.evidence === 'verified').length / v.length,
-          routes: Object.entries(v.reduce((a, x) => (x.route && (a[x.route] = (a[x.route] || 0) + 1), a), {})).map(([k, n]) => `${k} ${n}`).join(' · ')};
+          routes: Object.entries(v.reduce((a, x) => (x.route && (a[x.route] = (a[x.route] || 0) + 1), a), {})).map(([k, n]) => `${rt(k)} : ${n}`).join(' · ')};
 }
 function renderCmp() {
   const c = C[+$('#cmpset').value]; if (!c) return;
@@ -513,9 +523,12 @@ function renderCmp() {
   let h = `<div class="tscroll"><table class="tbl"><tr><th>n = ${rows.length}</th>${M.map(m => `<th class="num">${T['cfg_' + m]}</th>`).join('')}</tr>` +
     line(T.m_acc, s => fmtPct(s.acc)) + line(T.m_wrong, s => s.wrong) + line(T.m_verified, s => fmtPct(s.ver)) +
     line(T.m_p50, s => s.p50 == null ? '—' : (s.p50 / 1000).toFixed(1) + ' s') + line(T.m_p95, s => s.p95 == null ? '—' : (s.p95 / 1000).toFixed(1) + ' s') +
-    line(T.m_calls, s => s.calls) + line(T.m_tokens, s => s.tokens.toLocaleString(L)) + line(T.m_routes, s => s.routes || '—') + '</table></div>';
-  if (!tag) h += `<p class="mono muted" style="font-size:13px;margin:0">${T.cmp_diff}: ` + Object.entries(c.diffs).map(([k, d]) => `${k.replace('huwise', 'A').replace('naked', '0').replace('compiled', 'B').replace('optimized', 'C').replace('-', ' vs ')}: ${d.pp > 0 ? '+' : ''}${d.pp} pp [${d.ci[0]}; ${d.ci[1]}] p${d.p < 0.001 ? '<0.001' : '=' + d.p}`).join(' · ') + `</p>`;
-  h += `<p class="mono muted" style="font-size:12px;margin:0">${esc(c.model)} · ${c.date} · runs #${c.runs.join('/#')}${c.commit ? ' · commit ' + esc(c.commit) : ''}</p>`;
+    line(T.m_calls, s => s.calls) + line(T.m_tokens, s => s.tokens.toLocaleString(L)) + (M.includes('optimized') ? `<tr><td>${T.m_routes}</td><td class="num" colspan="${M.length}">${S.optimized.routes || '—'}</td></tr>` : '') + '</table></div>';
+  const LT = {huwise: 'A', naked: '0', compiled: 'B', optimized: 'C'};
+  if (!tag) h += `<div><b>${T.cmp_diff}</b><ul class="clean" style="margin-top:6px">` + Object.entries(c.diffs).map(([k, d]) => { const [b, a] = k.split('-').map(x => LT[x]);
+    return `<li>${T.cmp_diff_one.replace('{b}', b).replace('{a}', a).replace('{s}', Math.abs(Math.round(d.pp))).replace(T.cmp_more, d.pp < 0 ? T.cmp_less : T.cmp_more).replace('{lo}', (d.ci[0] > 0 ? '+' : '') + Math.round(d.ci[0])).replace('{hi}', (d.ci[1] > 0 ? '+' : '') + Math.round(d.ci[1]))}${d.ci[0] <= 0 ? ` <span class="muted">— ${T.cmp_diff_weak}</span>` : ''}</li>`; }).join('') + '</ul></div>';
+  if (!tag) h += `<p class="mono muted only-tech" style="font-size:13px;margin:0">p : ` + Object.entries(c.diffs).map(([k, d]) => `${k.replace('huwise', 'A').replace('naked', '0').replace('compiled', 'B').replace('optimized', 'C').replace('-', ' vs ')}: ${d.pp > 0 ? '+' : ''}${d.pp} pp [${d.ci[0]}; ${d.ci[1]}] p${d.p < 0.001 ? '<0.001' : '=' + d.p}`).join(' · ') + `</p>`;
+  h += `<p class="mono muted only-tech" style="font-size:12px;margin:0">${esc(c.model)} · ${c.date} · runs #${c.runs.join('/#')}${c.commit ? ' · commit ' + esc(c.commit) : ''}</p>`;
   h += `<details class="only-tech"><summary class="muted">${T.cmp_cases}</summary><div class="tscroll" style="margin-top:10px"><table class="tbl"><tr><th>question</th><th>split</th>${M.map(m => `<th class="num">${({huwise: 'A', naked: '0', compiled: 'B', optimized: 'C'})[m]}</th>`).join('')}<th>route C</th></tr>` +
     rows.map(r => `<tr><td>${esc(r.q)}</td><td class="mono">${esc(r.split || '—')}</td>${M.map(m => `<td class="num ${r[m].answer_ok ? 'ok' : 'ko'}">${r[m].answer_ok ? '✓' : r[m].abstained ? '∅' : '✗'}</td>`).join('')}<td class="mono">${esc(r.optimized.route || '')}</td></tr>`).join('') + '</table></div></details>';
   $('#cmp').innerHTML = h;
@@ -523,12 +536,14 @@ function renderCmp() {
 $('#cmpset').onchange = () => { $('#cmptag').innerHTML = `<option value="">${T.cmp_all}</option>` + tagsOf(C[+$('#cmpset').value]).map(t => `<option>${esc(t)}</option>`).join(''); renderCmp(); };
 $('#cmptag').onchange = renderCmp;
 if (C.length) $('#cmpset').onchange();
+const H = C.find(c => c.split === 'holdout'), hs = H && H.summary, first = H && (H.modes || [])[0];
+if (hs && first && hs.optimized) $('#herores').textContent = T.hero_res.replace('{n}', H.n).replace('{a}', Math.round(hs[first].accuracy) + ' %').replace('{c}', Math.round(hs.optimized.accuracy) + ' %').replace('{wa}', hs[first].wrong_confident).replace('{wc}', hs.optimized.wrong_confident);
 
 function renderLabMode() {
   const c = C[0];
   if (!c) { $('#labmode').innerHTML = `<p class="muted">${T.cmp_none}</p>`; return; }
   const s = c.summary;
-  $('#labmode').innerHTML = `<div class="grid">${(c.modes || ['naked', 'compiled', 'optimized']).map(m => `<div class="card"><h3>${T['cfg_' + m]} <span class="st st-RECORDED">RECORDED</span></h3><div style="font:600 34px var(--mono)">${fmtPct(s[m].accuracy)}</div><div class="muted mono" style="font-size:13px">${T.m_acc} · n=${c.n}<br>${T.m_wrong}: ${s[m].wrong_confident} · ${T.m_calls}: ${s[m].llm_calls} · p50 ${(s[m].p50 / 1000).toFixed(1)} s</div></div>`).join('')}</div><p class="muted mono" style="font-size:12px">${esc(label(c))} · <a href="#comparer">${T.nav_cmp} →</a></p>`;
+  $('#labmode').innerHTML = `<div class="grid">${(c.modes || ['naked', 'compiled', 'optimized']).map(m => `<div class="card"><h3>${T['cfg_' + m]} <span class="st st-RECORDED">{{ t.lbl_RECORDED }}</span></h3><div style="font:600 34px var(--mono)">${fmtPct(s[m].accuracy)}</div><div class="muted mono" style="font-size:13px">${T.m_acc} · n=${c.n}<br>${T.m_wrong}: ${s[m].wrong_confident} · ${T.m_calls}: ${s[m].llm_calls} · p50 ${(s[m].p50 / 1000).toFixed(1)} s</div></div>`).join('')}</div><p class="muted mono" style="font-size:12px">${esc(label(c))} · <a href="#comparer">${T.nav_cmp} →</a></p>`;
 }
 setMode('today'); select('mcp');
 })();
