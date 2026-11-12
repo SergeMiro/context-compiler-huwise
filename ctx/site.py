@@ -14,7 +14,7 @@ from catalog.models import Dataset, Field
 from ctx.export import export_llms
 from evals.models import EvalCase, EvalRun
 
-from .site_text import LIMITS, METHODS, TEXT
+from .site_text import LIMITS, TEXT
 
 HERE = Path(__file__).parent
 LOGOS = HERE / "logos"
@@ -178,9 +178,8 @@ def build_site(portal, out_dir):
     for lang, path in (("fr", out / "index.html"), ("en", out / "en" / "index.html")):
         path.parent.mkdir(parents=True, exist_ok=True)
         t = {k: v[lang] if isinstance(v, dict) else v for k, v in TEXT.items()}
-        methods = [{k: (v[lang] if isinstance(v, dict) else v) for k, v in m.items()} for m in METHODS]
         path.write_text(render_to_string("ctx/site.html", base | {"lang": lang, "t": t, "t_json": json.dumps(t, ensure_ascii=False),
-                                                                  "methods": methods, "limits": [x[lang] for x in LIMITS],
+                                                                  "limits": [x[lang] for x in LIMITS],
                                                                   "root": "" if lang == "fr" else "../"}),
                         encoding="utf-8")
     return pages

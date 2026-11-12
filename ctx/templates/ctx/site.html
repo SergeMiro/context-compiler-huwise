@@ -65,7 +65,7 @@ select{min-height:40px;max-width:100%;padding:0 10px;border:1px solid var(--line
 .brand{display:flex;align-items:center;gap:10px;min-height:40px;text-decoration:none;color:var(--fg);font-weight:600}
 .nav nav{display:flex;flex-wrap:wrap;gap:0 16px;font-size:14px;font-weight:500} .nav nav a{color:var(--fg);text-decoration:none;padding:8px 0} .nav nav a:hover{color:var(--accent)}
 .nav-r{display:flex;gap:8px;align-items:center}
-@media (max-width:900px){.nav nav{display:none}} @media (max-width:1440px){body:not(.simple) .nav nav a[href="#methode"],body:not(.simple) .nav nav a[href="#minute"]{display:none}} @media (max-width:640px){.nav{position:static}}
+@media (max-width:900px){.nav nav{display:none}} @media (max-width:1440px){body:not(.simple) .nav nav a[href="#minute"]{display:none}} @media (max-width:640px){.nav{position:static}}
 /* hero */
 .hero{padding-block:56px 48px;display:flex;flex-direction:column;gap:28px}
 .steps{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
@@ -218,7 +218,7 @@ body.simple .only-simple-hide{display:none!important}
   <nav aria-label="Sections">
     <a href="#minute">{{ t.nav_minute }}</a><a class="only-simple-hide" href="#architecture">{{ t.nav_arch }}</a><a class="only-simple-hide" href="#trace">{{ t.nav_trace }}</a><a class="only-simple-hide" href="#erreur">{{ t.nav_error }}</a>
     <a class="only-simple-hide" href="#lab">{{ t.nav_lab }}</a><a href="#comparer">{{ t.nav_cmp }}</a><a href="#securite">{{ t.nav_safety }}</a>
-    <a class="only-simple-hide" href="#methode">{{ t.nav_method }}</a><a class="only-simple-hide" href="#technique">{{ t.nav_tech }}</a>
+    <a class="only-simple-hide" href="#technique">{{ t.nav_tech }}</a>
   </nav>
   <div class="nav-r">
     <div class="seg" role="group" aria-label="Detail"><button data-view="simple" aria-pressed="false">{{ t.view_simple }}</button><button data-view="tech" aria-pressed="true">{{ t.view_tech }}</button></div>
@@ -369,16 +369,6 @@ body.simple .only-simple-hide{display:none!important}
     <div class="zone-box pre"><b>{{ t.safety_preprod }}</b><p class="muted" style="margin:8px 0 0">{{ t.safety_pre_l }}</p></div>
   </div>
   <p class="lead">{{ t.safety_gate }}</p>
-</div></section>
-
-<section id="methode" class="alt only-simple-hide"><div class="wrap sec">
-  <div class="sh"><span class="eyebrow purple">{{ t.method_eyebrow }}</span><h2>{{ t.method_title }}</h2><p>{{ t.method_warn }}</p></div>
-  <div class="grid">{% for m in methods %}
-    <div class="card"><h3><a href="{{ m.url }}">{{ m.name }}</a></h3>
-      <div><span class="muted mono" style="font-size:12px">{{ t.m_proven }}</span><div>{{ m.proven }}</div></div>
-      <div><span class="muted mono" style="font-size:12px">{{ t.m_adapted }}</span><div>{{ m.adapted }}</div></div>
-      <div class="only-tech"><span class="muted mono" style="font-size:12px">{{ t.m_limit }}</span><div>{{ m.limit }}</div></div></div>{% endfor %}
-  </div>
 </div></section>
 
 <section id="technique" class="only-simple-hide"><div class="wrap sec">

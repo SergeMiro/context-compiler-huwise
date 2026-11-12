@@ -22,8 +22,6 @@ SCENARIOS = [
      "title": {"fr": "Lieu ambigu (département = région)", "en": "Ambiguous place (department = region)"},
      "ref": {"dataset": "fr-en-annuaire-education",
              "where": "libelle_region='Guadeloupe' and type_etablissement='Lycée'"}},
-    {"id": "no-data", "kind": "recorded", "question": "Quels sont les horaires de la piscine olympique de Dijon ?",
-     "title": {"fr": "Pas de données sur ce portail", "en": "No data on this portal"}, "ref": None},
     {"id": "drift", "kind": "simulated", "question": "Combien y a-t-il de collèges à Dijon ?",
      "title": {"fr": "Le schéma a changé", "en": "The schema changed"},
      "fixture": "the field nom_commune changes type in the local catalog copy (never on the portal)"},

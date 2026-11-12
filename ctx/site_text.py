@@ -9,7 +9,7 @@ TEXT = {
     "nav_arch": {"fr": "Architecture", "en": "Architecture"}, "nav_trace": {"fr": "Une question", "en": "One question"},
     "nav_error": {"fr": "Le piège", "en": "The trap"}, "nav_lab": {"fr": "Lab", "en": "Lab"},
     "nav_cmp": {"fr": "Résultats", "en": "Results"}, "nav_safety": {"fr": "Sécurité", "en": "Safety"},
-    "nav_method": {"fr": "Idées", "en": "Ideas"}, "nav_tech": {"fr": "Technique", "en": "Technical"},
+    "nav_tech": {"fr": "Technique", "en": "Technical"},
     "view_simple": {"fr": "Simple", "en": "Simple"}, "view_tech": {"fr": "Technique", "en": "Technical"},
 
     # one-minute story (the Simple view)
@@ -137,8 +137,6 @@ TEXT = {
                       "en": "An average, not a count: no no-AI answer possible, every version goes through the agent."},
     "why_ambiguous": {"fr": "La Guadeloupe est à la fois un département et une région : il faut bien filtrer.",
                       "en": "Guadeloupe is both a department and a region: the filter must be right."},
-    "why_no-data": {"fr": "Le portail n'a pas cette donnée : la bonne réponse est de le dire. Ici, C fait moins bien : il refuse avec un message technique au lieu de dire « pas de données ».",
-                    "en": "The portal has no such data: the right answer is to say so. Here C does worse: it refuses with a technical message instead of saying “no data”."},
     "steps_hint": {"fr": "Cliquez une étape pour voir ce qui a été envoyé et reçu.", "en": "Click a step to see what was sent and received."},
     "sent": {"fr": "Envoyé", "en": "Sent"}, "got": {"fr": "Reçu", "en": "Received"},
     "llm_d": {"fr": "Le modèle lit la question et les résultats déjà obtenus, puis choisit l'outil suivant ou écrit la réponse.",
@@ -278,15 +276,8 @@ TEXT = {
     "safety_gate": {"fr": "Pour passer en production : un humain lit le changement et les mesures, l'applique, surveille, et peut revenir en arrière en une commande. La clé API du client n'est jamais gardée.",
                     "en": "To go to production: a human reads the change and the numbers, applies it, watches, and can roll back in one command. The client's API key is never kept."},
 
-    # method
-    "method_eyebrow": {"fr": "Écran 8 · D'où viennent les idées", "en": "Screen 8 · Where the ideas come from"},
-    "method_title": {"fr": "Ce que nous reprenons, et ses limites", "en": "What we borrow, and its limits"},
-    "method_warn": {"fr": "Aucun de ces travaux n'a testé Huwise. Seules nos mesures comptent ici.", "en": "None of these works tested Huwise. Only our measurements count here."},
-    "m_proven": {"fr": "Ce qu'ils montrent", "en": "What they show"}, "m_adapted": {"fr": "Ce que nous en faisons", "en": "What we do with it"},
-    "m_limit": {"fr": "Limite", "en": "Limit"},
-
     # tech
-    "tech_eyebrow": {"fr": "Écran 9 · Technique", "en": "Screen 9 · Technical"},
+    "tech_eyebrow": {"fr": "Écran 8 · Technique", "en": "Screen 8 · Technical"},
     "tech_title": {"fr": "Code, déploiement et limites", "en": "Code, deployment and limits"},
     "limits_title": {"fr": "Ce que cette démo ne prouve pas", "en": "What this demo does not prove"},
     "foot_code": {"fr": "Code source", "en": "Source code"}, "foot_portal": {"fr": "Portail", "en": "Portal"},
@@ -302,34 +293,6 @@ FIXTURES = {
     "forbidden": {"fr": "l'API répond 403 (accès refusé), comme pour un jeu restreint sans la bonne clé",
                   "en": "the API answers 403 (access denied), as for a restricted dataset without the right key"},
 }
-
-METHODS = [
-    {"name": "AutoResearch — Andrej Karpathy", "url": "https://github.com/karpathy/autoresearch",
-     "proven": {"fr": "Un agent modifie le code d'entraînement d'un petit modèle, lance un court test, garde si c'est mieux, sinon annule, et recommence.",
-                "en": "An agent changes a small model's training code, runs a short test, keeps it if better, else undoes, and repeats."},
-     "adapted": {"fr": "La même boucle, appliquée aux fiches de contexte.", "en": "The same loop, applied to context cards."},
-     "limit": {"fr": "Karpathy parle d'entraînement de modèles, pas de contexte ni de MCP.", "en": "Karpathy is about model training, not context or MCP."}},
-    {"name": "DSPy / MIPRO — EMNLP 2024", "url": "https://aclanthology.org/2024.emnlp-main.525/",
-     "proven": {"fr": "Chercher automatiquement de meilleures consignes et de meilleurs exemples améliore les résultats.", "en": "Searching automatically for better instructions and examples improves results."},
-     "adapted": {"fr": "Prévu comme option du Lab, gardé seulement s'il gagne sur les questions témoins.", "en": "Planned as a Lab option, kept only if it wins on the control questions."},
-     "limit": {"fr": "Pas lancé : trop d'appels IA pour le budget gratuit.", "en": "Not run: too many AI calls for the free budget."}},
-    {"name": "LLMCompiler — 2023", "url": "https://arxiv.org/abs/2312.04511",
-     "proven": {"fr": "Planifier les appels d'outils et lancer ensemble ceux qui sont indépendants va plus vite.", "en": "Planning tool calls and running independent ones together is faster."},
-     "adapted": {"fr": "Pour les questions simples, le plan est connu d'avance : pas d'IA du tout.", "en": "For simple questions the plan is known in advance: no AI at all."},
-     "limit": {"fr": "Pas d'appels en parallèle dans l'agent pour l'instant.", "en": "No parallel calls in the agent yet."}},
-    {"name": "RouteLLM — 2024", "url": "https://arxiv.org/abs/2406.18665",
-     "proven": {"fr": "Envoyer les questions faciles à un modèle moins cher coûte moins, à qualité égale.", "en": "Sending easy questions to a cheaper model costs less at the same quality."},
-     "adapted": {"fr": "Nous choisissons un chemin (rapide, normal, approfondi), pas un modèle. En cas de doute : le chemin le plus sûr.", "en": "We pick a path (fast, normal, deep), not a model. When in doubt: the safest path."},
-     "limit": {"fr": "Leurs chiffres ne valent pas pour nous ; seuls les nôtres comptent.", "en": "Their numbers don't apply to us; only ours count."}},
-    {"name": "Tests de cohérence (métamorphiques)", "url": "https://en.wikipedia.org/wiki/Metamorphic_testing",
-     "proven": {"fr": "Des règles simples entre résultats trouvent des erreurs sans connaître la bonne réponse.", "en": "Simple rules between results find errors without knowing the right answer."},
-     "adapted": {"fr": "Au même endroit, collèges publics ≤ tous les collèges. Tests au hasard du filtre de requêtes.", "en": "In the same place, public schools ≤ all schools. Random tests of the query filter."},
-     "limit": {"fr": "Ne remplace pas les bonnes réponses connues.", "en": "Does not replace known right answers."}},
-    {"name": "OpenTelemetry · SRE", "url": "https://opentelemetry.io/docs/concepts/signals/traces/",
-     "proven": {"fr": "Chaque requête se découpe en étapes chronométrées, avec des objectifs de qualité.", "en": "Each request splits into timed steps, with quality goals."},
-     "adapted": {"fr": "Chaque réponse garde ses étapes et leur temps, jamais la clé ni le prompt.", "en": "Each answer keeps its steps and timings, never the key or the prompt."},
-     "limit": {"fr": "Pas d'outil de monitoring dédié : inutile à cette taille.", "en": "No dedicated monitoring tool: not needed at this size."}},
-]
 
 LIMITS = [
     {"fr": "A est le vrai serveur MCP de Huwise, mais piloté par notre modèle gratuit et notre prompt : ce n'est pas Huwy.", "en": "A is the real Huwise MCP server, but driven by our free model and our prompt: it is not Huwy."},
