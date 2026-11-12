@@ -69,7 +69,7 @@ services:
       DJANGO_DEBUG: "0"
       CTXC_MCP_ALLOWED_HOSTS: context.smiro.dev
       # the MCP tools never call a model; only /api/agent (live duel on the site) does, capped per day
-      CTXC_LIVE_RUNS_PER_DAY: "15"  # free model, but the account has 1 000 free requests/day shared with other projects
+      CTXC_LIVE_RUNS_PER_DAY: "30"  # shared by both providers (OpenRouter 1 000 free/day, NVIDIA NIM its own limit)
     depends_on:
       mariadb: {condition: service_healthy}
       es: {condition: service_healthy}
