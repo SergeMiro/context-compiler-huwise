@@ -16,7 +16,7 @@ class LlmTest(SimpleTestCase):
     def tearDown(self):
         llm._sleep = self._sleep
 
-    @override_settings(CTXC_LLM_BASE_URL="", CTXC_LLM_API_KEY="", CTXC_LLM_MODEL="")
+    @override_settings(CTXC_LLM_BASE_URL="", CTXC_LLM_API_KEY="", CTXC_LLM_MODEL="", CTXC_LLM2_BASE_URL="", CTXC_LLM2_API_KEY="", CTXC_LLM2_MODEL="")
     def test_not_configured(self):
         with self.assertRaises(llm.LLMNotConfigured):
             llm.chat([{"role": "user", "content": "hi"}])

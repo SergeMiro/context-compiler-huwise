@@ -164,7 +164,12 @@ def build_site(portal, out_dir):
     (out / "data").mkdir(parents=True, exist_ok=True)
     for name, value in data.items():  # the read-only "API" of the page: /data/<name>.json
         (out / "data" / f"{name}.json").write_text(json.dumps(value, ensure_ascii=False, default=str), encoding="utf-8")
+    import llm
+    names = {"openrouter": "OpenRouter", "nim": "NVIDIA NIM"}
+    providers = [p | {"label": f"{names.get(p['name'], p['name'])} · {p['model'].split('/')[-1].split(':')[0]}"}
+                 for p in llm.public_providers()]  # names and models only, never keys
     base = {"domain": portal.domain, "pages": pages, "stack": stack(), "live_model": settings.CTXC_LLM_MODEL,
+            "providers": providers,
             "datasets": nb(Dataset.objects.filter(portal=portal).count()),
             "fields": nb(Field.objects.filter(dataset__portal=portal).count()),
             "data_json": json.dumps(data, ensure_ascii=False, default=str).replace("</", "<\\/"),

@@ -34,7 +34,9 @@ montre des mesures reproductibles — avec leurs limites. »
 
 - Scénario « Le cas principal », configuration **C**, *Rejouer le scénario* : route FAST → une requête Explore API →
   vérification. « 23 collèges à Dijon, zéro appel au modèle, la preuve est le total_count de l'API. »
-- *Exécuter C en direct* : badge **LIVE**, l'appel part maintenant.
+- *Lancer en direct* : badge **LIVE**, l'appel part maintenant — pour la version choisie (A, 0, B ou C).
+- Sélecteur **Modèle** : OpenRouter (`nemotron-3.5-super-vl`) ou NVIDIA NIM (`nemotron-3-ultra-550b`). « Deux
+  fournisseurs, deux quotas : si l'un est à sa limite, l'autre prend le relais, et la page affiche qui a répondu. »
 - Basculer sur **A** : « même question, même modèle, mais avec votre vrai serveur Huwise MCP — ses quatre outils,
   tels que `tools/list` les renvoie. Il trouve aussi 23, en 4 appels au modèle et 11 secondes. »
 - Précision honnête : « A, c'est votre serveur MCP avec la clé d'un compte utilisateur ordinaire, piloté par mon

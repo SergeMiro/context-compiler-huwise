@@ -72,6 +72,11 @@ CTXC_LLM_BASE_URL = env("CTXC_LLM_BASE_URL", "")
 CTXC_LLM_API_KEY = env("CTXC_LLM_API_KEY", "")
 CTXC_LLM_MODEL = env("CTXC_LLM_MODEL", "")
 CTXC_LLM_TIMEOUT = int(env("CTXC_LLM_TIMEOUT", "60"))
+CTXC_LLM_NAME = env("CTXC_LLM_NAME", "openrouter")
+CTXC_LLM2_BASE_URL = env("CTXC_LLM2_BASE_URL", "")  # optional backup provider (own limits), e.g. NVIDIA NIM
+CTXC_LLM2_API_KEY = env("CTXC_LLM2_API_KEY", "")
+CTXC_LLM2_MODEL = env("CTXC_LLM2_MODEL", "")
+CTXC_LLM2_NAME = env("CTXC_LLM2_NAME", "nim")
 
 LOGGING = {"version": 1, "disable_existing_loggers": False,
            "handlers": {"console": {"class": "logging.StreamHandler"}},

@@ -61,8 +61,16 @@ class CondenseTest(TestCase):
 
 
 class DemoRunTest(TestCase):
-    def test_only_fast_scenarios_run_live(self):
+    def test_live_runs_are_checked_and_capped(self):
+        from unittest import mock
+
+        import mcpserver
         from mcpserver import demo_run
         self.assertEqual(demo_run({"scenario": "nope"})[0], 404)
         self.assertEqual(demo_run({"scenario": "drift"})[0], 404)  # simulated: never live
-        self.assertEqual(demo_run({"scenario": "trap-dataset"})[0], 409)  # needs the model: recording only
+        self.assertEqual(demo_run({"scenario": "dijon", "mode": "admin"})[0], 400)
+        self.assertEqual(demo_run({"scenario": "dijon", "mode": "naked", "provider": "nope"})[0], 400)
+        with mock.patch.dict("os.environ", {"HUWISE_API_KEY": ""}):
+            self.assertEqual(demo_run({"scenario": "dijon", "mode": "huwise"})[0], 503)  # no key: recording only
+        with mock.patch.object(mcpserver, "LIVE_RUNS_PER_DAY", 0):  # a model run counts against the daily cap
+            self.assertEqual(demo_run({"scenario": "trap-dataset", "mode": "compiled"})[0], 429)

@@ -223,6 +223,7 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
     <label>{{ t.scenario }}<select id="scen"></select></label>
     <label>{{ t.config }}<span class="seg" id="cfg" role="group"><button data-cfg="huwise" aria-pressed="false">{{ t.cfg_huwise }}</button><button data-cfg="naked" aria-pressed="false">{{ t.cfg_naked }}</button><button data-cfg="compiled" aria-pressed="false">{{ t.cfg_compiled }}</button><button data-cfg="optimized" aria-pressed="true">{{ t.cfg_optimized }}</button></span></label>
     <button class="btn primary" id="replay"><svg class="i"><use href="#i-play"/></svg>{{ t.replay }}</button>
+    {% if providers %}<label>{{ t.model_sel }}<span class="seg" id="prov" role="group">{% for p in providers %}<button data-prov="{{ p.name }}" data-model="{{ p.model }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" title="{{ p.model }}">{{ p.label }}</button>{% endfor %}</span></label>{% endif %}
     <button class="btn" id="live" title="{{ t.live_note }}">{{ t.live_btn }}</button>
   </div>
   <div class="tsum" id="tsum"></div>
@@ -418,6 +419,9 @@ function highlight(ids) {
 const scen = D.scenarios, ids = Object.keys(scen);
 $('#scen').innerHTML = ids.map(i => `<option value="${i}">${esc(tx(scen[i].title))} — ${scen[i].kind === 'simulated' ? 'SIMULATED' : 'RECORDED'}</option>`).join('');
 let cfg = 'optimized', live = null, timer = null;
+const provBtn = () => document.querySelector('#prov button[aria-pressed="true"]');
+const provName = () => (provBtn() || {dataset: {}}).dataset.prov || '', provModel = () => (provBtn() || {dataset: {}}).dataset.model || '';
+$$('#prov button').forEach(b => b.onclick = () => { $$('#prov button').forEach(x => x.setAttribute('aria-pressed', x === b)); live = null; renderTrace(); });
 $$('#cfg button').forEach(b => b.onclick = () => { cfg = b.dataset.cfg; live = null; $$('#cfg button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderTrace(); });
 $('#scen').onchange = () => { live = null; renderTrace(); };
 const short = (v, n = 900) => { const s = typeof v === 'string' ? v : JSON.stringify(v, null, 1); return s && s.length > n ? s.slice(0, n) + ' …' : (s || ''); };
@@ -449,7 +453,8 @@ function renderTrace() {
   $('#tsum').innerHTML = `<span class="st st-${status}">${status}</span><span><b>${T.route}</b> ${esc(run.route)}</span><span><b>${T.evidence}</b> ${esc(run.evidence && run.evidence.status)}</span>` +
     `<span class="mono">${run.ms} ms · ${run.tokens || 0} tok · ${run.llm_calls || 0} ${T.model_calls}</span>` +
     (s.expected !== undefined && s.kind === 'recorded' ? `<span>${T.expected}: <b class="mono">${esc(typeof s.expected === 'number' ? Math.round(s.expected * 100) / 100 : s.expected)}</b></span>` : '') +
-    `<span class="mono muted">${esc(s.model || '')} · ${esc(s.recorded_at || '')} · ${esc(s.commit || '')}</span>` + (s.fixture ? `<span class="muted">fixture: ${esc(s.fixture)}</span>` : '');
+    (live ? `<span class="mono muted">${esc((live.models || []).join(' → ') || T.no_model)}</span>` + (live.models && live.models.length && !live.models.includes(provModel()) ? `<span class="st st-neutral">${T.fallback}</span>` : '')
+          : `<span class="mono muted">${esc(s.model || '')} · ${esc(s.recorded_at || '')} · ${esc(s.commit || '')}</span>`) + (s.fixture ? `<span class="muted">fixture: ${esc(s.fixture)}</span>` : '');
   $('#tsteps').innerHTML = steps.map((st, i) => `<div class="tstep" data-i="${i}"><button aria-expanded="false"><span class="mono">${esc(st.tool)}</span>${st.cache ? `<span class="st st-neutral">cache ${st.cache}</span>` : ''}${st.ok === false ? '<span class="st st-ko">error</span>' : ''}${st.note ? `<span class="muted">${esc(st.note)}</span>` : ''}<span class="ms">${st.ms} ms${st.tokens ? ' · ' + st.tokens + ' tok' : ''}</span></button>
     <dl class="tbody"><dt>${T.f_input}</dt><dd><pre>${esc(short(st.input))}</pre></dd><dt>${T.f_tool}</dt><dd class="mono">${esc(st.tool)}</dd><dt>${T.f_output}</dt><dd><pre>${esc(short(st.output))}</pre></dd>
     <dt>${T.f_time}</dt><dd class="mono">${st.ms} ms</dd><dt>${T.f_tokens}</dt><dd class="mono">${st.tokens ?? '—'}</dd><dt>${T.f_source}</dt><dd class="mono">${esc(st.source || '—')}</dd><dt>${T.f_status}</dt><dd><span class="st st-${status}">${status}</span></dd></dl></div>`).join('');
@@ -460,10 +465,11 @@ function renderTrace() {
 }
 $('#live').onclick = async () => {
   const b = $('#live'); b.disabled = true;
-  try { const r = await fetch(`/api/demo/run?scenario=${encodeURIComponent($('#scen').value)}`); const j = await r.json();
-    if (!r.ok) throw new Error(j.error || r.status); live = j; cfg = 'optimized'; $$('#cfg button').forEach(x => x.setAttribute('aria-pressed', x.dataset.cfg === 'optimized')); renderTrace(); $('#replay').click();
+  b.textContent = '…';
+  try { const r = await fetch(`/api/demo/run?scenario=${encodeURIComponent($('#scen').value)}&mode=${cfg}&provider=${encodeURIComponent(provName())}`); const j = await r.json();
+    if (!r.ok) throw new Error(j.error || r.status); live = j; renderTrace(); $('#replay').click();
   } catch (e) { $('#tsum').insertAdjacentHTML('afterbegin', `<span class="st st-ko">LIVE: ${esc(e.message)}</span>`); }
-  b.disabled = false;
+  b.disabled = false; b.textContent = T.live_btn;
 };
 renderTrace();
 

@@ -103,13 +103,15 @@ Needs Docker, Python 3.12, `libmariadb-dev` and `pkg-config` (for `mysqlclient`)
 python3.12 -m venv .venv && .venv/bin/pip install -r requirements.txt
 cp .env.example .env
 scripts/bootstrap.sh                       # services, schema, scan, signals, cards, ES, Neo4j, golden answers
-.venv/bin/python manage.py test            # 80 tests (use the local ES / Neo4j / MariaDB)
+.venv/bin/python manage.py test            # 84 tests (use the local ES / Neo4j / MariaDB)
 .venv/bin/python manage.py mcp             # MCP server: http://127.0.0.1:8796/mcp (header X-Domain)
 .venv/bin/python scripts/mcp_smoke.py      # find -> explain -> count public collèges in Côte-d'Or = 58
 ```
 
 LLM features (eval, improve) need any OpenAI-compatible endpoint in `.env`: `CTXC_LLM_BASE_URL`,
-`CTXC_LLM_API_KEY`, `CTXC_LLM_MODEL`. No provider is hard-coded.
+`CTXC_LLM_API_KEY`, `CTXC_LLM_MODEL`. No provider is hard-coded. An optional second provider (`CTXC_LLM2_*`, here
+NVIDIA NIM with `nvidia/nemotron-3-ultra-550b-a55b`) can be picked on the page for live runs and takes over when the
+first one answers 429; `eval --provider nim` measures it alone (evals never fall back).
 
 ```bash
 .venv/bin/python manage.py eval data.education.gouv.fr --mode both     # table naked vs compiled

@@ -25,9 +25,14 @@ the next step if the project leaves a single VPS.
 - The client `X-Apikey` is passed through to the Explore API, never stored, never logged, never part of a cache key
   (the cache uses an HMAC of it as "permission scope"; anonymous calls share the `public` scope).
 - The eval's own Huwise MCP key (configuration A): a read-only key of an ordinary user account, kept outside the
-  repository in `~/.config/huwise/account.env` (mode 600), read from `HUWISE_API_KEY`, sent only as the `X-Apikey`
-  header to `mcp.huwise.com`. It is never in the image, the site, the traces or the logs; revocable from the portal's
-  « Clés d'API » tab.
+  repository in `~/.config/huwise/account.env` (mode 600) and copied into the git-ignored `.env` / `.env.preprod`
+  (mode 600) so the MCP container can run A live; read from `HUWISE_API_KEY`, sent only as the `X-Apikey` header to
+  `mcp.huwise.com`. It is never in the image, the site, the traces or the logs; revocable from the portal's « Clés
+  d'API » tab.
+- Model keys (OpenRouter, NVIDIA NIM) live only in `.env` / `.env.preprod`; the page receives provider names and model
+  ids, never a key. Live runs: a daily cap shared by both providers, cached 1 h; a 429 on the chosen provider moves
+  the call to the other one and the page shows which model answered. Evals never fall back (one model per run).
+  The NIM free endpoints are meant for prototyping and evaluation, which is what this demo is.
 - PII-like fields get no sample values and never reach cards, prompts or logs.
 - ODSQL validator in front of every query: real field names only, `limit ≤ 100`, no comments, no extra parameters
   (unit + seeded property tests). An unknown field is refused before any API call.

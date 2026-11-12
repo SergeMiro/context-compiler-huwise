@@ -169,18 +169,54 @@ def live_agent(args):
 
 
 def demo_run(args):
-    """Live configuration C on a scenario question, only when the route needs no model (FAST). A question that would
-    need the agent returns 409: the page then shows the recorded trace, never a fake live one."""
+    """Live run of one configuration (A huwise / 0 naked / B compiled / C optimized) on a scenario question, with the
+    model the page picked (`provider`; a 429 there falls back to the other provider, and the answer says which model
+    answered). C on a FAST route needs no model and is not counted. Model runs share the live daily cap and cache."""
+    import datetime
+
+    import llm
+    from evals.runner import _run_once
     from optimizer import pipeline, router
+    from optimizer.management.commands.record_traces import expected, public
     from optimizer.scenarios import BY_ID
     s = BY_ID.get((args.get("scenario") or "")[:40])
     if s is None or s["kind"] != "recorded":
         return 404, {"error": "unknown scenario (simulated scenarios are not run live)"}
-    if router.route(DEMO_PORTAL, s["question"])["route"] != "FAST":
-        return 409, {"error": "this question needs the model: recorded trace only"}
-    res = pipeline.answer(DEMO_PORTAL, s["question"])
-    return 200, {k: res[k] for k in ("answer", "route", "reasons", "evidence", "spans", "steps", "tokens", "llm_calls",
-                                     "ms", "queries")} | {"answer_ok": None, "trace": []}
+    mode, provider = args.get("mode") or "optimized", args.get("provider") or None
+    if mode not in ("huwise", "naked", "compiled", "optimized"):
+        return 400, {"error": "mode must be huwise, naked, compiled or optimized"}
+    if provider and provider not in llm.providers():
+        return 400, {"error": "unknown provider"}
+    if mode == "huwise" and not os.environ.get("HUWISE_API_KEY"):
+        return 503, {"error": "A needs a Huwise portal API key on this server: recorded trace only"}
+    q = s["question"]
+    if mode == "optimized" and router.route(DEMO_PORTAL, q)["route"] == "FAST":
+        res = pipeline.answer(DEMO_PORTAL, q)
+        return 200, public(res, q, expected(DEMO_PORTAL, s.get("ref"))) | {"models": []}
+    key = ("demo", s["id"], mode, provider)
+    with _lock:
+        hit = _live["cache"].get(key)
+        if hit and time.monotonic() - hit[0] < LIVE_CACHE_S:
+            return 200, hit[1] | {"cached_s": int(time.monotonic() - hit[0])}
+        today = datetime.date.today()
+        if _live["day"] != today:
+            _live.update(day=today, runs=0)
+        if _live["runs"] >= LIVE_RUNS_PER_DAY:
+            return 429, {"error": "daily live quota used up: recorded trace only"}
+        _live["runs"] += 1
+    if not _live_slots.acquire(timeout=120):
+        return 503, {"error": "busy, try again"}
+    try:
+        with llm.using(provider, fallback=True):
+            res = _run_once(DEMO_PORTAL, q, mode, None)
+    except llm.LLMNotConfigured:
+        return 503, {"error": "no model configured"}
+    finally:
+        _live_slots.release()
+    body = public(res, q, expected(DEMO_PORTAL, s.get("ref"))) | {"models": sorted({x["model"] for x in res["spans"] if x.get("model")})}
+    with _lock:
+        _live["cache"][key] = (time.monotonic(), body)
+    return 200, body
 
 
 for _kind in ("find", "explain", "query", "raw", "agent", "demo/run"):

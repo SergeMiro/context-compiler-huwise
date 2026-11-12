@@ -82,7 +82,8 @@ def run_agent(domain, question, mode, chat=None, max_steps=MAX_STEPS):
             r = chat(messages, tools=specs if step < max_steps - 1 else None)
             if r["message"]["content"] or r["message"]["tool_calls"]:
                 break
-        out["spans"].append({"name": "llm", "ms": int((time.monotonic() - t_llm) * 1000), "tokens": r["tokens"]})
+        out["spans"].append({"name": "llm", "ms": int((time.monotonic() - t_llm) * 1000), "tokens": r["tokens"],
+                             "model": r.get("model")})
         out["steps"] += 1
         out["tokens"] += r["tokens"]
         msg = r["message"]
@@ -107,5 +108,6 @@ def run_agent(domain, question, mode, chat=None, max_steps=MAX_STEPS):
             messages.append({"role": "tool", "tool_call_id": call["id"],
                              "content": json.dumps(result, ensure_ascii=False, default=str)[:MAX_RESULT_CHARS]})
     out["ms"] = int((time.monotonic() - t0) * 1000)
+    out["models"] = sorted({s["model"] for s in out["spans"] if s.get("model")})  # 2 = a fallback happened
     out["transcript"] = messages
     return out

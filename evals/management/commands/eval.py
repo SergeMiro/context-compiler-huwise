@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 
+import llm
 from llm import LLMNotConfigured
 
 from catalog.models import Portal
@@ -16,13 +17,15 @@ class Command(BaseCommand):
         p.add_argument("--cases", default="", help="comma-separated slugs")
         p.add_argument("--suite", default="education", help="golden file name")
         p.add_argument("--split", default="", help="dev | val | holdout (default: all cases)")
+        p.add_argument("--provider", default="", help="configured provider name (default: primary); never falls back")
 
-    def handle(self, domain, mode, cases, suite, split, **_):
+    def handle(self, domain, mode, cases, suite, split, provider, **_):
         portal = Portal.objects.get(domain=domain)
         slugs = [s for s in cases.split(",") if s] or None
         modes = {"both": ["naked", "compiled"], "abc": ["naked", "compiled", "optimized"]}.get(mode, [mode])
         try:
-            runs = [run_eval(portal, m, slugs=slugs, suite=suite, split=split or None) for m in modes]
+            with llm.using(provider or None):  # one model per run: no fallback in a measurement
+                runs = [run_eval(portal, m, slugs=slugs, suite=suite, split=split or None) for m in modes]
         except LLMNotConfigured as e:
             raise CommandError(f"no model configured: {e}") from None
         self.stdout.write(table(runs))
