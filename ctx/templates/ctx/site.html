@@ -65,7 +65,7 @@ select{min-height:40px;max-width:100%;padding:0 10px;border:1px solid var(--line
 .brand{display:flex;align-items:center;gap:10px;min-height:40px;text-decoration:none;color:var(--fg);font-weight:600}
 .nav nav{display:flex;flex-wrap:wrap;gap:0 16px;font-size:14px;font-weight:500} .nav nav a{color:var(--fg);text-decoration:none;padding:8px 0} .nav nav a:hover{color:var(--accent)}
 .nav-r{display:flex;gap:8px;align-items:center}
-@media (max-width:900px){.nav nav{display:none}} @media (max-width:640px){.nav{position:static}}
+@media (max-width:900px){.nav nav{display:none}} @media (max-width:1440px){body:not(.simple) .nav nav a[href="#methode"],body:not(.simple) .nav nav a[href="#minute"]{display:none}} @media (max-width:640px){.nav{position:static}}
 /* hero */
 .hero{padding-block:56px 48px;display:flex;flex-direction:column;gap:28px}
 .steps{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
@@ -113,19 +113,37 @@ select{min-height:40px;max-width:100%;padding:0 10px;border:1px solid var(--line
 /* trace */
 .tracebar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--subtle)}
 .tracebar label{display:flex;flex-direction:column;gap:4px;font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:0;max-width:100%}
-.tsum{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:14px}
+.tq{display:flex;flex-direction:column;gap:10px}
+.tq .q{margin:0;font-size:clamp(20px,2.4vw,26px);font-weight:600;line-height:1.25}
+.tq .exp{font-size:15px;color:var(--muted)} .tq .exp b{color:var(--fg);font-family:var(--mono)}
+.simbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.simbox div{border:1px dashed var(--bad-line);background:#FFF8F7;border-radius:10px;padding:12px 14px;font-size:15px} .simbox div+div{border-color:var(--good-line);background:#F6FEF8}
+.simbox b{display:block;font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
+.tres{display:flex;gap:16px;align-items:flex-start;padding:16px 18px;border-radius:12px;border:2px solid var(--line);background:var(--bg)}
+.tres.ok{border-color:var(--good-line);background:#F6FEF8} .tres.ko{border-color:var(--bad-line);background:#FFF8F7}
+.tres .mark{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 22px var(--mono);background:var(--chip);color:var(--muted)}
+.tres.ok .mark{background:var(--good);color:#fff} .tres.ko .mark{background:var(--bad);color:#fff}
+.tres .ans{font-size:17px;font-weight:500} .tres .meta{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:6px;font-size:14px;color:var(--muted)} .tres .meta b{color:var(--fg);font-weight:600}
+.tsteps-h{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline} .tsteps-h h3{font-size:17px}
 .tsteps{display:flex;flex-direction:column;gap:8px;counter-reset:s}
-.tstep{border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden}
-.tstep>button{width:100%;display:flex;gap:10px;align-items:center;padding:10px 12px;border:0;background:transparent;font:500 14px "IBM Plex Sans",sans-serif;text-align:left;cursor:pointer;color:var(--fg)}
-.tstep>button::before{counter-increment:s;content:counter(s);flex:none;width:24px;height:24px;border-radius:50%;background:var(--chip);font:600 12px/24px var(--mono);text-align:center}
-.tstep.on{border-color:var(--good);box-shadow:0 0 0 2px var(--good-soft)} .tstep.on>button::before{background:var(--good);color:#fff}
-.tstep .ms{margin-left:auto;font:12px var(--mono);color:var(--muted);white-space:nowrap}
-.tbody{display:none;padding:0 12px 12px;gap:8px;grid-template-columns:110px minmax(0,1fr);font-size:13px} .tstep.on .tbody{display:grid}
-.tbody dt{font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;padding-top:3px} .tbody dd{margin:0;min-width:0}
-.tbody pre{margin:0;padding:6px 8px;background:var(--subtle);border-radius:6px;font:12px/1.5 var(--mono);white-space:pre-wrap;word-break:break-word}
+.tstep{border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden;transition:border-color .2s}
+.tstep>button{width:100%;display:flex;gap:12px;align-items:center;padding:12px 14px;border:0;background:transparent;font:15px "IBM Plex Sans",sans-serif;text-align:left;cursor:pointer;color:var(--fg)}
+.tstep>button:hover{background:var(--subtle)}
+.tstep>button::before{counter-increment:s;content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;font:600 12px/26px var(--mono);text-align:center;background:var(--accent-soft);color:var(--accent-ink)}
+.tstep.k-ia>button::before{background:var(--purple-soft);color:var(--purple-ink)} .tstep.k-opt>button::before{background:var(--good-soft);color:var(--good-ink)} .tstep.k-err>button::before{background:var(--bad-soft);color:var(--bad-ink)}
+.tstep .sl{flex:1;min-width:0} .tstep .sl b{font-weight:600} .tstep .sum{color:var(--muted)} .tstep .sum.ko{color:var(--bad-ink)}
+.tstep .bar{flex:none;width:90px;height:6px;border-radius:3px;background:var(--line-2);overflow:hidden} .tstep .bar i{display:block;height:100%;background:var(--faint);border-radius:3px}
+.tstep.k-ia .bar i{background:var(--purple)} .tstep.k-api .bar i{background:var(--accent)} .tstep.k-opt .bar i{background:var(--good)}
+.tstep .ms{flex:none;width:56px;text-align:right;font:12px var(--mono);color:var(--muted)}
+.tstep .chev{flex:none;color:var(--faint);transition:transform .2s} .tstep.on .chev{transform:rotate(90deg)}
+.tstep.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.tstep .tbody{display:none;padding:2px 14px 14px 52px;flex-direction:column;gap:10px;font-size:14px} .tstep.on .tbody{display:flex}
+.tbody .lab{font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.tbody pre{margin:0;padding:8px 10px;background:var(--subtle);border-radius:6px;font:12px/1.5 var(--mono);white-space:pre-wrap;word-break:break-word}
 pre.cl{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .more{border:0;background:none;padding:4px 0;color:var(--accent);font:500 13px "IBM Plex Sans",sans-serif;cursor:pointer}
-@media (max-width:520px){.tbody{grid-template-columns:1fr}}
+.cfgbtn:disabled{opacity:.35;text-decoration:line-through}
+@media (max-width:640px){.tstep .bar{display:none}.tstep .tbody{padding-left:14px}.tres{flex-direction:column}}
 .answer{padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:15px}
 /* tables */
 .tbl{width:100%;border-collapse:collapse;font-size:14px} .tbl th,.tbl td{padding:8px 10px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top}
@@ -282,15 +300,16 @@ body.simple .only-simple-hide{display:none!important}
 <section id="trace" class="only-simple-hide"><div class="wrap sec">
   <div class="sh"><span class="eyebrow good">{{ t.trace_eyebrow }}</span><h2>{{ t.trace_title }}</h2><p>{{ t.trace_lead }}</p></div>
   <div class="tracebar">
-    <label>{{ t.scenario }}<select id="scen"></select></label>
-    <label>{{ t.config }}<span class="seg" id="cfg" role="group"><button data-cfg="huwise" aria-pressed="false">{{ t.cfg_huwise }}</button><button data-cfg="naked" aria-pressed="false">{{ t.cfg_naked }}</button><button data-cfg="compiled" aria-pressed="false">{{ t.cfg_compiled }}</button><button data-cfg="optimized" aria-pressed="true">{{ t.cfg_optimized }}</button></span></label>
+    <label>1 · {{ t.scenario }}<select id="scen"></select></label>
+    <label>2 · {{ t.config }}<span class="seg" id="cfg" role="group"><button class="cfgbtn" data-cfg="huwise" aria-pressed="false">{{ t.cfg_huwise }}</button><button class="cfgbtn" data-cfg="naked" aria-pressed="false">{{ t.cfg_naked }}</button><button class="cfgbtn" data-cfg="compiled" aria-pressed="false">{{ t.cfg_compiled }}</button><button class="cfgbtn" data-cfg="optimized" aria-pressed="true">{{ t.cfg_optimized }}</button></span></label>
     <button class="btn primary" id="replay"><svg class="i"><use href="#i-play"/></svg>{{ t.replay }}</button>
     {% if providers %}<label>{{ t.model_sel }}<span class="seg" id="prov" role="group">{% for p in providers %}<button data-prov="{{ p.name }}" data-model="{{ p.model }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" title="{{ p.model }}">{{ p.label }}</button>{% endfor %}</span></label>{% endif %}
     <button class="btn" id="live" title="{{ t.live_note }}">{{ t.live_btn }}</button>
   </div>
-  <div class="tsum" id="tsum"></div>
+  <div class="tq" id="tq"></div>
+  <div class="tres" id="tres" aria-live="polite"></div>
+  <div class="tsteps-h"><h3 id="tsh"></h3><span class="muted">{{ t.steps_hint }}</span></div>
   <div class="tsteps" id="tsteps"></div>
-  <div class="answer" id="tanswer"></div>
 </div></section>
 
 <section id="erreur" class="alt only-simple-hide"><div class="wrap sec">
@@ -496,50 +515,90 @@ $$('#prov button').forEach(b => b.onclick = () => { $$('#prov button').forEach(x
 $$('#cfg button').forEach(b => b.onclick = () => { cfg = b.dataset.cfg; live = null; $$('#cfg button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderTrace(); });
 $('#scen').onchange = () => { live = null; renderTrace(); };
 const short = (v, n = 20000) => { const s = typeof v === 'string' ? v : JSON.stringify(v, null, 1); return s && s.length > n ? s.slice(0, n) + ' …' : (s || ''); };
-function stepsOf(run, kind) {
-  const trace = [...(run.trace || [])], q = [...(run.queries || [])], out = [];
+const J = v => { if (typeof v !== 'string') return v; try { return JSON.parse(v); } catch (e) { return v; } };
+const pretty = v => { v = J(v); return v == null || v === '' ? '' : typeof v === 'string' ? v : JSON.stringify(v, null, 1); };
+// recorded tool results are JSON cut at 400 characters: read the count and the first id from the text when parsing fails
+const grab = (raw, re) => { const m = typeof raw === 'string' && raw.match(re); return m ? m[1] : null; };
+const trR = r => T['er_' + r] || String(r).replace(/^number\(s\) not returned by any query:/, T.er_num);
+const kindOf = n => n === 'llm' ? 'ia' : n === 'route' || n === 'verify' ? 'opt' : 'api';
+function stepsOf(run) {
+  const trace = [...(run.trace || [])], q = [...(run.queries || [])], out = [], spans = run.spans || [];
   const userNode = cfg === 'naked' || cfg === 'huwise' ? ['user', 'mcp'] : ['user', 'opt'];
-  for (const s of run.spans || []) {
-    if (s.name === 'llm') { out.push({tool: 'LLM', key: 'llm', nodes: userNode, ms: s.ms, tokens: s.tokens, input: '(prompt + tool results)', output: '→ next tool call or final answer'}); continue; }
-    if (s.name === 'route') { out.push({tool: 'route()', key: 'route', nodes: ['opt'], ms: s.ms, input: run.question || '', output: `${s.route}${s.note ? ' · ' + s.note : ''}\n${(run.reasons || []).join('\n')}`, source: s.policy}); continue; }
-    if (s.name === 'verify') { out.push({tool: 'evidence.check()', key: 'verify', nodes: ['opt'], ms: s.ms, input: 'answer + query results', output: `${run.evidence.status}\n${(run.evidence.reasons || []).join('\n')}`}); continue; }
+  const lastLlm = spans.map(s => s.name).lastIndexOf('llm');
+  let lastQ = null;
+  spans.forEach((s, idx) => {
+    const note = s.note ? (T['sn_' + s.note] || s.note) : '';
+    if (s.name === 'llm') { out.push({key: 'llm', tool: 'LLM', nodes: userNode, ms: s.ms, tokens: s.tokens, sum: idx === lastLlm ? T.sum_answer : T.sum_next, info: T.llm_d}); return; }
+    if (s.name === 'route') { out.push({key: 'route', tool: 'route()', nodes: ['opt'], ms: s.ms, sum: '→ ' + rt(s.route) + (note ? ' · ' + note : ''), why: (run.reasons || []).join('\n'), source: s.policy}); return; }
+    if (s.name === 'verify') { out.push({key: 'verify', tool: 'evidence.check()', nodes: ['opt'], ms: s.ms, sum: '→ ' + ev(run.evidence.status), got: (run.evidence.reasons || []).map(trR).join('\n')}); return; }
+    const isQ = s.name === 'query' || s.name === 'search_asset_records';
     const tr = cfg === 'optimized' && s.name === 'query' && !trace.length ? null : trace.shift();
-    const qq = s.name === 'query' || s.name === 'search_asset_records' ? q.shift() : null;
-    out.push({tool: s.name, key: s.name, nodes: A.tool_nodes[s.name] || ['opt'], ms: s.ms, ok: s.ok, cache: s.cache, note: s.note,
-              input: tr ? tr.args : (qq ? qq.params : ''), output: tr ? tr.result : (qq ? qq.result : (s.ok === false ? 'error' : '')),
-              source: (tr && tr.args && (tr.args.dataset_id || tr.args.slug)) || (qq && qq.dataset_id) || ''});
-  }
+    let qq = isQ ? (q.shift() || null) : null;
+    if (isQ && !tr && !qq && s.ok !== false) qq = lastQ;  // the same query asked again (cache scenario)
+    if (qq) lastQ = qq;
+    const sent = tr ? tr.args : (qq ? qq.params : ''), got = J(tr ? tr.result : (qq ? qq.result : ''));
+    const res = got && typeof got === 'object' ? got : {}, raw = tr ? tr.result : '';
+    const total = res.total_count ?? grab(raw, /"total_count":\s*(\d+)/), first = ((res.results || [])[0] || {});
+    const firstId = first.dataset_id || first.slug || grab(raw, /"(?:dataset_id|slug)":\s*"([^"]+)"/);
+    let sum;
+    if (s.ok === false || (tr && tr.ok === false)) sum = T.sum_err;
+    else if (isQ) sum = '→ ' + (total != null ? T.sum_rows.replace('{n}', total) : T.sum_ok);
+    else if (s.name === 'find_dataset' || s.name === 'search_assets') sum = '→ ' + (firstId ? T.sum_first.replace('{x}', firstId) : T.sum_none);
+    else sum = '→ ' + T.sum_card.replace('{x}', (sent && (sent.dataset_id || sent.slug)) || res.dataset_id || res.slug || '—');
+    if (s.cache === 'hit') sum += ' · ' + T.sum_cache;
+    if (note) sum += ' · ' + note;
+    out.push({key: s.name, tool: s.name, nodes: A.tool_nodes[s.name] || ['opt'], ms: s.ms, err: s.ok === false, sum, sent, got,
+              source: (sent && (sent.dataset_id || sent.slug)) || (qq && qq.dataset_id) || ''});
+  });
   return out;
 }
 function renderTrace() {
   clearInterval(timer);
-  const s = scen[$('#scen').value]; if (!s) { $('#tsteps').innerHTML = `<p class="muted">${T.no_trace}</p>`; return; }
+  const id = $('#scen').value, s = scen[id];
+  if (!s) { $('#tsteps').innerHTML = `<p class="muted">${T.no_trace}</p>`; return; }
+  if (!live && !s.runs[cfg]) { cfg = s.runs.optimized ? 'optimized' : Object.keys(s.runs)[0]; }  // this case has no recording for that version
+  $$('#cfg button').forEach(b => { b.disabled = !s.runs[b.dataset.cfg]; b.title = b.disabled ? T.na_ver : ''; b.setAttribute('aria-pressed', b.dataset.cfg === cfg); });
+  const sim = s.kind === 'simulated';
+  $('#live').disabled = sim; $('#live').title = sim ? T.live_sim : T.live_note;
   const run = live || s.runs[cfg];
-  $$('#cfg button').forEach(b => b.disabled = !s.runs[b.dataset.cfg]);
-  if (!run) { $('#tsteps').innerHTML = `<p class="muted">${T.no_trace}</p>`; $('#tanswer').innerHTML = ''; $('#tsum').innerHTML = ''; return; }
-  run.question = s.question;
-  const status = live ? 'LIVE' : s.kind === 'simulated' ? 'SIMULATED' : 'RECORDED';
-  const steps = stepsOf(run, status);
-  const okChip = run.answer_ok === true ? '<span class="st st-ok">✓</span>' : run.answer_ok === false ? '<span class="st st-ko">✗</span>' : '';
-  $('#tsum').innerHTML = `<span class="st st-${status}">${T['lbl_' + status]}</span><span><b>${T.route}</b> ${esc(rt(run.route))}</span><span><b>${T.evidence}</b> ${esc(ev(run.evidence && run.evidence.status))}</span>` +
-    `<span class="mono">${(run.ms / 1000).toFixed(1)} s · ${run.llm_calls || 0} ${T.model_calls}</span><span class="mono muted only-tech">${run.tokens || 0} tok</span>` +
-    (s.expected !== undefined && s.kind === 'recorded' ? `<span>${T.expected}: <b class="mono">${esc(typeof s.expected === 'number' ? Math.round(s.expected * 100) / 100 : s.expected)}</b></span>` : '') +
-    (live ? `<span class="mono muted">${esc((live.models || []).join(' → ') || T.no_model)}</span>` + (live.models && live.models.length && !live.models.includes(provModel()) ? `<span class="st st-neutral">${T.fallback}</span>` : '')
-          : `<span class="mono muted only-tech">${esc(s.model || '')} · ${esc(s.recorded_at || '')} · ${esc(s.commit || '')}</span>`) + (s.fixture ? `<span class="muted"><b>${T.fixture} :</b> ${esc(T['fx_' + $('#scen').value] || s.fixture)}</span>` : '');
-  $('#tsteps').innerHTML = steps.map((st, i) => `<div class="tstep" data-i="${i}"><button aria-expanded="false"><span>${esc(T['sp_' + st.key] || st.tool)}</span><span class="mono muted only-tech" style="font-size:12px">${esc(st.tool)}</span>${st.cache ? `<span class="st st-neutral">cache ${st.cache}</span>` : ''}${st.ok === false ? '<span class="st st-ko">error</span>' : ''}${st.note ? `<span class="muted">${esc(st.note)}</span>` : ''}<span class="ms">${st.ms} ms${st.tokens ? ' · ' + st.tokens + ' tok' : ''}</span></button>
-    <dl class="tbody"><dt>${T.f_input}</dt><dd><pre class="cl">${esc(short(st.input))}</pre></dd><dt>${T.f_tool}</dt><dd class="mono">${esc(st.tool)}</dd><dt>${T.f_output}</dt><dd><pre class="cl">${esc(short(st.output))}</pre></dd>
-    <dt>${T.f_time}</dt><dd class="mono">${st.ms} ms</dd><dt>${T.f_tokens}</dt><dd class="mono">${st.tokens ?? '—'}</dd><dt>${T.f_source}</dt><dd class="mono">${esc(st.source || '—')}</dd><dt>${T.f_status}</dt><dd><span class="st st-${status}">${T['lbl_' + status]}</span></dd></dl></div>`).join('');
-  const open = i => { setTimeout(() => clampAll($(`.tstep[data-i="${i}"]`)), 0); $$('.tstep').forEach((d, j) => { d.classList.toggle('on', j === i); d.querySelector('button').setAttribute('aria-expanded', j === i); }); if (steps[i]) highlight(steps[i].nodes); };
-  $$('.tstep>button').forEach((b, i) => b.onclick = () => { clearInterval(timer); if (mode !== 'trace') setMode('trace'); open(i); });
-  $('#tanswer').innerHTML = `<b>${T.answer}</b> ${okChip} ${esc(ans(run.answer))}`;
-  $('#replay').onclick = () => { if (mode !== 'trace') setMode('trace'); let i = 0; open(0); clearInterval(timer); timer = setInterval(() => { i++; if (i >= steps.length) { clearInterval(timer); return; } open(i); }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 1600 : 1100); };
+  const status = live ? 'LIVE' : sim ? 'SIMULATED' : 'RECORDED';
+  $('#tq').innerHTML = `<div><span class="st st-${status}">${T['lbl_' + status]}</span></div><p class="q">« ${esc(s.question)} »</p>` +
+    (s.expected !== undefined && !sim ? `<span class="exp">${T.expected} : <b>${esc(typeof s.expected === 'number' ? Math.round(s.expected * 100) / 100 : s.expected)}</b></span>` : '') +
+    (sim ? `<div class="simbox"><div><b>${T.sim_t}</b>${esc(T['fx_' + id] || s.fixture || '')}</div><div><b>${T.sim_r}</b>${esc(T['sim_' + id] || '')}</div></div>` : '');
+  if (!run) { $('#tsteps').innerHTML = `<p class="muted">${T.no_trace}</p>`; $('#tres').innerHTML = ''; $('#tsh').textContent = ''; return; }
+  const steps = stepsOf(run), maxMs = Math.max(1, ...steps.map(x => x.ms || 0));
+  const okc = run.answer_ok === true ? 'ok' : run.answer_ok === false ? 'ko' : '';
+  const models = live ? (live.models || []) : [];
+  $('#tres').className = 'tres ' + okc;
+  $('#tres').innerHTML = `<div class="mark">${okc === 'ok' ? '✓' : okc === 'ko' ? '✗' : '–'}</div><div style="min-width:0"><div class="ans">${esc(ans(run.answer) || '—')}</div>` +
+    `<div class="meta"><span>${T.route} : <b>${esc(rt(run.route))}</b></span><span>${T.evidence} : <b>${esc(ev(run.evidence && run.evidence.status))}</b></span><span><b>${(run.ms / 1000).toFixed(1)} s</b></span><span><b>${run.llm_calls || 0}</b> ${T.model_calls}</span>` +
+    (live ? `<span>${esc(models.join(' → ') || T.no_model)}</span>` + (models.length && !models.includes(provModel()) ? `<span class="st st-neutral">${T.fallback}</span>` : '') : '') + `</div>` +
+    (!live ? `<div class="meta only-tech mono" style="font-size:12px">${esc(s.model || '')} · ${esc(s.recorded_at || '')} · ${esc(s.commit || '')} · ${run.tokens || 0} tok</div>` : '') + `</div>`;
+  $('#tsh').textContent = T.steps_h.replace('{n}', steps.length);
+  $('#tsteps').innerHTML = steps.map((st, i) => {
+    const k = st.err ? 'err' : kindOf(st.key);
+    const body = (st.info ? `<div>${esc(st.info)}</div>` : '') +
+      (st.sent ? `<div><div class="lab">${T.sent}</div><pre class="cl">${esc(short(pretty(st.sent)))}</pre></div>` : '') +
+      (st.got ? `<div><div class="lab">${T.got}${typeof st.got === 'string' && st.got.length >= 400 ? ' · ' + T.trunc : ''}</div><pre class="cl">${esc(short(pretty(st.got)))}</pre></div>` : '') +
+      (st.why ? `<div class="only-tech"><div class="lab">${T.why}</div><pre class="cl">${esc(st.why)}</pre></div>` : '') +
+      `<div class="mono muted only-tech" style="font-size:12px">${esc(st.tool)} · ${st.ms} ms${st.tokens ? ' · ' + st.tokens + ' tok' : ''}${st.source ? ' · ' + esc(st.source) : ''}</div>`;
+    return `<div class="tstep k-${k}" data-i="${i}"><button aria-expanded="false"><span class="sl"><b>${esc(T['sp_' + st.key] || st.tool)}</b> <span class="sum${st.err ? ' ko' : ''}">${esc(st.sum || '')}</span></span>` +
+      `<span class="bar" aria-hidden="true"><i style="width:${Math.max(3, Math.round(100 * (st.ms || 0) / maxMs))}%"></i></span><span class="ms">${st.ms >= 1000 ? (st.ms / 1000).toFixed(1) + ' s' : st.ms + ' ms'}</span><span class="chev" aria-hidden="true">▸</span></button>` +
+      `<div class="tbody">${body}</div></div>`;
+  }).join('');
+  const open = (i, toggle) => {
+    $$('#tsteps .tstep').forEach((d, j) => { const on = j === i && !(toggle && d.classList.contains('on')); d.classList.toggle('on', on); d.querySelector('button').setAttribute('aria-expanded', on); });
+    setTimeout(() => clampAll($(`#tsteps .tstep[data-i="${i}"]`)), 0);
+    if (mode === 'trace' && steps[i]) highlight(steps[i].nodes);
+  };
+  $$('#tsteps .tstep>button').forEach((b, i) => b.onclick = () => { clearInterval(timer); open(i, true); });
+  $('#replay').onclick = () => { let i = 0; open(0); clearInterval(timer); timer = setInterval(() => { i++; if (i >= steps.length) { clearInterval(timer); return; } open(i); }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 1600 : 1100); };
 }
 $('#live').onclick = async () => {
-  const b = $('#live'); b.disabled = true;
-  b.textContent = '…';
+  const b = $('#live'); b.disabled = true; b.textContent = T.live_wait;
   try { const r = await fetch(`/api/demo/run?scenario=${encodeURIComponent($('#scen').value)}&mode=${cfg}&provider=${encodeURIComponent(provName())}`); const j = await r.json();
     if (!r.ok) throw new Error(j.error || r.status); live = j; renderTrace(); $('#replay').click();
-  } catch (e) { $('#tsum').insertAdjacentHTML('afterbegin', `<span class="st st-ko">${T.lbl_LIVE} : ${esc(e.message)}</span>`); }
+  } catch (e) { $('#tres').className = 'tres ko'; $('#tres').innerHTML = `<div class="mark">!</div><div><div class="ans">${T.lbl_LIVE} : ${esc(e.message)}</div></div>`; }
   b.disabled = false; b.textContent = T.live_btn;
 };
 renderTrace();
