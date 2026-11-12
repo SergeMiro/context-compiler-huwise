@@ -122,7 +122,9 @@ select{min-height:40px;max-width:100%;padding:0 10px;border:1px solid var(--line
 .tstep .ms{margin-left:auto;font:12px var(--mono);color:var(--muted);white-space:nowrap}
 .tbody{display:none;padding:0 12px 12px;gap:8px;grid-template-columns:110px minmax(0,1fr);font-size:13px} .tstep.on .tbody{display:grid}
 .tbody dt{font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;padding-top:3px} .tbody dd{margin:0;min-width:0}
-.tbody pre{margin:0;padding:6px 8px;background:var(--subtle);border-radius:6px;font:12px/1.5 var(--mono);white-space:pre-wrap;word-break:break-word;max-height:180px;overflow:auto}
+.tbody pre{margin:0;padding:6px 8px;background:var(--subtle);border-radius:6px;font:12px/1.5 var(--mono);white-space:pre-wrap;word-break:break-word}
+pre.cl{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.more{border:0;background:none;padding:4px 0;color:var(--accent);font:500 13px "IBM Plex Sans",sans-serif;cursor:pointer}
 @media (max-width:520px){.tbody{grid-template-columns:1fr}}
 .answer{padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:15px}
 /* tables */
@@ -387,10 +389,15 @@ const NS = 'http://www.w3.org/2000/svg', XH = 'http://www.w3.org/1999/xhtml';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const tx = o => o && typeof o === 'object' ? (o[L] ?? o.fr ?? '') : (o ?? '');
 const el = (tag, attrs = {}, ns = NS) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+const clampAll = root => (root || document).querySelectorAll('pre.cl').forEach(p => {
+  if (p.dataset.w || !p.clientHeight || p.scrollHeight <= p.clientHeight + 2) return;
+  p.dataset.w = 1; const b = document.createElement('button'); b.className = 'more'; b.textContent = T.more_open;
+  b.onclick = () => { b.textContent = p.classList.toggle('cl') ? T.more_open : T.more_close; }; p.after(b);
+});
 const store = (k, v) => { try { v === undefined ? null : localStorage.setItem(k, v); return localStorage.getItem(k); } catch (e) { return null; } };
 
 /* simple / technical */
-const setView = v => { document.body.classList.toggle('simple', v === 'simple'); $$('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === v)); store('ctxc-view', v); };
+const setView = v => { document.body.classList.toggle('simple', v === 'simple'); $$('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === v)); store('ctxc-view', v); clampAll(); };
 $$('[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view)); setView(store('ctxc-view') || 'simple');
 $$('#minute a[href^="#"]').forEach(a => a.addEventListener('click', () => setView('tech')));  // the detailed screens live in the Technique view
 
@@ -488,7 +495,7 @@ const provName = () => (provBtn() || {dataset: {}}).dataset.prov || '', provMode
 $$('#prov button').forEach(b => b.onclick = () => { $$('#prov button').forEach(x => x.setAttribute('aria-pressed', x === b)); live = null; renderTrace(); });
 $$('#cfg button').forEach(b => b.onclick = () => { cfg = b.dataset.cfg; live = null; $$('#cfg button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderTrace(); });
 $('#scen').onchange = () => { live = null; renderTrace(); };
-const short = (v, n = 900) => { const s = typeof v === 'string' ? v : JSON.stringify(v, null, 1); return s && s.length > n ? s.slice(0, n) + ' …' : (s || ''); };
+const short = (v, n = 20000) => { const s = typeof v === 'string' ? v : JSON.stringify(v, null, 1); return s && s.length > n ? s.slice(0, n) + ' …' : (s || ''); };
 function stepsOf(run, kind) {
   const trace = [...(run.trace || [])], q = [...(run.queries || [])], out = [];
   const userNode = cfg === 'naked' || cfg === 'huwise' ? ['user', 'mcp'] : ['user', 'opt'];
@@ -520,9 +527,9 @@ function renderTrace() {
     (live ? `<span class="mono muted">${esc((live.models || []).join(' → ') || T.no_model)}</span>` + (live.models && live.models.length && !live.models.includes(provModel()) ? `<span class="st st-neutral">${T.fallback}</span>` : '')
           : `<span class="mono muted only-tech">${esc(s.model || '')} · ${esc(s.recorded_at || '')} · ${esc(s.commit || '')}</span>`) + (s.fixture ? `<span class="muted"><b>${T.fixture} :</b> ${esc(T['fx_' + $('#scen').value] || s.fixture)}</span>` : '');
   $('#tsteps').innerHTML = steps.map((st, i) => `<div class="tstep" data-i="${i}"><button aria-expanded="false"><span>${esc(T['sp_' + st.key] || st.tool)}</span><span class="mono muted only-tech" style="font-size:12px">${esc(st.tool)}</span>${st.cache ? `<span class="st st-neutral">cache ${st.cache}</span>` : ''}${st.ok === false ? '<span class="st st-ko">error</span>' : ''}${st.note ? `<span class="muted">${esc(st.note)}</span>` : ''}<span class="ms">${st.ms} ms${st.tokens ? ' · ' + st.tokens + ' tok' : ''}</span></button>
-    <dl class="tbody"><dt>${T.f_input}</dt><dd><pre>${esc(short(st.input))}</pre></dd><dt>${T.f_tool}</dt><dd class="mono">${esc(st.tool)}</dd><dt>${T.f_output}</dt><dd><pre>${esc(short(st.output))}</pre></dd>
+    <dl class="tbody"><dt>${T.f_input}</dt><dd><pre class="cl">${esc(short(st.input))}</pre></dd><dt>${T.f_tool}</dt><dd class="mono">${esc(st.tool)}</dd><dt>${T.f_output}</dt><dd><pre class="cl">${esc(short(st.output))}</pre></dd>
     <dt>${T.f_time}</dt><dd class="mono">${st.ms} ms</dd><dt>${T.f_tokens}</dt><dd class="mono">${st.tokens ?? '—'}</dd><dt>${T.f_source}</dt><dd class="mono">${esc(st.source || '—')}</dd><dt>${T.f_status}</dt><dd><span class="st st-${status}">${T['lbl_' + status]}</span></dd></dl></div>`).join('');
-  const open = i => { $$('.tstep').forEach((d, j) => { d.classList.toggle('on', j === i); d.querySelector('button').setAttribute('aria-expanded', j === i); }); if (steps[i]) highlight(steps[i].nodes); };
+  const open = i => { setTimeout(() => clampAll($(`.tstep[data-i="${i}"]`)), 0); $$('.tstep').forEach((d, j) => { d.classList.toggle('on', j === i); d.querySelector('button').setAttribute('aria-expanded', j === i); }); if (steps[i]) highlight(steps[i].nodes); };
   $$('.tstep>button').forEach((b, i) => b.onclick = () => { clearInterval(timer); if (mode !== 'trace') setMode('trace'); open(i); });
   $('#tanswer').innerHTML = `<b>${T.answer}</b> ${okChip} ${esc(ans(run.answer))}`;
   $('#replay').onclick = () => { if (mode !== 'trace') setMode('trace'); let i = 0; open(0); clearInterval(timer); timer = setInterval(() => { i++; if (i >= steps.length) { clearInterval(timer); return; } open(i); }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 1600 : 1100); };
@@ -548,7 +555,7 @@ $$('#erreur [data-q]').forEach(b => b.onclick = async () => {
 const ct = scen['code-format'];
 if (ct) $('#errtrace').innerHTML = `<p style="margin:0 0 12px;font-weight:600">{{ t.err_same }}</p><div class="grid">${['huwise', 'naked', 'optimized'].filter(m => ct.runs[m]).map(m => { const r = ct.runs[m];
   const qs = (r.queries || []).map(q => `${q.ok ? '✓' : '✗'} ${esc(q.dataset_id)} ${esc(JSON.stringify(q.params))} → ${esc(q.result ? q.result.total_count : 'error')}`).join('\n');
-  return `<div class="card"><h3>${T['cfg_' + m]} <span class="st st-RECORDED">{{ t.lbl_RECORDED }}</span> ${r.answer_ok ? '<span class="st st-ok">✓</span>' : '<span class="st st-ko">✗</span>'}</h3><p class="muted" style="margin:0">${esc(ct.question)}</p><pre class="pre only-tech">${qs || '—'}</pre><div>${esc(ans(r.answer))}</div><div class="muted" style="font-size:13px">${T.route} : ${esc(rt(r.route))} · ${T.evidence} : ${esc(ev(r.evidence.status))} · ${r.llm_calls} ${T.model_calls} · ${(r.ms / 1000).toFixed(1)} s</div></div>`; }).join('')}</div>`;
+  return `<div class="card"><h3>${T['cfg_' + m]} <span class="st st-RECORDED">{{ t.lbl_RECORDED }}</span> ${r.answer_ok ? '<span class="st st-ok">✓</span>' : '<span class="st st-ko">✗</span>'}</h3><p class="muted" style="margin:0">${esc(ct.question)}</p><pre class="pre only-tech cl">${qs || '—'}</pre><div>${esc(ans(r.answer))}</div><div class="muted" style="font-size:13px">${T.route} : ${esc(rt(r.route))} · ${T.evidence} : ${esc(ev(r.evidence.status))} · ${r.llm_calls} ${T.model_calls} · ${(r.ms / 1000).toFixed(1)} s</div></div>`; }).join('')}</div>`;
 
 /* ---------- lab ---------- */
 const chips = byId.lab.chips; $('#cycle').innerHTML = chips.map(c => `<span title="${esc(tx(c.d))}">${esc(c[L] || c.fr)}</span>`).join('<i>→</i>');

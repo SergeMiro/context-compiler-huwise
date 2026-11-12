@@ -122,6 +122,7 @@ TEXT = {
     "answer": {"fr": "Réponse", "en": "Answer"}, "evidence": {"fr": "Chiffre", "en": "Number"},
     "route": {"fr": "Chemin", "en": "Path"}, "no_trace": {"fr": "Pas encore enregistré.", "en": "Not recorded yet."},
     "model_calls": {"fr": "appels IA", "en": "AI calls"},
+    "more_open": {"fr": "Tout afficher ▾", "en": "Show all ▾"}, "more_close": {"fr": "Réduire ▴", "en": "Collapse ▴"},
     "no_final": {"fr": "Pas de réponse finale : le modèle a écrit un appel d'outil au lieu de répondre.", "en": "No final answer: the model wrote a tool call instead of answering."},
     "fixture": {"fr": "Ce qui est simulé", "en": "What is simulated"},
     "rt_FAST": {"fr": "rapide, sans IA", "en": "fast, no AI"}, "rt_STANDARD": {"fr": "agent IA", "en": "AI agent"},
