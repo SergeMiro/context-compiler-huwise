@@ -24,7 +24,7 @@ alone. Between A and B: our cards **and** our search and validator versus Huwise
   shapes: counts by commune / department / académie / region / France, English questions, extra conditions
   (SEGPA, ULIS, internat, restauration, REP+), a dataset trap (lycées des métiers), averages (IPS), sums (bac),
   group-by (which académie has the most…), no-data questions, ambiguous places. Splits by slug hash:
-  **dev 42 / val 27 / holdout 26**. The lab only sees dev failures; the holdout is evaluated only for the final
+  **dev 42 / val 27 / holdout 26**. The lab only sees failures outside the holdout (this cycle: the legacy set); the holdout is evaluated only for the final
   comparison. Limitation: the recipe parser was written before the v2 file, but both are by the same author in the same
   week, so the v2 phrasings are close to what the parser expects: **not an independent benchmark**. The FAST share
   on v2 is an upper bound for real user questions.
@@ -43,7 +43,7 @@ case: right dataset, first query valid, steps, model calls, tokens, wall time, r
 
 ## Statistics
 
-Per configuration: accuracy with n; latency p50/p95 per question (wall time including model calls); tokens; model
+Per configuration: accuracy with n; latency p50/p95 per question (wall time including model calls; linear interpolation); tokens; model
 calls. Paired comparisons on the same questions: difference in percentage points with a **95 % paired bootstrap
 CI** (2 000 resamples, fixed seed) and an **exact McNemar p-value** (`ctx/site.py`). One run per configuration: the
 model's run-to-run variance is not captured by the CI (a limitation; repeated runs need more free quota).
@@ -59,4 +59,52 @@ bounded trade-off. The gate is never adjusted after seeing results.
 Filled from the recorded runs (database `ctxc_preprod`); the page `/#comparer` shows the same numbers with per-question
 detail and filters.
 
-RESULTS_PLACEHOLDER
+Model `nvidia/nemotron-3.5-super-vl:free` (OpenRouter), commit `70e986c`, temperature 0, one run per configuration.
+Diffs are paired on the same questions: percentage points, 95 % paired bootstrap CI, exact McNemar p.
+
+### Holdout — `education_v2`, 26 questions never seen by the lab (runs #28 A, #29 0, #30 B, #31 C, 12.11.2026 00:03–00:26 UTC, back to back)
+
+| | A · Huwise MCP | 0 · basic tools | B · cards | C · cards + optimizer |
+|---|---|---|---|---|
+| correct answer | 50.0 % (13/26) | 38.5 % (10/26) | 73.1 % (19/26) | 96.2 % (25/26) |
+| right dataset | 50.0 % | 34.6 % | 80.8 % | 92.3 % |
+| valid query 1st try | 91.3 % | 62.5 % | 95.8 % | 100 % |
+| wrong and stated as fact | 12 | 13 | 7 | 1 |
+| evidence verified | 42.3 % | 38.5 % | 57.7 % | 73.1 % |
+| model calls | 136 | 147 | 126 | 56 |
+| tokens | 752 372 | 351 589 | 385 738 | 171 738 |
+| latency p50 / p95 | 18.2 s / 63.7 s | 11.3 s / 16.8 s | 12.3 s / 21.2 s | 2.0 s / 16.2 s |
+| routes (C) | — | — | — | FAST 13, STANDARD 13 |
+
+| difference (correct answer) | pp | 95 % CI | McNemar p |
+|---|---|---|---|
+| B − A | +23.1 | [−3.8 ; +50.0] | 0.18 |
+| C − A | +46.2 | [+23.1 ; +65.4] | 0.002 |
+| B − 0 | +34.6 | [+11.5 ; +57.7] | 0.022 |
+| C − B | +23.1 | [+7.7 ; +38.5] | 0.031 |
+| C − 0 | +57.7 | [+38.5 ; +76.9] | < 0.001 |
+
+Reading: with the same free model, our cards (B) are not significantly better than the real Huwise MCP tools (A) on
+26 questions — the CI includes 0. Cards plus the optimizer (C) are. C's median latency is low because half the holdout
+questions match a FAST recipe (0 model calls, ~0.1 s; the even-n median is the mean of the two middle values); the v2 phrasings are close to what the recipe parser expects, so this
+FAST share is an upper bound (see Question sets). A uses the most tokens: Huwise's tool results are larger.
+
+### Legacy — `education`, 30 questions seen during development (runs #24 0, #25 B on 11.11; #32 C on 12.11)
+
+| | 0 · basic tools | B · cards | C · cards + optimizer |
+|---|---|---|---|
+| correct answer | 40.0 % | 73.3 % | 80.0 % |
+| wrong and stated as fact | 16 | 8 | 3 |
+| model calls | 162 | 143 | 125 |
+
+B − 0 +33.3 pp [+16.7 ; +50.0], p = 0.002 · C − B +6.7 pp [−10.0 ; +23.3], p = 0.69 · C − 0 +40.0 pp [+23.3 ; +56.7],
+p < 0.001. Latencies of this set are not comparable: runs #24/#25 were slowed by provider 429 retries on 11.11
+(p50 141 s and 102 s) and C ran the next night. **A on the legacy set is missing**: run #36 stopped on the OpenRouter
+free daily limit (1000 requests, reached at 01:41 UTC 12.11) and was not resumed, to keep the next day's quota.
+
+### AutoContext Lab — one cycle (12.11.2026, base run #32, policy `gate-2026-11-11.1`, 147 model calls)
+
+Diagnosed the 6 failures of run #32 (wrong dataset ×4, hallucinated value ×1, wrong filter ×1), tried 3 single-card edits
+(query templates), each evaluated on the failing and control questions (runs #33–#35): **3 reverted, 0 kept** —
+two fixed nothing, one fixed `bac-pro-filles-2024` but broke the control `ips-moyen-colleges-cote-dor`. Journal
+`var/lab/experiments.jsonl`, sha256 chain intact. The lab worked on legacy failures and never saw the v2 holdout.

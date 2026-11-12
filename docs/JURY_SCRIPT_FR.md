@@ -1,7 +1,8 @@
 # Script de démonstration — 6 minutes
 
-Page : <https://context-preprod.smiro.dev/> (mode « Technique »). Tous les chiffres viennent des runs enregistrés
-affichés sur la page ; rien n'est tapé à la main.
+Page : <https://context.smiro.dev/> (mode « Technique »). Tous les chiffres viennent des runs enregistrés
+affichés sur la page ; rien n'est tapé à la main. Runs du 11–12.11.2026, modèle gratuit
+`nvidia/nemotron-3.5-super-vl:free`, un run par configuration.
 
 ## 0:00 — La thèse (20 s)
 
@@ -34,8 +35,10 @@ montre des mesures reproductibles — avec leurs limites. »
 - Scénario « Le cas principal », configuration **C**, *Rejouer le scénario* : route FAST → une requête Explore API →
   vérification. « 23 collèges à Dijon, zéro appel au modèle, la preuve est le total_count de l'API. »
 - *Exécuter C en direct* : badge **LIVE**, l'appel part maintenant.
-- Basculer sur **A** : « même question, même modèle, outils génériques : voilà les étapes, les jetons, le temps. »
-- Précision honnête : « A porte les noms des outils Huwise mais ce n'est pas votre serveur : il exige une clé API. »
+- Basculer sur **A** : « même question, même modèle, mais avec votre vrai serveur Huwise MCP — ses quatre outils,
+  tels que `tools/list` les renvoie. Il trouve aussi 23, en 4 appels au modèle et 11 secondes. »
+- Précision honnête : « A, c'est votre serveur MCP avec la clé d'un compte utilisateur ordinaire, piloté par mon
+  modèle gratuit et mon prompt. Ce n'est pas Huwy : je n'ai ni votre modèle ni votre prompt. »
 
 ## 3:30 — Écran 4 : une erreur observée (40 s)
 
@@ -48,18 +51,24 @@ montre des mesures reproductibles — avec leurs limites. »
 - Le cycle en 10 étapes, le budget, le quality gate fixé avant le run.
 - Le journal : diagnostic des échecs, la modification proposée (diff), la décision gardée ou annulée, la chaîne
   sha256 intacte. « Le lab ne voit jamais le holdout et ne peut toucher ni l'évaluateur ni les réponses attendues. »
+- Le run de cette nuit : trois modifications essayées, **trois annulées**. Une corrigeait une question mais en
+  cassait une de contrôle. « Le quality gate a fait son travail : rien n'est passé. »
 
 ## 5:00 — Écran 6 : la comparaison (50 s)
 
-- Jeu **holdout** (questions que le lab n'a jamais vues) : précision A / B / C, *faux et affirmé*, appels modèle,
-  latence p50/p95, n et intervalle de confiance.
-- « Les intervalles sont larges : petit échantillon, modèle gratuit, un seul run par configuration. Je ne dis pas
-  que c'est mieux que Huwy : je dis que la boucle mesure, et qu'un vrai test A demande votre clé API. »
+- Jeu **holdout**, 26 questions que le lab n'a jamais vues. Réponses justes : A (votre serveur MCP) **50 %**,
+  B (fiches) **73 %**, C (fiches + Optimizer) **96 %**. *Faux et affirmé* : 12, 7, 1. Appels modèle : 136, 126, 56.
+- « B contre A : +23 points, mais l'intervalle de confiance va de −4 à +50 : sur 26 questions, ce n'est pas
+  significatif. C contre A : +46 points, intervalle de +23 à +65, p = 0,002. »
+- « Les limites : 26 questions, un modèle gratuit, un run par configuration, et des questions écrites par moi —
+  la moitié passe par une recette FAST, c'est un plafond. Je ne dis pas que c'est mieux que Huwy : je dis que la
+  boucle mesure, au-dessus de vos outils. »
 
 ## 5:50 — Clôture (10 s)
 
-« La prod n'a pas bougé : tout ceci tourne en preprod, base et index séparés. Ce que je vous propose, c'est de
-brancher cette boucle sur vos outils, avec vos signaux d'usage. »
+« Les expériences tournent en preprod, base et index séparés ; la prod ne reçoit qu'une version vérifiée, sur
+décision humaine. Ce que je vous propose, c'est de brancher cette boucle sur vos outils, avec vos signaux
+d'usage. »
 
 ## Questions probables
 

@@ -55,7 +55,7 @@ def triples(portal):
         if a and b and c.metrics.get("n", 0) > 3:
             h = prev(c, "huwise")  # optional: the real Huwise MCP run on the same questions, when one exists
             out.append(((h,) if h else ()) + (a, b, c))
-    return out
+    return sorted(out, key=lambda t: t[-1].metrics.get("split") != "holdout")  # the clean set opens first
 
 
 def mcnemar(x, y):
@@ -81,7 +81,11 @@ def boot_ci(x, y, n=2000, seed=13):
 
 def pct(xs, q):
     xs = sorted(xs)
-    return xs[min(len(xs) - 1, int(round(q * (len(xs) - 1))))] if xs else None
+    if not xs:
+        return None
+    i, f = divmod(q * (len(xs) - 1), 1)  # linear interpolation: the median of an even n is the mean of the two middle values
+    i = int(i)
+    return round(xs[i] + (xs[min(i + 1, len(xs) - 1)] - xs[i]) * f)
 
 
 def comparison(portal):

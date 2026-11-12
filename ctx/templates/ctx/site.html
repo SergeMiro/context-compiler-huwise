@@ -112,7 +112,7 @@ select{min-height:40px;max-width:100%;padding:0 10px;border:1px solid var(--line
 .nodelist button.ours{border-color:var(--purple-line);color:var(--purple-ink)}
 /* trace */
 .tracebar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--subtle)}
-.tracebar label{display:flex;flex-direction:column;gap:4px;font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tracebar label{display:flex;flex-direction:column;gap:4px;font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:0;max-width:100%}
 .tsum{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:14px}
 .tsteps{display:flex;flex-direction:column;gap:8px;counter-reset:s}
 .tstep{border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden}
@@ -268,7 +268,7 @@ footer a{color:inherit;text-decoration:none} footer a:hover{color:var(--accent)}
     <tr><td>{{ t.chk_comp }}</td><td class="num">{{ checks.compression.all_needed_fields_kept }}/{{ checks.compression.cases }} · −{{ checks.compression.tokens_saved_median_pct }} %</td></tr>
     <tr><td>{{ t.chk_lat }}</td><td class="num">{{ checks.latency.cold_p50_ms }} / {{ checks.latency.cold_p95_ms }} ms · {{ checks.latency.warm_p50_ms }} / {{ checks.latency.warm_p95_ms }} ms</td></tr></table></div>{% endif %}
   {% if legacy %}<details class="only-tech"><summary class="muted">{{ t.cmp_legacy }}</summary>
-    <div class="tscroll" style="margin-top:10px"><table class="tbl"><tr><th>model</th><th class="num">A</th><th class="num">B</th><th>runs</th><th>date</th></tr>
+    <div class="tscroll" style="margin-top:10px"><table class="tbl"><tr><th>model</th><th class="num">0</th><th class="num">B</th><th>runs</th><th>date</th></tr>
     {% for r in legacy %}<tr><td class="mono">{{ r.model }}</td><td class="num">{{ r.naked }} %</td><td class="num">{{ r.compiled }} %</td><td class="mono">#{{ r.runs.0 }}/#{{ r.runs.1 }}</td><td class="mono">{{ r.date }}</td></tr>{% endfor %}</table></div></details>{% endif %}
 </div></section>
 
@@ -493,7 +493,7 @@ $('#cmpset').innerHTML = C.map((c, i) => `<option value="${i}">${esc(label(c))}<
 const tagsOf = c => [...new Set(c.rows.flatMap(r => r.tags))].sort();
 const fmtPct = x => x == null ? '—' : x.toFixed(1).replace('.0', '') + ' %';
 function summ(rows, m) {
-  const v = rows.map(r => r[m]), ms = v.map(x => x.ms || 0).sort((a, b) => a - b), q = p => ms.length ? ms[Math.min(ms.length - 1, Math.round(p * (ms.length - 1)))] : null;
+  const v = rows.map(r => r[m]), ms = v.map(x => x.ms || 0).sort((a, b) => a - b), q = p => { if (!ms.length) return null; const x = p * (ms.length - 1), i = Math.floor(x); return Math.round(ms[i] + (ms[Math.min(i + 1, ms.length - 1)] - ms[i]) * (x - i)); };
   return {acc: 100 * v.filter(x => x.answer_ok).length / v.length, p50: q(.5), p95: q(.95), tokens: v.reduce((a, x) => a + (x.tokens || 0), 0),
           calls: v.reduce((a, x) => a + (x.llm_calls || 0), 0), wrong: v.filter(x => !x.answer_ok && !x.abstained).length,
           ver: 100 * v.filter(x => x.evidence === 'verified').length / v.length,
@@ -508,7 +508,7 @@ function renderCmp() {
     line(T.m_acc, s => fmtPct(s.acc)) + line(T.m_wrong, s => s.wrong) + line(T.m_verified, s => fmtPct(s.ver)) +
     line(T.m_p50, s => s.p50 == null ? '—' : (s.p50 / 1000).toFixed(1) + ' s') + line(T.m_p95, s => s.p95 == null ? '—' : (s.p95 / 1000).toFixed(1) + ' s') +
     line(T.m_calls, s => s.calls) + line(T.m_tokens, s => s.tokens.toLocaleString(L)) + line(T.m_routes, s => s.routes || '—') + '</table></div>';
-  if (!tag) h += `<p class="mono muted" style="font-size:13px;margin:0">${T.cmp_diff}: ` + Object.entries(c.diffs).map(([k, d]) => `${k.replace('huwise', 'A').replace('naked', '0').replace('compiled', 'B').replace('optimized', 'C').replace('-', ' vs ')}: ${d.pp > 0 ? '+' : ''}${d.pp} pp [${d.ci[0]}; ${d.ci[1]}] p=${d.p}`).join(' · ') + `</p>`;
+  if (!tag) h += `<p class="mono muted" style="font-size:13px;margin:0">${T.cmp_diff}: ` + Object.entries(c.diffs).map(([k, d]) => `${k.replace('huwise', 'A').replace('naked', '0').replace('compiled', 'B').replace('optimized', 'C').replace('-', ' vs ')}: ${d.pp > 0 ? '+' : ''}${d.pp} pp [${d.ci[0]}; ${d.ci[1]}] p${d.p < 0.001 ? '<0.001' : '=' + d.p}`).join(' · ') + `</p>`;
   h += `<p class="mono muted" style="font-size:12px;margin:0">${esc(c.model)} · ${c.date} · runs #${c.runs.join('/#')}${c.commit ? ' · commit ' + esc(c.commit) : ''}</p>`;
   h += `<details class="only-tech"><summary class="muted">${T.cmp_cases}</summary><div class="tscroll" style="margin-top:10px"><table class="tbl"><tr><th>question</th><th>split</th>${M.map(m => `<th class="num">${({huwise: 'A', naked: '0', compiled: 'B', optimized: 'C'})[m]}</th>`).join('')}<th>route C</th></tr>` +
     rows.map(r => `<tr><td>${esc(r.q)}</td><td class="mono">${esc(r.split || '—')}</td>${M.map(m => `<td class="num ${r[m].answer_ok ? 'ok' : 'ko'}">${r[m].answer_ok ? '✓' : r[m].abstained ? '∅' : '✗'}</td>`).join('')}<td class="mono">${esc(r.optimized.route || '')}</td></tr>`).join('') + '</table></div></details>';

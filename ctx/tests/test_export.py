@@ -61,3 +61,11 @@ class StatsTest(TestCase):
         self.assertEqual(mcnemar(x, x), 1.0)
         lo, hi = boot_ci(x, y)
         self.assertTrue(0 < lo <= 50 <= hi)
+
+
+class PctTest(TestCase):
+    def test_even_n_median_is_the_mean_of_the_middle_values(self):
+        from ctx.site import pct
+        self.assertEqual(pct([100, 4000, 200, 3000], .5), 1600)
+        self.assertEqual(pct([5], .95), 5)
+        self.assertIsNone(pct([], .5))
